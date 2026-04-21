@@ -132,9 +132,9 @@ python translator_lisp.py examples/prob1.lisp examples/prob1.bin
 Архитектура разделена на **Control Unit** и **Data Path**. Процессор поддерживает потактовое исполнение и аппаратную суперскалярность.
 
 ### Схема процессора
-![CU](.\CISC_CU_SC.png)
+![CU](/CISC_CU_SC.png)
 
-![DP](/\CISC_DP_SC.png)
+![DP](/CISC_DP_SC.png)
 ---
 
 ### Тестирование через Golden Tests:
