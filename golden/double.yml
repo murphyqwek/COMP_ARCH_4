@@ -1,0 +1,85 @@
+in_source: |-
+  (defvar A-Low 4000000000)
+  (defvar A-High 1)
+  (defvar B-Low 1000000000)
+  (defvar B-High 2)
+
+  (defvar Res-Low (+ A-Low B-Low))
+  (defvar Res-High (adc A-High B-High))
+
+  (print Res-High)
+  (print-pstr " ")
+  (print Res-Low)     
+in_schedule: |-
+  []
+out_log: |-
+  TICK:       0 | PC:    2 | JMP     #16
+  TICK:       4 | PC:   19 | MOV     R1, [7]
+  TICK:      13 | PC:   21 | PUSH    R1    & MOV     R2, [9]           (SUPERSCALAR)
+  TICK:      19 | PC:   26 | POP     R1
+  TICK:      29 | PC:   30 | ADD     R0, R1, R2
+  TICK:      35 | PC:   33 | MOV     [11], R0
+  TICK:      41 | PC:   36 | MOV     R1, [8]
+  TICK:      46 | PC:   38 | PUSH    R1    & MOV     R2, [10]          (SUPERSCALAR)
+  TICK:      52 | PC:   43 | POP     R1
+  TICK:      62 | PC:   47 | ADC     R0, R1, R2
+  TICK:      68 | PC:   50 | MOV     [12], R0
+  TICK:      74 | PC:   53 | MOV     R0, [12]
+  TICK:      80 | PC:   56 | MOV     [5], R0 & MOV     R1, #14           (SUPERSCALAR)
+  TICK:      86 | PC:   62 | MOV     R2, [13]
+  TICK:      96 | PC:   65 | CMP     R2, #0
+  TICK:     100 | PC:   67 | JEQ     #83
+  TICK:     101 | PC:   70 | MOV     R0, [R1]
+  TICK:     112 | PC:   73 | MOV     [6], R0 & ADD     R1, R1, #1        (SUPERSCALAR)
+  TICK:     119 | PC:   81 | SUB     R2, R2, #1
+  TICK:     129 | PC:   83 | JMP     #62
+  TICK:     130 | PC:   65 | CMP     R2, #0
+  TICK:     138 | PC:   67 | JEQ     #83
+  TICK:     139 | PC:   86 | MOV     R0, [11]
+  TICK:     149 | PC:   89 | MOV     [5], R0
+  TICK:     153 | PC:   90 | HALT    
+  --- HALTED ---
+
+  Ticks (Opt/Seq): 153 / 219
+  Output: 4 705032704
+out_code_log: |-
+  0000: 00001107  JMP    -> 0016 
+  0002: 00001107  JMP    -> 0015 
+  0004: 00000000  .word 0x00000000 (DATA)
+  0005: 00000000  .word 0x00000000 (DATA)
+  0006: 00000000  .word 0x00000000 (DATA)
+  0007: EE6B2800  .word 0xEE6B2800 (DATA)
+  0008: 00000001  .word 0x00000001 (DATA)
+  0009: 3B9ACA00  .word 0x3B9ACA00 (DATA)
+  0010: 00000002  .word 0x00000002 (DATA)
+  0011: 00000000  .word 0x00000000 (DATA)
+  0012: 00000000  .word 0x00000000 (DATA)
+  0013: 00000001  .word 0x00000001 (DATA)
+  0014: 00000020  .word 0x00000020 (DATA)
+  0015: 0000000E  IRET   
+  0016: 00023201  MOV    R1, [7]
+  0019: 0000310C  PUSH   R1
+  0021: 00023201  MOV    R2, [9]
+  0024: 0000310D  POP    R1
+  0026: 00333302  ADD    R0, R1, R2
+  0030: 00032201  MOV    [11], R0
+  0033: 00023201  MOV    R1, [8]
+  0036: 0000310C  PUSH   R1
+  0038: 00023201  MOV    R2, [10]
+  0041: 0000310D  POP    R1
+  0043: 00333310  ADC    R0, R1, R2
+  0047: 00032201  MOV    [12], R0
+  0050: 00023201  MOV    R0, [12]
+  0053: 00032201  MOV    [OUT_INT], R0
+  0056: 00013201  MOV    R1, #14
+  0059: 00023201  MOV    R2, [13]
+  0062: 00013206  CMP    R2, #0
+  0065: 00001108  JEQ    -> 0083
+  0067: 00043201  MOV    R0, [R1]
+  0070: 00032201  MOV    [OUT_CHAR], R0
+  0073: 00133302  ADD    R1, R1, #1
+  0077: 00133303  SUB    R2, R2, #1
+  0081: 00001107  JMP    -> 0062
+  0083: 00023201  MOV    R0, [11]
+  0086: 00032201  MOV    [OUT_INT], R0
+  0089: 0000000F  HALT   

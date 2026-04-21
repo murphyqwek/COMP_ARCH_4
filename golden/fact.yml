@@ -1,0 +1,267 @@
+in_source: |-
+  (defun fact (n)
+      (if (= n 0)
+          1
+          (* n (call fact (- n 1)))
+      )
+  )
+
+  (print (call fact 6))
+in_schedule: |-
+  []
+out_log: |-
+  TICK:       0 | PC:    2 | JMP     #8
+  TICK:       4 | PC:   10 | JMP     #104
+  TICK:       8 | PC:  106 | PUSH    R1
+  TICK:      16 | PC:  108 | PUSH    R2    & MOV     R0, #6            (SUPERSCALAR)
+  TICK:      22 | PC:  113 | PUSH    R0
+  TICK:      30 | PC:  115 | CALL    #10
+  TICK:      33 | PC:   13 | MOV     R1, SP
+  TICK:      43 | PC:   17 | ADD     R1, R1, #1
+  TICK:      49 | PC:   20 | MOV     R1, [R1] & MOV     R2, #0            (SUPERSCALAR)
+  TICK:      56 | PC:   26 | CMP     R1, R2 & MOV     R0, #1            (SUPERSCALAR)
+  TICK:      65 | PC:   31 | JEQ     #34
+  TICK:      69 | PC:   34 | MOV     R0, #0
+  TICK:      78 | PC:   37 | CMP     R0, #0
+  TICK:      82 | PC:   39 | JEQ     #44
+  TICK:      83 | PC:   47 | MOV     R1, SP
+  TICK:      93 | PC:   51 | ADD     R1, R1, #1
+  TICK:      99 | PC:   54 | MOV     R1, [R1]
+  TICK:     105 | PC:   56 | PUSH    R1
+  TICK:     110 | PC:   58 | PUSH    R1
+  TICK:     115 | PC:   60 | PUSH    R2
+  TICK:     121 | PC:   63 | MOV     R1, SP
+  TICK:     127 | PC:   67 | ADD     R1, R1, #1
+  TICK:     133 | PC:   70 | MOV     R1, [R1]
+  TICK:     139 | PC:   72 | PUSH    R1    & MOV     R2, #1            (SUPERSCALAR)
+  TICK:     145 | PC:   77 | POP     R1
+  TICK:     155 | PC:   81 | SUB     R0, R1, R2
+  TICK:     160 | PC:   83 | PUSH    R0
+  TICK:     165 | PC:   85 | CALL    #10
+  TICK:     168 | PC:   13 | MOV     R1, SP
+  TICK:     178 | PC:   17 | ADD     R1, R1, #1
+  TICK:     184 | PC:   20 | MOV     R1, [R1] & MOV     R2, #0            (SUPERSCALAR)
+  TICK:     191 | PC:   26 | CMP     R1, R2 & MOV     R0, #1            (SUPERSCALAR)
+  TICK:     200 | PC:   31 | JEQ     #34
+  TICK:     204 | PC:   34 | MOV     R0, #0
+  TICK:     213 | PC:   37 | CMP     R0, #0
+  TICK:     217 | PC:   39 | JEQ     #44
+  TICK:     218 | PC:   47 | MOV     R1, SP
+  TICK:     228 | PC:   51 | ADD     R1, R1, #1
+  TICK:     234 | PC:   54 | MOV     R1, [R1]
+  TICK:     240 | PC:   56 | PUSH    R1
+  TICK:     245 | PC:   58 | PUSH    R1
+  TICK:     250 | PC:   60 | PUSH    R2
+  TICK:     256 | PC:   63 | MOV     R1, SP
+  TICK:     262 | PC:   67 | ADD     R1, R1, #1
+  TICK:     268 | PC:   70 | MOV     R1, [R1]
+  TICK:     274 | PC:   72 | PUSH    R1    & MOV     R2, #1            (SUPERSCALAR)
+  TICK:     280 | PC:   77 | POP     R1
+  TICK:     290 | PC:   81 | SUB     R0, R1, R2
+  TICK:     295 | PC:   83 | PUSH    R0
+  TICK:     300 | PC:   85 | CALL    #10
+  TICK:     303 | PC:   13 | MOV     R1, SP
+  TICK:     313 | PC:   17 | ADD     R1, R1, #1
+  TICK:     319 | PC:   20 | MOV     R1, [R1] & MOV     R2, #0            (SUPERSCALAR)
+  TICK:     326 | PC:   26 | CMP     R1, R2 & MOV     R0, #1            (SUPERSCALAR)
+  TICK:     335 | PC:   31 | JEQ     #34
+  TICK:     339 | PC:   34 | MOV     R0, #0
+  TICK:     348 | PC:   37 | CMP     R0, #0
+  TICK:     352 | PC:   39 | JEQ     #44
+  TICK:     353 | PC:   47 | MOV     R1, SP
+  TICK:     363 | PC:   51 | ADD     R1, R1, #1
+  TICK:     369 | PC:   54 | MOV     R1, [R1]
+  TICK:     375 | PC:   56 | PUSH    R1
+  TICK:     380 | PC:   58 | PUSH    R1
+  TICK:     385 | PC:   60 | PUSH    R2
+  TICK:     391 | PC:   63 | MOV     R1, SP
+  TICK:     397 | PC:   67 | ADD     R1, R1, #1
+  TICK:     403 | PC:   70 | MOV     R1, [R1]
+  TICK:     409 | PC:   72 | PUSH    R1    & MOV     R2, #1            (SUPERSCALAR)
+  TICK:     415 | PC:   77 | POP     R1
+  TICK:     425 | PC:   81 | SUB     R0, R1, R2
+  TICK:     430 | PC:   83 | PUSH    R0
+  TICK:     435 | PC:   85 | CALL    #10
+  TICK:     438 | PC:   13 | MOV     R1, SP
+  TICK:     448 | PC:   17 | ADD     R1, R1, #1
+  TICK:     454 | PC:   20 | MOV     R1, [R1] & MOV     R2, #0            (SUPERSCALAR)
+  TICK:     461 | PC:   26 | CMP     R1, R2 & MOV     R0, #1            (SUPERSCALAR)
+  TICK:     470 | PC:   31 | JEQ     #34
+  TICK:     474 | PC:   34 | MOV     R0, #0
+  TICK:     483 | PC:   37 | CMP     R0, #0
+  TICK:     487 | PC:   39 | JEQ     #44
+  TICK:     488 | PC:   47 | MOV     R1, SP
+  TICK:     498 | PC:   51 | ADD     R1, R1, #1
+  TICK:     504 | PC:   54 | MOV     R1, [R1]
+  TICK:     510 | PC:   56 | PUSH    R1
+  TICK:     515 | PC:   58 | PUSH    R1
+  TICK:     520 | PC:   60 | PUSH    R2
+  TICK:     526 | PC:   63 | MOV     R1, SP
+  TICK:     532 | PC:   67 | ADD     R1, R1, #1
+  TICK:     538 | PC:   70 | MOV     R1, [R1]
+  TICK:     544 | PC:   72 | PUSH    R1    & MOV     R2, #1            (SUPERSCALAR)
+  TICK:     550 | PC:   77 | POP     R1
+  TICK:     560 | PC:   81 | SUB     R0, R1, R2
+  TICK:     565 | PC:   83 | PUSH    R0
+  TICK:     570 | PC:   85 | CALL    #10
+  TICK:     573 | PC:   13 | MOV     R1, SP
+  TICK:     583 | PC:   17 | ADD     R1, R1, #1
+  TICK:     589 | PC:   20 | MOV     R1, [R1] & MOV     R2, #0            (SUPERSCALAR)
+  TICK:     596 | PC:   26 | CMP     R1, R2 & MOV     R0, #1            (SUPERSCALAR)
+  TICK:     605 | PC:   31 | JEQ     #34
+  TICK:     609 | PC:   34 | MOV     R0, #0
+  TICK:     618 | PC:   37 | CMP     R0, #0
+  TICK:     622 | PC:   39 | JEQ     #44
+  TICK:     623 | PC:   47 | MOV     R1, SP
+  TICK:     633 | PC:   51 | ADD     R1, R1, #1
+  TICK:     639 | PC:   54 | MOV     R1, [R1]
+  TICK:     645 | PC:   56 | PUSH    R1
+  TICK:     650 | PC:   58 | PUSH    R1
+  TICK:     655 | PC:   60 | PUSH    R2
+  TICK:     661 | PC:   63 | MOV     R1, SP
+  TICK:     667 | PC:   67 | ADD     R1, R1, #1
+  TICK:     673 | PC:   70 | MOV     R1, [R1]
+  TICK:     679 | PC:   72 | PUSH    R1    & MOV     R2, #1            (SUPERSCALAR)
+  TICK:     685 | PC:   77 | POP     R1
+  TICK:     695 | PC:   81 | SUB     R0, R1, R2
+  TICK:     700 | PC:   83 | PUSH    R0
+  TICK:     705 | PC:   85 | CALL    #10
+  TICK:     708 | PC:   13 | MOV     R1, SP
+  TICK:     718 | PC:   17 | ADD     R1, R1, #1
+  TICK:     724 | PC:   20 | MOV     R1, [R1] & MOV     R2, #0            (SUPERSCALAR)
+  TICK:     731 | PC:   26 | CMP     R1, R2 & MOV     R0, #1            (SUPERSCALAR)
+  TICK:     740 | PC:   31 | JEQ     #34
+  TICK:     744 | PC:   34 | MOV     R0, #0
+  TICK:     753 | PC:   37 | CMP     R0, #0
+  TICK:     757 | PC:   39 | JEQ     #44
+  TICK:     758 | PC:   47 | MOV     R1, SP
+  TICK:     768 | PC:   51 | ADD     R1, R1, #1
+  TICK:     774 | PC:   54 | MOV     R1, [R1]
+  TICK:     780 | PC:   56 | PUSH    R1
+  TICK:     785 | PC:   58 | PUSH    R1
+  TICK:     790 | PC:   60 | PUSH    R2
+  TICK:     796 | PC:   63 | MOV     R1, SP
+  TICK:     802 | PC:   67 | ADD     R1, R1, #1
+  TICK:     808 | PC:   70 | MOV     R1, [R1]
+  TICK:     814 | PC:   72 | PUSH    R1    & MOV     R2, #1            (SUPERSCALAR)
+  TICK:     820 | PC:   77 | POP     R1
+  TICK:     830 | PC:   81 | SUB     R0, R1, R2
+  TICK:     835 | PC:   83 | PUSH    R0
+  TICK:     840 | PC:   85 | CALL    #10
+  TICK:     843 | PC:   13 | MOV     R1, SP
+  TICK:     853 | PC:   17 | ADD     R1, R1, #1
+  TICK:     859 | PC:   20 | MOV     R1, [R1] & MOV     R2, #0            (SUPERSCALAR)
+  TICK:     866 | PC:   26 | CMP     R1, R2 & MOV     R0, #1            (SUPERSCALAR)
+  TICK:     875 | PC:   31 | JEQ     #34
+  TICK:     879 | PC:   37 | CMP     R0, #0
+  TICK:     887 | PC:   39 | JEQ     #44
+  TICK:     888 | PC:   42 | MOV     R0, #1
+  TICK:     896 | PC:   44 | JMP     #103
+  TICK:     897 | PC:  104 | RET     
+  TICK:     902 | PC:   88 | MOV     R3, R0
+  TICK:     910 | PC:   90 | POP     R0
+  TICK:     915 | PC:   92 | POP     R2
+  TICK:     920 | PC:   94 | POP     R1    & MOV     R2, R3            (SUPERSCALAR)
+  TICK:     926 | PC:   99 | POP     R1
+  TICK:     936 | PC:  103 | MUL     R0, R1, R2
+  TICK:     940 | PC:  104 | RET     
+  TICK:     943 | PC:   88 | MOV     R3, R0
+  TICK:     951 | PC:   90 | POP     R0
+  TICK:     956 | PC:   92 | POP     R2
+  TICK:     961 | PC:   94 | POP     R1    & MOV     R2, R3            (SUPERSCALAR)
+  TICK:     967 | PC:   99 | POP     R1
+  TICK:     977 | PC:  103 | MUL     R0, R1, R2
+  TICK:     981 | PC:  104 | RET     
+  TICK:     984 | PC:   88 | MOV     R3, R0
+  TICK:     992 | PC:   90 | POP     R0
+  TICK:     997 | PC:   92 | POP     R2
+  TICK:    1002 | PC:   94 | POP     R1    & MOV     R2, R3            (SUPERSCALAR)
+  TICK:    1008 | PC:   99 | POP     R1
+  TICK:    1018 | PC:  103 | MUL     R0, R1, R2
+  TICK:    1022 | PC:  104 | RET     
+  TICK:    1025 | PC:   88 | MOV     R3, R0
+  TICK:    1033 | PC:   90 | POP     R0
+  TICK:    1038 | PC:   92 | POP     R2
+  TICK:    1043 | PC:   94 | POP     R1    & MOV     R2, R3            (SUPERSCALAR)
+  TICK:    1049 | PC:   99 | POP     R1
+  TICK:    1059 | PC:  103 | MUL     R0, R1, R2
+  TICK:    1063 | PC:  104 | RET     
+  TICK:    1066 | PC:   88 | MOV     R3, R0
+  TICK:    1074 | PC:   90 | POP     R0
+  TICK:    1079 | PC:   92 | POP     R2
+  TICK:    1084 | PC:   94 | POP     R1    & MOV     R2, R3            (SUPERSCALAR)
+  TICK:    1090 | PC:   99 | POP     R1
+  TICK:    1100 | PC:  103 | MUL     R0, R1, R2
+  TICK:    1104 | PC:  104 | RET     
+  TICK:    1107 | PC:   88 | MOV     R3, R0
+  TICK:    1115 | PC:   90 | POP     R0
+  TICK:    1120 | PC:   92 | POP     R2
+  TICK:    1125 | PC:   94 | POP     R1    & MOV     R2, R3            (SUPERSCALAR)
+  TICK:    1131 | PC:   99 | POP     R1
+  TICK:    1141 | PC:  103 | MUL     R0, R1, R2
+  TICK:    1145 | PC:  104 | RET     
+  TICK:    1148 | PC:  118 | MOV     R3, R0
+  TICK:    1156 | PC:  120 | POP     R0
+  TICK:    1161 | PC:  122 | POP     R2
+  TICK:    1166 | PC:  124 | POP     R1    & MOV     R0, R3            (SUPERSCALAR)
+  TICK:    1172 | PC:  130 | MOV     [5], R0
+  TICK:    1180 | PC:  131 | HALT    
+  --- HALTED ---
+
+  Ticks (Opt/Seq): 1180 / 1702
+  Output: 720
+out_code_log: |-
+  0000: 00001107  JMP    -> 0008 
+  0002: 00001107  JMP    -> 0007 
+  0004: 00000000  .word 0x00000000 (DATA)
+  0005: 00000000  .word 0x00000000 (DATA)
+  0006: 00000000  .word 0x00000000 (DATA)
+  0007: 0000000E  IRET   
+  0008: 00001107  JMP    -> 0104
+  0010: 00033201  MOV    R1, SP
+  0013: 00133302  ADD    R1, R1, #1
+  0017: 00043201  MOV    R1, [R1]
+  0020: 00013201  MOV    R2, #0
+  0023: 00033206  CMP    R1, R2
+  0026: 00013201  MOV    R0, #1
+  0029: 00001108  JEQ    -> 0034
+  0031: 00013201  MOV    R0, #0
+  0034: 00013206  CMP    R0, #0
+  0037: 00001108  JEQ    -> 0044
+  0039: 00013201  MOV    R0, #1
+  0042: 00001107  JMP    -> 0103
+  0044: 00033201  MOV    R1, SP
+  0047: 00133302  ADD    R1, R1, #1
+  0051: 00043201  MOV    R1, [R1]
+  0054: 0000310C  PUSH   R1
+  0056: 0000310C  PUSH   R1
+  0058: 0000310C  PUSH   R2
+  0060: 00033201  MOV    R1, SP
+  0063: 00133302  ADD    R1, R1, #1
+  0067: 00043201  MOV    R1, [R1]
+  0070: 0000310C  PUSH   R1
+  0072: 00013201  MOV    R2, #1
+  0075: 0000310D  POP    R1
+  0077: 00333303  SUB    R0, R1, R2
+  0081: 0000310C  PUSH   R0
+  0083: 0000110A  CALL   -> 0010
+  0085: 00033201  MOV    R3, R0
+  0088: 0000310D  POP    R0
+  0090: 0000310D  POP    R2
+  0092: 0000310D  POP    R1
+  0094: 00033201  MOV    R2, R3
+  0097: 0000310D  POP    R1
+  0099: 00333304  MUL    R0, R1, R2
+  0103: 0000000B  RET    
+  0104: 0000310C  PUSH   R1
+  0106: 0000310C  PUSH   R2
+  0108: 00013201  MOV    R0, #6
+  0111: 0000310C  PUSH   R0
+  0113: 0000110A  CALL   -> 0010
+  0115: 00033201  MOV    R3, R0
+  0118: 0000310D  POP    R0
+  0120: 0000310D  POP    R2
+  0122: 0000310D  POP    R1
+  0124: 00033201  MOV    R0, R3
+  0127: 00032201  MOV    [OUT_INT], R0
+  0130: 0000000F  HALT   

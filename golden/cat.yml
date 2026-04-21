@@ -1,0 +1,154 @@
+in_source: |-
+  (defvar running 1)
+  (defvar ch 0)
+
+  (def-interrupt
+      (setq ch (in-char))
+      (if (= ch 0)
+          (setq running 0)
+          (print-char ch)
+      )
+  )
+
+  ; Основной цикл ждет прерываний
+  (loop i 0 1000
+      (if (= running 0)
+          (setq i 1000) ; Выход из цикла
+          (setq running running) ; NOP
+      )
+  )      
+in_schedule: |-
+  [(10, 'f'), (20, 'o'), (30, 'o'), (40, '\0')]
+out_log: |-
+  TICK:       0 | PC:    2 | JMP     #54
+  TICK:       4 | PC:   57 | MOV     R0, #0
+  --- TRAP: f at 13 ---
+  TICK:      13 | PC:    2 | MOV     [9], R0
+  TICK:      30 | PC:    4 | JMP     #11
+  TICK:      31 | PC:   14 | MOV     R0, [4]
+  TICK:      41 | PC:   17 | MOV     [8], R0
+  TICK:      47 | PC:   20 | MOV     R1, [8] & MOV     R2, #0            (SUPERSCALAR)
+  TICK:      53 | PC:   26 | CMP     R1, R2 & MOV     R0, #1            (SUPERSCALAR)
+  TICK:      62 | PC:   31 | JEQ     #34
+  TICK:      66 | PC:   34 | MOV     R0, #0
+  TICK:      75 | PC:   37 | CMP     R0, #0
+  TICK:      79 | PC:   39 | JEQ     #47
+  TICK:      80 | PC:   50 | MOV     R0, [8]
+  TICK:      90 | PC:   53 | MOV     [6], R0
+  TICK:      94 | PC:   54 | IRET    
+  --- TRAP: o at 108 ---
+  TICK:     108 | PC:    4 | JMP     #11
+  TICK:     124 | PC:   14 | MOV     R0, [4]
+  TICK:     134 | PC:   17 | MOV     [8], R0
+  TICK:     140 | PC:   20 | MOV     R1, [8] & MOV     R2, #0            (SUPERSCALAR)
+  TICK:     146 | PC:   26 | CMP     R1, R2 & MOV     R0, #1            (SUPERSCALAR)
+  TICK:     155 | PC:   31 | JEQ     #34
+  TICK:     159 | PC:   34 | MOV     R0, #0
+  TICK:     168 | PC:   37 | CMP     R0, #0
+  TICK:     172 | PC:   39 | JEQ     #47
+  TICK:     173 | PC:   50 | MOV     R0, [8]
+  TICK:     183 | PC:   53 | MOV     [6], R0
+  TICK:     187 | PC:   54 | IRET    
+  --- TRAP: o at 201 ---
+  TICK:     201 | PC:    4 | JMP     #11
+  TICK:     217 | PC:   14 | MOV     R0, [4]
+  TICK:     227 | PC:   17 | MOV     [8], R0
+  TICK:     233 | PC:   20 | MOV     R1, [8] & MOV     R2, #0            (SUPERSCALAR)
+  TICK:     239 | PC:   26 | CMP     R1, R2 & MOV     R0, #1            (SUPERSCALAR)
+  TICK:     248 | PC:   31 | JEQ     #34
+  TICK:     252 | PC:   34 | MOV     R0, #0
+  TICK:     261 | PC:   37 | CMP     R0, #0
+  TICK:     265 | PC:   39 | JEQ     #47
+  TICK:     266 | PC:   50 | MOV     R0, [8]
+  TICK:     276 | PC:   53 | MOV     [6], R0
+  TICK:     280 | PC:   54 | IRET    
+  --- TRAP: \0 at 294 ---
+  TICK:     294 | PC:    4 | JMP     #11
+  TICK:     310 | PC:   14 | MOV     R0, [4]
+  TICK:     320 | PC:   17 | MOV     [8], R0
+  TICK:     326 | PC:   20 | MOV     R1, [8] & MOV     R2, #0            (SUPERSCALAR)
+  TICK:     332 | PC:   26 | CMP     R1, R2 & MOV     R0, #1            (SUPERSCALAR)
+  TICK:     341 | PC:   31 | JEQ     #34
+  TICK:     345 | PC:   37 | CMP     R0, #0
+  TICK:     353 | PC:   39 | JEQ     #47
+  TICK:     354 | PC:   42 | MOV     R0, #0
+  TICK:     363 | PC:   45 | MOV     [7], R0
+  TICK:     368 | PC:   47 | JMP     #53
+  TICK:     369 | PC:   54 | IRET    
+  TICK:     385 | PC:   63 | MOV     R1, #1000 & MOV     R0, [9]           (SUPERSCALAR)
+  TICK:     395 | PC:   69 | CMP     R0, R1
+  TICK:     403 | PC:   71 | JGT     #122
+  TICK:     404 | PC:   74 | MOV     R1, [7] & MOV     R2, #0            (SUPERSCALAR)
+  TICK:     414 | PC:   80 | CMP     R1, R2 & MOV     R0, #1            (SUPERSCALAR)
+  TICK:     423 | PC:   85 | JEQ     #88
+  TICK:     427 | PC:   91 | CMP     R0, #0
+  TICK:     435 | PC:   93 | JEQ     #101
+  TICK:     436 | PC:   96 | MOV     R0, #1000
+  TICK:     445 | PC:   99 | MOV     [9], R0
+  TICK:     450 | PC:  101 | JMP     #107
+  TICK:     451 | PC:  110 | MOV     [10], R0
+  TICK:     461 | PC:  113 | MOV     R0, [9]
+  TICK:     468 | PC:  117 | ADD     R0, R0, #1
+  TICK:     474 | PC:  120 | MOV     [9], R0
+  TICK:     479 | PC:  122 | JMP     #60
+  TICK:     480 | PC:   63 | MOV     R1, #1000 & MOV     R0, [9]           (SUPERSCALAR)
+  TICK:     490 | PC:   69 | CMP     R0, R1
+  TICK:     498 | PC:   71 | JGT     #122
+  TICK:     499 | PC:  125 | MOV     R0, [10]
+  TICK:     507 | PC:  126 | HALT    
+  --- HALTED ---
+
+  Ticks (Opt/Seq): 507 / 641
+  Output: foo
+out_code_log: |-
+  0000: 00001107  JMP    -> 0054 
+  0002: 00001107  JMP    -> 0011 
+  0004: 00000000  .word 0x00000000 (DATA)
+  0005: 00000000  .word 0x00000000 (DATA)
+  0006: 00000000  .word 0x00000000 (DATA)
+  0007: 00000001  .word 0x00000001 (DATA)
+  0008: 00000000  .word 0x00000000 (DATA)
+  0009: 00000000  .word 0x00000000 (DATA)
+  0010: 00000000  .word 0x00000000 (DATA)
+  0011: 00023201  MOV    R0, [TRAP_BUFFER]
+  0014: 00032201  MOV    [8], R0
+  0017: 00023201  MOV    R1, [8]
+  0020: 00013201  MOV    R2, #0
+  0023: 00033206  CMP    R1, R2
+  0026: 00013201  MOV    R0, #1
+  0029: 00001108  JEQ    -> 0034
+  0031: 00013201  MOV    R0, #0
+  0034: 00013206  CMP    R0, #0
+  0037: 00001108  JEQ    -> 0047
+  0039: 00013201  MOV    R0, #0
+  0042: 00032201  MOV    [7], R0
+  0045: 00001107  JMP    -> 0053
+  0047: 00023201  MOV    R0, [8]
+  0050: 00032201  MOV    [OUT_CHAR], R0
+  0053: 0000000E  IRET   
+  0054: 00013201  MOV    R0, #0
+  0057: 00032201  MOV    [9], R0
+  0060: 00013201  MOV    R1, #1000
+  0063: 00023201  MOV    R0, [9]
+  0066: 00033206  CMP    R0, R1
+  0069: 00001109  JGT    -> 0122
+  0071: 00023201  MOV    R1, [7]
+  0074: 00013201  MOV    R2, #0
+  0077: 00033206  CMP    R1, R2
+  0080: 00013201  MOV    R0, #1
+  0083: 00001108  JEQ    -> 0088
+  0085: 00013201  MOV    R0, #0
+  0088: 00013206  CMP    R0, #0
+  0091: 00001108  JEQ    -> 0101
+  0093: 00013201  MOV    R0, #1000
+  0096: 00032201  MOV    [9], R0
+  0099: 00001107  JMP    -> 0107
+  0101: 00023201  MOV    R0, [7]
+  0104: 00032201  MOV    [7], R0
+  0107: 00032201  MOV    [10], R0
+  0110: 00023201  MOV    R0, [9]
+  0113: 00133302  ADD    R0, R0, #1
+  0117: 00032201  MOV    [9], R0
+  0120: 00001107  JMP    -> 0060
+  0122: 00023201  MOV    R0, [10]
+  0125: 0000000F  HALT   
