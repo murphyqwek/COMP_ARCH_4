@@ -1,7 +1,8 @@
-import sys, logging
+import sys
+import logging
 import ast
-from isa import Opcode, AddrMode, Registers, from_bytes
 
+from isa import Opcode, AddrMode, Registers, from_bytes
 from translator_lisp import VECTOR_TRAP, TRAP_BUFFER, OUT_CHAR, OUT_INT
 
 
