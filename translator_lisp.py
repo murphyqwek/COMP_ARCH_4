@@ -12,6 +12,8 @@ def tokenize(chars):
 
 
 def parse(tokens):
+    if not tokens:
+        raise SyntaxError("Unexpected EOF")
     token = tokens.pop(0)
     if token == "(":
         L = []
@@ -321,16 +323,17 @@ class Compiler:
                     [AddrMode.REG_INDIRECT, AddrMode.REG],
                     [Registers.R1, Registers.R0],
                 )
-            elif op == "call":
-                argc = len(expr[2:])
+            elif op in self.functions:
+                argc = len(expr[1:])
 
                 self.emit(Opcode.PUSH, [AddrMode.REG], [Registers.R1])
                 self.emit(Opcode.PUSH, [AddrMode.REG], [Registers.R2])
-                for arg in expr[2:]:
+                
+                for arg in expr[1:]:
                     self.compile_expr(arg, Registers.R0, local_scope)
                     self.emit(Opcode.PUSH, [AddrMode.REG], [Registers.R0])
 
-                self.emit(Opcode.CALL, [AddrMode.IMM], [self.functions[expr[1]]])
+                self.emit(Opcode.CALL, [AddrMode.IMM], [self.functions[op]])
 
                 self.emit(
                     Opcode.MOV,
@@ -347,6 +350,9 @@ class Compiler:
                 self.emit(
                     Opcode.MOV, [AddrMode.REG, AddrMode.REG], [dest_reg, Registers.R3]
                 )
+                
+            else:
+                raise SyntaxError(f"Unknown function or operator: {op}")
 
     def compile_statement(self, stmt, local_scope=None):
         if not isinstance(stmt, list):
@@ -425,9 +431,6 @@ class Compiler:
 
 
 def main(source_file, target_file):
-    if len(sys.argv) != 3:
-        sys.exit(1)
-
     with open(source_file, "r", encoding="utf-8") as f:
         tokens = tokenize(f.read())
 
@@ -447,6 +450,9 @@ def main(source_file, target_file):
 
 
 if __name__ == "__main__":
+    if len(sys.argv) != 3:
+        sys.exit(1)
+        
     source_file = sys.argv[1]
     target_file = sys.argv[2]
     main(source_file, target_file)

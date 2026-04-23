@@ -5,14 +5,8 @@
     (setq ch (in-char))
     (if (= ch 0)
         (setq running 0)
-        (print-char ch)
-    )
-)
+        (print-char ch)))
 
-; Основной цикл ждет прерываний
 (loop i 0 1000
     (if (= running 0)
-        (setq i 1000) ; Выход из цикла
-        (setq running running) ; NOP
-    )
-)
+        (setq i 1000)))

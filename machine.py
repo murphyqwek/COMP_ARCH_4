@@ -1,8 +1,7 @@
-import sys
-import logging
+import sys, logging
 import ast
-
 from isa import Opcode, AddrMode, Registers, from_bytes
+
 from const import VECTOR_TRAP, OUT_INT, OUT_CHAR, TRAP_BUFFER
 
 
@@ -138,25 +137,40 @@ class ControlUnit:
 
     def check_interrupts(self):
         steps = 0
-        if self.schedule and self.tick >= self.schedule[0]["tick"] and self.ie:
-            event = self.schedule.pop(0)
+        if self.schedule and self.tick >= self.schedule[0]["tick"]:
+            if self.ie:
+                event = self.schedule.pop(0)
 
-            if self.tick < 1500:
-                symbol = event["char"]
-                if symbol == "\n":
-                    symbol = "\\n"
-                elif symbol == "\0":
-                    symbol = "\\0"
-                logging.info(f"--- TRAP: {symbol} at {self.tick} ---")
-            self.dp.push(self.pc)
-            flags = (self.dp.n << 3) | (self.dp.z << 2) | (self.dp.c << 1) | self.dp.v
-            self.dp.push(flags)
-            for r in [Registers.R0, Registers.R1, Registers.R2, Registers.R3]:
-                self.dp.push(self.dp.regs[r])
-            self.ie = False
-            self.dp.mem[TRAP_BUFFER] = ord(event["char"])
-            self.pc = VECTOR_TRAP
-            steps = 2 + 2 + 4 * 2
+                if self.tick < 1500:
+                    symbol = event["char"]
+                    if symbol == "\n":
+                        symbol = "\\n"
+                    elif symbol == "\0":
+                        symbol = "\\0"
+                    logging.info(f"--- TRAP: {symbol} at {self.tick} ---")
+                
+                return_pc = self.i1["pc"] if self.i1 is not None else self.pc
+                self.dp.push(return_pc)
+                
+                flags = (self.dp.n << 3) | (self.dp.z << 2) | (self.dp.c << 1) | self.dp.v
+                self.dp.push(flags)
+                for r in [Registers.R0, Registers.R1, Registers.R2, Registers.R3]:
+                    self.dp.push(self.dp.regs[r])
+                self.ie = False
+                self.dp.mem[TRAP_BUFFER] = ord(event["char"])
+                self.pc = VECTOR_TRAP
+                
+                self.i1 = None
+                
+                steps = 2 + 2 + 4 * 2
+            else:
+                symbol = self.schedule.pop(0)
+                if self.tick < 1500:
+                    if symbol == "\n":
+                        symbol = "\\n"
+                    elif symbol == "\0":
+                        symbol = "\\0"
+                    logging.info(f"--- TRAP: {symbol} at {self.tick} was skipped ---")
 
         return steps
 
@@ -374,10 +388,13 @@ class ControlUnit:
             Opcode.POP,
         ]
         if self.i1["op"] in safe:
-            nxt = self.fetch(self.pc)
-            steps += 1 + nxt["len"]
-            if nxt["op"] in safe and not self.has_dep(self.i1, nxt):
-                self.i2 = nxt
+            try:
+                nxt = self.fetch(self.pc)
+                steps += 1 + nxt["len"]
+                if nxt["op"] in safe and not self.has_dep(self.i1, nxt):
+                    self.i2 = nxt
+            except:
+                pass
 
         if nxt is not None:
             self.pc += nxt["len"]
@@ -409,14 +426,13 @@ class ControlUnit:
 
 def main(target, schedule):
     logging.basicConfig(level=logging.DEBUG, format="%(message)s")
-    if len(sys.argv) < 2:
-        sys.exit("Usage: python machine.py <bin> [sched]")
+
 
     with open(target, "rb") as f:
         dp = DataPath(from_bytes(f.read()))
 
     schd = []
-    if len(sys.argv) == 3:
+    if schedule is not None:
         with open(schedule, "r", encoding="utf-8") as f:
             raw_data = ast.literal_eval(f.read())
             schd = [{"tick": t, "char": c} for t, c in raw_data]
@@ -434,4 +450,6 @@ def main(target, schedule):
 
 
 if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        sys.exit("Usage: python machine.py <bin> [sched]")
     main(sys.argv[1], sys.argv[2] if len(sys.argv) > 2 else None)
