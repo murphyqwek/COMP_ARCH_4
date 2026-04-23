@@ -328,7 +328,7 @@ class Compiler:
 
                 self.emit(Opcode.PUSH, [AddrMode.REG], [Registers.R1])
                 self.emit(Opcode.PUSH, [AddrMode.REG], [Registers.R2])
-                
+
                 for arg in expr[1:]:
                     self.compile_expr(arg, Registers.R0, local_scope)
                     self.emit(Opcode.PUSH, [AddrMode.REG], [Registers.R0])
@@ -350,7 +350,7 @@ class Compiler:
                 self.emit(
                     Opcode.MOV, [AddrMode.REG, AddrMode.REG], [dest_reg, Registers.R3]
                 )
-                
+
             else:
                 raise SyntaxError(f"Unknown function or operator: {op}")
 
@@ -452,7 +452,7 @@ def main(source_file, target_file):
 if __name__ == "__main__":
     if len(sys.argv) != 3:
         sys.exit(1)
-        
+
     source_file = sys.argv[1]
     target_file = sys.argv[2]
     main(source_file, target_file)
