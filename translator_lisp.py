@@ -3,10 +3,7 @@ import re
 from isa import Opcode, AddrMode, Registers, serialize_instruction, to_bytes
 import disasm
 
-VECTOR_TRAP = 0x02
-OUT_INT = 0x05
-OUT_CHAR = 0x06
-TRAP_BUFFER = 0x04
+from const import VECTOR_TRAP, OUT_INT, OUT_CHAR, TRAP_BUFFER
 
 
 def tokenize(chars):

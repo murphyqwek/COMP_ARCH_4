@@ -3,7 +3,7 @@ import logging
 import ast
 
 from isa import Opcode, AddrMode, Registers, from_bytes
-from translator_lisp import VECTOR_TRAP, TRAP_BUFFER, OUT_CHAR, OUT_INT
+from const import VECTOR_TRAP, OUT_INT, OUT_CHAR, TRAP_BUFFER
 
 
 class DataPath:
