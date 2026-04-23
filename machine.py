@@ -1,4 +1,5 @@
-import sys, logging
+import sys
+import logging
 import ast
 from isa import Opcode, AddrMode, Registers, from_bytes
 
@@ -390,13 +391,10 @@ class ControlUnit:
             Opcode.POP,
         ]
         if self.i1["op"] in safe:
-            try:
-                nxt = self.fetch(self.pc)
-                steps += 1 + nxt["len"]
-                if nxt["op"] in safe and not self.has_dep(self.i1, nxt):
-                    self.i2 = nxt
-            except:
-                pass
+            nxt = self.fetch(self.pc)
+            steps += 1 + nxt["len"]
+            if nxt["op"] in safe and not self.has_dep(self.i1, nxt):
+                self.i2 = nxt
 
         if nxt is not None:
             self.pc += nxt["len"]

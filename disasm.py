@@ -2,7 +2,7 @@ import sys
 import struct
 from isa import Opcode, AddrMode, Registers
 
-from const import VECTOR_TRAP, OUT_INT, OUT_CHAR, TRAP_BUFFER
+from const import OUT_INT, OUT_CHAR, TRAP_BUFFER
 
 REG_MAP = {v: k for k, v in Registers.__members__.items()}
 
