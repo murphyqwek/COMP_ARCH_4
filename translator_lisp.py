@@ -15,8 +15,6 @@ def tokenize(chars):
 
 
 def parse(tokens):
-    if not tokens:
-        raise SyntaxError("Unexpected EOF")
     token = tokens.pop(0)
     if token == "(":
         L = []
