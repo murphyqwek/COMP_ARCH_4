@@ -18,7 +18,7 @@
 
 <operator> ::= "defvar" | "defun" | "setq" | "if" | "loop" 
              | "print" | "print-pstr" | "print-char" | "in-char" 
-             | "+" | "-" | "*" | "mod" | "adc" | "sbc" 
+             | "+" | "-" | "*" | "/" | "mod" | "adc" | "sbc" 
              | "=" | ">" | "<" 
              | "read-mem" | "write-mem"
              | "progn" | "def-interrupt"
