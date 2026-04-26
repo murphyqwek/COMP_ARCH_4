@@ -57,7 +57,6 @@ class Compiler:
                 return
             op = node[0]
 
-            # 1. Ищем строки в print-pstr
             if op == "print-pstr" and len(node) > 1:
                 string_content = node[1]
                 if (

@@ -85,6 +85,25 @@ class DataPath:
             ar = self._update_flags_sub(ar, op2 + borrow, ar - op2 - borrow)
             borrow = 0
         self.write(m[0], a[0], ar)
+    
+    def execute_mod(self, m, a):
+        op1 = self.read(m[1], a[1])
+        op2 = self.read(m[2], a[2])
+
+        if op2 == 0:
+            ar = 0
+        else:
+            ar = op1 % op2
+
+        ar = ar & 0xFFFFFFFF
+        
+        self.z = (ar == 0)
+        self.n = bool((ar >> 31) & 1)
+
+        self.c = False
+        self.v = False
+
+        self.write(m[0], a[0], ar)
 
     def execute_mul(self, m, a):
         ar = 1
@@ -181,7 +200,12 @@ class ControlUnit:
         if op in [Opcode.NOP, Opcode.HALT, Opcode.JMP, Opcode.JEQ, Opcode.JGT]:
             return 1
         if op in [Opcode.PUSH, Opcode.POP]:
-            return 2
+            if modes[0] == AddrMode.REG:
+                return 2
+            if modes[0] == AddrMode.MEM:
+                return 4
+            if modes[0] == AddrMode.REG_INDIRECT:
+                return 5
         if op in [Opcode.MOV]:
             if modes[0] == AddrMode.MEM:
                 if modes[1] == AddrMode.IMM:
@@ -210,7 +234,7 @@ class ControlUnit:
                     return 3
                 if modes[1] == AddrMode.REG_INDIRECT:
                     return 6
-        if op in [Opcode.ADD, Opcode.SUB, Opcode.ADC, Opcode.SBC, Opcode.MUL]:
+        if op in [Opcode.ADD, Opcode.SUB, Opcode.ADC, Opcode.SBC, Opcode.MUL, Opcode.MOD]:
             steps = 0
 
             for m in modes[1:]:
@@ -281,6 +305,8 @@ class ControlUnit:
             self.dp.execute_sub(m, a, True)
         elif op == Opcode.MUL:
             self.dp.execute_mul(m, a)
+        elif op == Opcode.MOD:
+            self.dp.execute_mod(m, a)
         elif op == Opcode.CMP:
             self.dp.execute_cmp(m, a)
         elif op == Opcode.PUSH:
