@@ -111,6 +111,22 @@ class DataPath:
             ar *= self.read(m[i], a[i])
         self.write(m[0], a[0], ar)
 
+    def execute_div(self, m, a):
+        op1 = self.read(m[1], a[1])
+        op2 = self.read(m[2], a[2])
+
+        if op2 == 0:
+            ar = 0
+        else:
+            ar = op1 // op2
+
+        ar &= 0xFFFFFFFF
+        self.z = ar == 0
+        self.n = bool((ar >> 31) & 1)
+        self.c = False
+        self.v = False
+        self.write(m[0], a[0], ar)
+
     def execute_cmp(self, m, a):
         op1 = self.read(m[0], a[0])
         op2 = self.read(m[1], a[1])
@@ -241,6 +257,7 @@ class ControlUnit:
             Opcode.SBC,
             Opcode.MUL,
             Opcode.MOD,
+            Opcode.DIV,
         ]:
             steps = 0
 
@@ -312,6 +329,8 @@ class ControlUnit:
             self.dp.execute_sub(m, a, True)
         elif op == Opcode.MUL:
             self.dp.execute_mul(m, a)
+        elif op == Opcode.DIV:
+            self.dp.execute_div(m, a)
         elif op == Opcode.MOD:
             self.dp.execute_mod(m, a)
         elif op == Opcode.CMP:
@@ -356,6 +375,7 @@ class ControlUnit:
                 Opcode.ADD,
                 Opcode.SUB,
                 Opcode.MUL,
+                Opcode.DIV,
                 Opcode.ADC,
                 Opcode.SBC,
                 Opcode.CMP,
@@ -365,6 +385,7 @@ class ControlUnit:
                 Opcode.ADD,
                 Opcode.SUB,
                 Opcode.MUL,
+                Opcode.DIV,
                 Opcode.ADC,
                 Opcode.SBC,
                 Opcode.MOV,

@@ -223,11 +223,12 @@ class Compiler:
                     Opcode.MOV, [AddrMode.REG, AddrMode.MEM], [dest_reg, temp_res]
                 )
 
-            elif op in ["+", "-", "*", "mod", "adc", "sbc"]:
+            elif op in ["+", "-", "*", "/", "mod", "adc", "sbc"]:
                 op_map = {
                     "+": Opcode.ADD,
                     "-": Opcode.SUB,
                     "*": Opcode.MUL,
+                    "/": Opcode.DIV,
                     "mod": Opcode.MOD,
                     "adc": Opcode.ADC,
                     "sbc": Opcode.SBC,

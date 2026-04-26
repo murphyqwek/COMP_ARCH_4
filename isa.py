@@ -21,6 +21,7 @@ class Opcode(int, Enum):
     HALT = 15
     ADC = 16
     SBC = 17
+    DIV = 18
 
 
 class AddrMode(int, Enum):
