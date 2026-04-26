@@ -85,7 +85,7 @@ class DataPath:
             ar = self._update_flags_sub(ar, op2 + borrow, ar - op2 - borrow)
             borrow = 0
         self.write(m[0], a[0], ar)
-    
+
     def execute_mod(self, m, a):
         op1 = self.read(m[1], a[1])
         op2 = self.read(m[2], a[2])
@@ -96,8 +96,8 @@ class DataPath:
             ar = op1 % op2
 
         ar = ar & 0xFFFFFFFF
-        
-        self.z = (ar == 0)
+
+        self.z = ar == 0
         self.n = bool((ar >> 31) & 1)
 
         self.c = False
@@ -234,7 +234,14 @@ class ControlUnit:
                     return 3
                 if modes[1] == AddrMode.REG_INDIRECT:
                     return 6
-        if op in [Opcode.ADD, Opcode.SUB, Opcode.ADC, Opcode.SBC, Opcode.MUL, Opcode.MOD]:
+        if op in [
+            Opcode.ADD,
+            Opcode.SUB,
+            Opcode.ADC,
+            Opcode.SBC,
+            Opcode.MUL,
+            Opcode.MOD,
+        ]:
             steps = 0
 
             for m in modes[1:]:
