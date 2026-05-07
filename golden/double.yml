@@ -45,20 +45,22 @@ out_log: |-
   TICK   29 | EXEC: JEQ:ALU@65 + MOV:MEM@67   | RS: ['JEQ:R@65', 'MOV:F@67', 'MOV:F@70', 'ADD:F@73', 'SUB:F@77', 'JMP:F@81']
   TICK   30 | EXEC: MOV:ALU@67 + ADD:ALU@73   | RS: ['MOV:W@67', 'MOV:F@70', 'ADD:W@73', 'SUB:F@77', 'JMP:F@81', 'MOV:F@83']
   TICK   31 | EXEC: MOV:MEM@70 + SUB:ALU@77   | RS: ['MOV:F@70', 'ADD:W@73', 'SUB:W@77', 'JMP:F@81', 'MOV:F@83', 'MOV:F@86']
-  TICK   32 | EXEC: MOV:ALU@70 + JMP:ALU@81   | RS: ['MOV:W@70', 'ADD:W@73', 'SUB:W@77', 'JMP:R@81']
-  TICK   33 | EXEC: IDLE                      | RS: []
-  TICK   34 | EXEC: IDLE                      | RS: ['CMP:F@62']
-  TICK   35 | EXEC: CMP:ALU@62                | RS: ['CMP:W@62', 'JEQ:F@65', 'MOV:F@67']
-  TICK   36 | EXEC: JEQ:ALU@65 + MOV:MEM@67   | RS: ['JEQ:R@65']
-  TICK   37 | EXEC: IDLE                      | RS: []
-  TICK   38 | EXEC: IDLE                      | RS: ['MOV:F@83']
-  TICK   39 | EXEC: MOV:MEM@83                | RS: ['MOV:F@83', 'MOV:F@86', 'HALT:F@89']
-  TICK   40 | EXEC: MOV:ALU@83 + HALT:ALU@89  | RS: ['MOV:W@83', 'MOV:F@86', 'HALT:W@89', 'NOP:F@90', 'NOP:F@91']
-  TICK   41 | EXEC: MOV:MEM@86 + NOP:ALU@90   | RS: ['MOV:F@86', 'HALT:W@89', 'NOP:E@90', 'NOP:F@91', 'NOP:F@92', 'NOP:F@93']
-  TICK   42 | EXEC: MOV:ALU@86 + NOP:ALU@90   | RS: ['MOV:W@86', 'HALT:W@89', 'NOP:E@90', 'NOP:F@91', 'NOP:F@92', 'NOP:F@93']
-  TICK   43 | EXEC: NOP:ALU@90 + NOP:ALU@91   | RS: ['NOP:E@90', 'NOP:E@91', 'NOP:F@92', 'NOP:F@93', 'NOP:F@94', 'NOP:F@95']
+  TICK   32 | EXEC: MOV:ALU@70                | RS: ['MOV:W@70', 'ADD:W@73', 'SUB:W@77', 'JMP:F@81', 'MOV:F@83', 'MOV:F@86']
+  TICK   33 | EXEC: JMP:ALU@81 + MOV:MEM@83   | RS: ['JMP:R@81']
+  TICK   34 | EXEC: IDLE                      | RS: []
+  TICK   35 | EXEC: IDLE                      | RS: ['CMP:F@62']
+  TICK   36 | EXEC: CMP:ALU@62                | RS: ['CMP:W@62', 'JEQ:F@65', 'MOV:F@67']
+  TICK   37 | EXEC: JEQ:ALU@65 + MOV:MEM@67   | RS: ['JEQ:R@65']
+  TICK   38 | EXEC: IDLE                      | RS: []
+  TICK   39 | EXEC: IDLE                      | RS: ['MOV:F@83']
+  TICK   40 | EXEC: MOV:MEM@83                | RS: ['MOV:F@83', 'MOV:F@86', 'HALT:F@89']
+  TICK   41 | EXEC: MOV:ALU@83                | RS: ['MOV:W@83', 'MOV:F@86', 'HALT:F@89', 'NOP:F@90', 'NOP:F@91']
+  TICK   42 | EXEC: MOV:MEM@86                | RS: ['MOV:F@86', 'HALT:F@89', 'NOP:F@90', 'NOP:F@91', 'NOP:F@92', 'NOP:F@93']
+  TICK   43 | EXEC: MOV:ALU@86                | RS: ['MOV:W@86', 'HALT:F@89', 'NOP:F@90', 'NOP:F@91', 'NOP:F@92', 'NOP:F@93']
+  TICK   44 | EXEC: HALT:ALU@89               | RS: ['HALT:W@89', 'NOP:F@90', 'NOP:F@91', 'NOP:F@92', 'NOP:F@93', 'NOP:F@94']
+  TICK   45 | EXEC: NOP:ALU@90                | RS: ['NOP:E@90', 'NOP:F@91', 'NOP:F@92', 'NOP:F@93', 'NOP:F@94', 'NOP:F@95']
 
-  Ticks: 43
+  Ticks: 45
   Output: 4 705032704
 out_code_log: |-
   0000: 00001107  JMP    -> 0016 

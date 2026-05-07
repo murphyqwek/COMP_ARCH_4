@@ -120,8 +120,8 @@ out_log: |-
   TICK  114 | EXEC: JEQ:ALU@31 + MOV:MEM@33   | RS: ['JEQ:R@31']
   TICK  115 | EXEC: IDLE                      | RS: []
   TICK  116 | EXEC: IDLE                      | RS: ['HALT:F@49', 'NOP:F@50']
-  TICK  117 | EXEC: HALT:ALU@49 + NOP:ALU@50  | RS: ['HALT:W@49', 'NOP:E@50', 'NOP:F@51', 'NOP:F@52']
-  TICK  118 | EXEC: NOP:ALU@50 + NOP:ALU@51   | RS: ['NOP:E@50', 'NOP:E@51', 'NOP:F@52', 'NOP:F@53', 'NOP:F@54']
+  TICK  117 | EXEC: HALT:ALU@49               | RS: ['HALT:W@49', 'NOP:F@50', 'NOP:F@51', 'NOP:F@52']
+  TICK  118 | EXEC: NOP:ALU@50                | RS: ['NOP:E@50', 'NOP:F@51', 'NOP:F@52', 'NOP:F@53', 'NOP:F@54']
 
   Ticks: 118
   Output: Hello, World!

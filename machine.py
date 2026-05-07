@@ -30,14 +30,12 @@ class Instruction:
         self.state = InstrState.FETCHING_OPERANDS
         self.result = None
         self.operands = None
-        # !!! Уменьшаем базовую задержку. 0 для регистров, +1 если есть память.
         self.cycles_left = 0
         for m in modes:
             if m in [AddrMode.MEM, AddrMode.REG_INDIRECT]:
                 self.cycles_left += 1
 
     def modifies_sp(self):
-        # Инструкции, которые неявно меняют SP
         return self.opcode in [
             Opcode.PUSH,
             Opcode.POP,
@@ -47,10 +45,8 @@ class Instruction:
         ]
 
     def writes_to_reg(self):
-        # Если нет аргументов или первый аргумент не регистр - не пишет
         if not self.args or not self.modes or self.modes[0] != AddrMode.REG:
             return False
-        # Список исключений: первый аргумент - регистр, но в него не пишем
         if self.opcode in [
             Opcode.CMP,
             Opcode.PUSH,
@@ -64,11 +60,10 @@ class Instruction:
         return True
 
     def get_target_reg(self):
-        """Возвращает индекс регистра, в который пишет инструкция, или None"""
         if self.writes_to_reg():
             return self.args[0]
         if self.modifies_sp():
-            return Registers.SP  # SP это индекс 4
+            return Registers.SP
         return None
 
     def __repr__(self):
@@ -151,28 +146,18 @@ class ControlUnit:
 
         if mode == AddrMode.REG:
             try:
-                # Находим позицию текущей инструкции
                 idx = self.rs.index(current_instr)
-                # Ищем только среди тех, кто стоит в очереди ПЕРЕД нами (программный порядок)
                 for prev in reversed(self.rs[:idx]):
                     if prev.writes_to_reg() and prev.args[0] == val:
-                        # Мы нашли ближайшего производителя.
-                        # Если у него уже есть результат, пробрасываем его.
-                        # Если результата еще нет (None), значит произойдет ошибка логики,
-                        # но check_hazard должен был это предотвратить.
                         return prev.result
             except ValueError:
                 pass
-            # Если производителей в конвейере нет, берем физическое значение из регистра
             return self.dp.regs[val]
 
         if mode == AddrMode.MEM:
-            # Для памяти в CISC лучше не делать Forwarding без проверки адресов.
-            # Читаем честно из памяти (инструкция подождет записи в check_hazard).
             return self.dp.mem[val]
 
         if mode == AddrMode.REG_INDIRECT:
-            # Сначала форвардим адрес из регистра, потом читаем память
             addr = self._read_forward(AddrMode.REG, val, current_instr)
             if addr is None:
                 return None
@@ -187,30 +172,21 @@ class ControlUnit:
         except ValueError:
             return False
 
-        # --- 1. RAW (Read After Write) ---
         for i, (m, a) in enumerate(zip(instr.modes, instr.args)):
-            # Читаем ли мы из этого операнда?
-            # В PUSH и CMP читается даже 0-й аргумент. В остальных - только со 2-го.
             is_read = (i > 0) or (instr.opcode in [Opcode.CMP, Opcode.PUSH])
-
             if is_read and m == AddrMode.REG:
                 for prev in older:
-                    # Если старая инструкция пишет в наш регистр (включая неявный SP)
                     if prev.get_target_reg() == a:
                         if prev.result is None and prev.state != InstrState.RETIRED:
                             return True
 
-        # --- 2. WAW (Write After Write) ---
-        # Не даем инструкциям, пишущим в одну цель, "перемешиваться"
         curr_target = instr.get_target_reg()
-        if curr_target is not None:
+        if curr_target is None:
             for prev in older:
                 if prev.get_target_reg() == curr_target:
                     if prev.state != InstrState.RETIRED:
                         return True
 
-        # --- 3. Memory & Stack Serialization ---
-        # Гарантируем, что порядок работы с памятью и стеком сохраняется
         curr_uses_mem = any(
             mod in [AddrMode.MEM, AddrMode.REG_INDIRECT] for mod in instr.modes
         )
@@ -225,8 +201,6 @@ class ControlUnit:
                 if prev_uses_mem and prev.state != InstrState.RETIRED:
                     return True
 
-        # --- 4. Flag Hazard ---
-        # Переходы и арифметика с переносом должны ждать флагов от АЛУ
         if instr.opcode in [Opcode.JEQ, Opcode.JGT, Opcode.ADC, Opcode.SBC]:
             for prev in older:
                 if prev.opcode in [
@@ -244,7 +218,6 @@ class ControlUnit:
         return False
 
     def step_fetch(self):
-        # !!! Суперскаляр должен читать много слов за такт, чтобы "прокормить" конвейер
         fetch_width = 4 if self.superscalar else 1
         limit = 12 if self.superscalar else 5
         for _ in range(fetch_width):
@@ -253,7 +226,6 @@ class ControlUnit:
                 self.fetch_pc += 1
 
     def step_decode(self):
-        # !!! Декодируем несколько инструкций за такт
         decode_width = 2 if self.superscalar else 1
         for _ in range(decode_width):
             if self.fetch_buffer:
@@ -266,7 +238,7 @@ class ControlUnit:
                         args = [self.fetch_buffer.pop(0)[1] for _ in range(cnt)]
                         self.decode_queue.append(Instruction(op, ms, args, pc))
                     else:
-                        break  # Ждем догрузки слов
+                        break
                 except ValueError:
                     self.fetch_buffer.pop(0)
 
@@ -281,7 +253,6 @@ class ControlUnit:
         exec_limit = 2 if self.superscalar else 1
         executed_this_tick = 0
 
-        # Итерируемся по копии списка, так как мы можем изменять оригинал (self.rs)
         for instr in list(self.rs):
             if executed_this_tick >= exec_limit:
                 break
@@ -350,12 +321,10 @@ class ControlUnit:
                     instr.state = InstrState.WRITING_BACK
 
                 elif op == Opcode.PUSH:
-                    # В стеке результат - это само значение, которое пушим
                     instr.result = vals[0]
                     instr.state = InstrState.WRITING_BACK
 
                 elif op == Opcode.POP:
-                    # Читаем из памяти по ТЕКУЩЕМУ SP (в Retire мы его сдвинем)
                     instr.result = self.dp.mem[self.dp.regs[Registers.SP]]
                     instr.state = InstrState.WRITING_BACK
 
@@ -371,7 +340,6 @@ class ControlUnit:
             if instr.state == InstrState.RETIRED:
                 continue
 
-            # --- Работа со стеком (Строго In-Order) ---
             if instr.opcode == Opcode.PUSH:
                 self.dp.regs[Registers.SP] -= 1
                 self.dp.mem[self.dp.regs[Registers.SP]] = instr.result
@@ -379,7 +347,6 @@ class ControlUnit:
                 self.dp.regs[instr.args[0]] = instr.result
                 self.dp.regs[Registers.SP] += 1
 
-            # --- Остальное ---
             elif instr.opcode == Opcode.HALT:
                 self.halted = True
                 break
@@ -414,7 +381,6 @@ class ControlUnit:
 
             instr.state = InstrState.RETIRED
 
-    # ... (методы sequences без изменений) ...
     def process_call_sequence(self):
         self.seq_step += 1
         if self.seq_step == 1:
@@ -500,10 +466,9 @@ class ControlUnit:
 
     def tick_machine(self):
         self.tick += 1
-        self.current_executing = []  # Очищаем список перед началом такта
+        self.current_executing = []
 
         if self.cu_state != CUState.NORMAL:
-            # Обработка последовательностей (Interrupt, Call, Ret)
             if self.cu_state == CUState.INTERRUPT_SEQ:
                 self.process_interrupt_sequence()
             elif self.cu_state == CUState.IRET_SEQ:
@@ -516,7 +481,6 @@ class ControlUnit:
             if self.schedule and self.tick >= self.schedule[0]["tick"]:
                 event = self.schedule.pop(0)
                 if self.ie:
-                    # Определяем PC для возврата (инструкция, которая должна была выполниться следующей)
                     ret_pc = (
                         self.rs[0].pc
                         if self.rs
@@ -537,19 +501,16 @@ class ControlUnit:
                     self.seq_data = {"char": event["char"], "ret_pc": ret_pc}
                     return
 
-            # Стадии конвейера
             self.step_retire()
-            self.step_execute()  # Здесь заполняется current_executing
+            self.step_execute()
             self.step_dispatch()
             self.step_decode()
             self.step_fetch()
 
-        # Вывод логов (каждые N тактов или в начале)
         if self.tick < 500:
             exec_s = (
                 " + ".join(self.current_executing) if self.current_executing else "IDLE"
             )
-            # Форматируем строку для наглядности
             logging.info(
                 f"TICK {self.tick:4} | "
                 f"EXEC: {exec_s:25} | "
@@ -560,30 +521,24 @@ class ControlUnit:
 def main(target, sched_file=None, superscalar_str="True"):
     logging.basicConfig(level=logging.INFO, format="%(message)s")
 
-    # 1. Загрузка памяти
     with open(target, "rb") as f:
         mem = from_bytes(f.read())
 
-    # 2. Загрузка расписания прерываний
     sch = []
     if sched_file and sched_file.lower() != "none":
         try:
             with open(sched_file, "r") as f:
                 sch = [{"tick": t, "char": c} for t, c in ast.literal_eval(f.read())]
-        except (FileNotFoundError, ValueError, SyntaxError) as e:
-            # Если это не файл, а просто флаг, переданный по ошибке как 2-й аргумент, игнорируем
+        except (FileNotFoundError, ValueError, SyntaxError):
             pass
 
-    # 3. Определение режима работы (SS или SC)
     is_ss = superscalar_str.lower() not in ["false", "0", "off"]
-
     mode_name = "SS (Superscalar)" if is_ss else "SC (Scalar)"
     logging.info(f"--- STARTING SIMULATION IN {mode_name} MODE ---")
 
     cu = ControlUnit(DataPath(mem), sch, superscalar=is_ss)
 
     try:
-        # Увеличим лимит тактов для больших программ
         while cu.tick < 500000 and not cu.halted:
             cu.tick_machine()
     except StopIteration:
