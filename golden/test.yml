@@ -21,140 +21,180 @@ in_source: |-
 in_schedule: |-
   []
 out_log: |-
-  TICK:       0 | PC:    2 | JMP     #14
-  TICK:       4 | PC:   17 | MOV     R0, #13
-  TICK:      13 | PC:   20 | MOV     [7], R0
-  TICK:      19 | PC:   23 | MOV     [5], R0 & MOV     R1, #10           (SUPERSCALAR)
-  TICK:      25 | PC:   29 | MOV     R2, [9]
-  TICK:      35 | PC:   32 | CMP     R2, #0
-  TICK:      39 | PC:   34 | JEQ     #50
-  TICK:      40 | PC:   37 | MOV     R0, [R1]
-  TICK:      51 | PC:   40 | MOV     [6], R0 & ADD     R1, R1, #1        (SUPERSCALAR)
-  TICK:      58 | PC:   48 | SUB     R2, R2, #1
-  TICK:      68 | PC:   50 | JMP     #29
-  TICK:      69 | PC:   32 | CMP     R2, #0
-  TICK:      77 | PC:   34 | JEQ     #50
-  TICK:      78 | PC:   53 | MOV     R1, [7] & MOV     R2, #13           (SUPERSCALAR)
-  TICK:      88 | PC:   59 | CMP     R1, R2 & MOV     R0, #1            (SUPERSCALAR)
-  TICK:      97 | PC:   64 | JEQ     #67
-  TICK:     101 | PC:   70 | CMP     R0, #0
-  TICK:     109 | PC:   72 | JEQ     #77
-  TICK:     110 | PC:   75 | MOV     R0, #100
-  TICK:     118 | PC:   77 | JMP     #80
-  TICK:     119 | PC:   83 | MOV     [7], R0
-  TICK:     129 | PC:   86 | MOV     R0, [7]
-  TICK:     135 | PC:   89 | MOV     [5], R0 & MOV     R1, #10           (SUPERSCALAR)
-  TICK:     141 | PC:   95 | MOV     R2, [9]
-  TICK:     151 | PC:   98 | CMP     R2, #0
-  TICK:     155 | PC:  100 | JEQ     #116
-  TICK:     156 | PC:  103 | MOV     R0, [R1]
-  TICK:     167 | PC:  106 | MOV     [6], R0 & ADD     R1, R1, #1        (SUPERSCALAR)
-  TICK:     174 | PC:  114 | SUB     R2, R2, #1
-  TICK:     184 | PC:  116 | JMP     #95
-  TICK:     185 | PC:   98 | CMP     R2, #0
-  TICK:     193 | PC:  100 | JEQ     #116
-  TICK:     194 | PC:  119 | MOV     R0, #1
-  TICK:     203 | PC:  122 | MOV     [11], R0 & MOV     R1, #5            (SUPERSCALAR)
-  TICK:     209 | PC:  128 | MOV     R0, [11]
-  TICK:     219 | PC:  131 | CMP     R0, R1
-  TICK:     223 | PC:  133 | JGT     #162
-  TICK:     224 | PC:  136 | MOV     R1, [11]
-  TICK:     233 | PC:  138 | PUSH    R1    & MOV     R2, #10           (SUPERSCALAR)
-  TICK:     239 | PC:  143 | POP     R1
-  TICK:     249 | PC:  147 | ADD     R0, R1, R2
-  TICK:     255 | PC:  150 | MOV     [12], R0
-  TICK:     261 | PC:  153 | MOV     R0, [11]
-  TICK:     268 | PC:  157 | ADD     R0, R0, #1
-  TICK:     274 | PC:  160 | MOV     [11], R0
-  TICK:     279 | PC:  162 | JMP     #122
-  TICK:     280 | PC:  125 | MOV     R1, #5 & MOV     R0, [11]          (SUPERSCALAR)
-  TICK:     290 | PC:  131 | CMP     R0, R1
-  TICK:     298 | PC:  133 | JGT     #162
-  TICK:     299 | PC:  136 | MOV     R1, [11]
-  TICK:     308 | PC:  138 | PUSH    R1    & MOV     R2, #10           (SUPERSCALAR)
-  TICK:     314 | PC:  143 | POP     R1
-  TICK:     324 | PC:  147 | ADD     R0, R1, R2
-  TICK:     330 | PC:  150 | MOV     [12], R0
-  TICK:     336 | PC:  153 | MOV     R0, [11]
-  TICK:     343 | PC:  157 | ADD     R0, R0, #1
-  TICK:     349 | PC:  160 | MOV     [11], R0
-  TICK:     354 | PC:  162 | JMP     #122
-  TICK:     355 | PC:  125 | MOV     R1, #5 & MOV     R0, [11]          (SUPERSCALAR)
-  TICK:     365 | PC:  131 | CMP     R0, R1
-  TICK:     373 | PC:  133 | JGT     #162
-  TICK:     374 | PC:  136 | MOV     R1, [11]
-  TICK:     383 | PC:  138 | PUSH    R1    & MOV     R2, #10           (SUPERSCALAR)
-  TICK:     389 | PC:  143 | POP     R1
-  TICK:     399 | PC:  147 | ADD     R0, R1, R2
-  TICK:     405 | PC:  150 | MOV     [12], R0
-  TICK:     411 | PC:  153 | MOV     R0, [11]
-  TICK:     418 | PC:  157 | ADD     R0, R0, #1
-  TICK:     424 | PC:  160 | MOV     [11], R0
-  TICK:     429 | PC:  162 | JMP     #122
-  TICK:     430 | PC:  125 | MOV     R1, #5 & MOV     R0, [11]          (SUPERSCALAR)
-  TICK:     440 | PC:  131 | CMP     R0, R1
-  TICK:     448 | PC:  133 | JGT     #162
-  TICK:     449 | PC:  136 | MOV     R1, [11]
-  TICK:     458 | PC:  138 | PUSH    R1    & MOV     R2, #10           (SUPERSCALAR)
-  TICK:     464 | PC:  143 | POP     R1
-  TICK:     474 | PC:  147 | ADD     R0, R1, R2
-  TICK:     480 | PC:  150 | MOV     [12], R0
-  TICK:     486 | PC:  153 | MOV     R0, [11]
-  TICK:     493 | PC:  157 | ADD     R0, R0, #1
-  TICK:     499 | PC:  160 | MOV     [11], R0
-  TICK:     504 | PC:  162 | JMP     #122
-  TICK:     505 | PC:  125 | MOV     R1, #5 & MOV     R0, [11]          (SUPERSCALAR)
-  TICK:     515 | PC:  131 | CMP     R0, R1
-  TICK:     523 | PC:  133 | JGT     #162
-  TICK:     524 | PC:  136 | MOV     R1, [11]
-  TICK:     533 | PC:  138 | PUSH    R1    & MOV     R2, #10           (SUPERSCALAR)
-  TICK:     539 | PC:  143 | POP     R1
-  TICK:     549 | PC:  147 | ADD     R0, R1, R2
-  TICK:     555 | PC:  150 | MOV     [12], R0
-  TICK:     561 | PC:  153 | MOV     R0, [11]
-  TICK:     568 | PC:  157 | ADD     R0, R0, #1
-  TICK:     574 | PC:  160 | MOV     [11], R0
-  TICK:     579 | PC:  162 | JMP     #122
-  TICK:     580 | PC:  125 | MOV     R1, #5 & MOV     R0, [11]          (SUPERSCALAR)
-  TICK:     590 | PC:  131 | CMP     R0, R1
-  TICK:     598 | PC:  133 | JGT     #162
-  TICK:     599 | PC:  165 | MOV     R0, [12]
-  TICK:     609 | PC:  168 | MOV     [7], R0
-  TICK:     615 | PC:  171 | MOV     R0, [7]
-  TICK:     621 | PC:  174 | MOV     [5], R0 & MOV     R1, #10           (SUPERSCALAR)
-  TICK:     627 | PC:  180 | MOV     R2, [9]
-  TICK:     637 | PC:  183 | CMP     R2, #0
-  TICK:     641 | PC:  185 | JEQ     #201
-  TICK:     642 | PC:  188 | MOV     R0, [R1]
-  TICK:     653 | PC:  191 | MOV     [6], R0 & ADD     R1, R1, #1        (SUPERSCALAR)
-  TICK:     660 | PC:  199 | SUB     R2, R2, #1
-  TICK:     670 | PC:  201 | JMP     #180
-  TICK:     671 | PC:  183 | CMP     R2, #0
-  TICK:     679 | PC:  185 | JEQ     #201
-  TICK:     680 | PC:  204 | MOV     R1, [8] & MOV     R2, #5            (SUPERSCALAR)
-  TICK:     690 | PC:  210 | CMP     R1, R2 & MOV     R0, #1            (SUPERSCALAR)
-  TICK:     699 | PC:  215 | JEQ     #218
-  TICK:     703 | PC:  221 | CMP     R0, #0
-  TICK:     711 | PC:  223 | JEQ     #228
-  TICK:     712 | PC:  226 | MOV     R1, #10
-  TICK:     720 | PC:  228 | JMP     #231
-  TICK:     721 | PC:  233 | PUSH    R1    & MOV     R0, #5            (SUPERSCALAR)
-  TICK:     730 | PC:  239 | MOV     [8], R0 & POP     R1                (SUPERSCALAR)
-  TICK:     739 | PC:  245 | ADD     R0, R1, R2
-  TICK:     750 | PC:  248 | MOV     [5], R0 & MOV     R1, #10           (SUPERSCALAR)
-  TICK:     756 | PC:  254 | MOV     R2, [9]
-  TICK:     766 | PC:  257 | CMP     R2, #0
-  TICK:     770 | PC:  259 | JEQ     #275
-  TICK:     771 | PC:  262 | MOV     R0, [R1]
-  TICK:     782 | PC:  265 | MOV     [6], R0 & ADD     R1, R1, #1        (SUPERSCALAR)
-  TICK:     789 | PC:  273 | SUB     R2, R2, #1
-  TICK:     799 | PC:  275 | JMP     #254
-  TICK:     800 | PC:  257 | CMP     R2, #0
-  TICK:     808 | PC:  259 | JEQ     #275
-  TICK:     809 | PC:  276 | HALT    
-  --- HALTED ---
+  --- STARTING SIMULATION IN SS (Superscalar) MODE ---
+  TICK    1 | EXEC: IDLE                      | RS: []
+  TICK    2 | EXEC: IDLE                      | RS: []
+  TICK    3 | EXEC: IDLE                      | RS: ['JMP:F@0', 'JMP:F@2']
+  TICK    4 | EXEC: JMP:ALU@0 + JMP:ALU@2     | RS: ['JMP:R@0']
+  TICK    5 | EXEC: IDLE                      | RS: []
+  TICK    6 | EXEC: IDLE                      | RS: ['MOV:F@14']
+  TICK    7 | EXEC: MOV:ALU@14                | RS: ['MOV:W@14', 'MOV:F@17']
+  TICK    8 | EXEC: MOV:MEM@17                | RS: ['MOV:F@17', 'MOV:F@20', 'MOV:F@23']
+  TICK    9 | EXEC: MOV:ALU@17 + MOV:ALU@23   | RS: ['MOV:W@17', 'MOV:F@20', 'MOV:W@23', 'MOV:F@26']
+  TICK   10 | EXEC: MOV:MEM@20                | RS: ['MOV:F@20', 'MOV:W@23', 'MOV:F@26', 'CMP:F@29', 'JEQ:F@32']
+  TICK   11 | EXEC: MOV:ALU@20                | RS: ['MOV:W@20', 'MOV:W@23', 'MOV:F@26', 'CMP:F@29', 'JEQ:F@32', 'MOV:F@34']
+  TICK   12 | EXEC: MOV:MEM@26                | RS: ['MOV:F@26', 'CMP:F@29', 'JEQ:F@32', 'MOV:F@34', 'MOV:F@37']
+  TICK   13 | EXEC: MOV:ALU@26 + CMP:ALU@29   | RS: ['MOV:W@26', 'CMP:W@29', 'JEQ:F@32', 'MOV:F@34', 'MOV:F@37', 'ADD:F@40']
+  TICK   14 | EXEC: JEQ:ALU@32 + MOV:MEM@34   | RS: ['JEQ:R@32', 'MOV:F@34', 'MOV:F@37', 'ADD:F@40', 'SUB:F@44', 'JMP:F@48']
+  TICK   15 | EXEC: MOV:ALU@34 + ADD:ALU@40   | RS: ['MOV:W@34', 'MOV:F@37', 'ADD:W@40', 'SUB:F@44', 'JMP:F@48', 'MOV:F@50']
+  TICK   16 | EXEC: MOV:MEM@37 + SUB:ALU@44   | RS: ['MOV:F@37', 'ADD:W@40', 'SUB:W@44', 'JMP:F@48', 'MOV:F@50', 'MOV:F@53']
+  TICK   17 | EXEC: MOV:ALU@37 + JMP:ALU@48   | RS: ['MOV:W@37', 'ADD:W@40', 'SUB:W@44', 'JMP:R@48']
+  TICK   18 | EXEC: IDLE                      | RS: []
+  TICK   19 | EXEC: IDLE                      | RS: ['CMP:F@29']
+  TICK   20 | EXEC: CMP:ALU@29                | RS: ['CMP:W@29', 'JEQ:F@32', 'MOV:F@34']
+  TICK   21 | EXEC: JEQ:ALU@32 + MOV:MEM@34   | RS: ['JEQ:R@32']
+  TICK   22 | EXEC: IDLE                      | RS: []
+  TICK   23 | EXEC: IDLE                      | RS: ['MOV:F@50']
+  TICK   24 | EXEC: MOV:MEM@50                | RS: ['MOV:F@50', 'MOV:F@53']
+  TICK   25 | EXEC: MOV:ALU@50 + MOV:ALU@53   | RS: ['MOV:W@50', 'MOV:W@53', 'CMP:F@56', 'MOV:F@59']
+  TICK   26 | EXEC: CMP:ALU@56 + MOV:ALU@59   | RS: ['CMP:W@56', 'MOV:W@59', 'JEQ:F@62']
+  TICK   27 | EXEC: JEQ:ALU@62                | RS: ['JEQ:R@62']
+  TICK   28 | EXEC: IDLE                      | RS: []
+  TICK   29 | EXEC: IDLE                      | RS: ['CMP:F@67']
+  TICK   30 | EXEC: CMP:ALU@67                | RS: ['CMP:W@67', 'JEQ:F@70', 'MOV:F@72']
+  TICK   31 | EXEC: JEQ:ALU@70 + MOV:ALU@72   | RS: ['JEQ:R@70', 'MOV:W@72', 'JMP:F@75']
+  TICK   32 | EXEC: JMP:ALU@75                | RS: ['JMP:R@75']
+  TICK   33 | EXEC: IDLE                      | RS: []
+  TICK   34 | EXEC: IDLE                      | RS: ['MOV:F@80']
+  TICK   35 | EXEC: MOV:MEM@80                | RS: ['MOV:F@80', 'MOV:F@83']
+  TICK   36 | EXEC: MOV:ALU@80                | RS: ['MOV:W@80', 'MOV:F@83', 'MOV:F@86', 'MOV:F@89']
+  TICK   37 | EXEC: MOV:MEM@83 + MOV:ALU@89   | RS: ['MOV:F@83', 'MOV:F@86', 'MOV:W@89', 'MOV:F@92']
+  TICK   38 | EXEC: MOV:ALU@83                | RS: ['MOV:W@83', 'MOV:F@86', 'MOV:W@89', 'MOV:F@92', 'CMP:F@95', 'JEQ:F@98']
+  TICK   39 | EXEC: MOV:MEM@86                | RS: ['MOV:F@86', 'MOV:W@89', 'MOV:F@92', 'CMP:F@95', 'JEQ:F@98', 'MOV:F@100']
+  TICK   40 | EXEC: MOV:ALU@86                | RS: ['MOV:W@86', 'MOV:W@89', 'MOV:F@92', 'CMP:F@95', 'JEQ:F@98', 'MOV:F@100']
+  TICK   41 | EXEC: MOV:MEM@92                | RS: ['MOV:F@92', 'CMP:F@95', 'JEQ:F@98', 'MOV:F@100', 'MOV:F@103', 'ADD:F@106']
+  TICK   42 | EXEC: MOV:ALU@92 + CMP:ALU@95   | RS: ['MOV:W@92', 'CMP:W@95', 'JEQ:F@98', 'MOV:F@100', 'MOV:F@103', 'ADD:F@106']
+  TICK   43 | EXEC: JEQ:ALU@98 + MOV:MEM@100  | RS: ['JEQ:R@98', 'MOV:F@100', 'MOV:F@103', 'ADD:F@106', 'SUB:F@110', 'JMP:F@114']
+  TICK   44 | EXEC: MOV:ALU@100 + ADD:ALU@106 | RS: ['MOV:W@100', 'MOV:F@103', 'ADD:W@106', 'SUB:F@110', 'JMP:F@114', 'MOV:F@116']
+  TICK   45 | EXEC: MOV:MEM@103 + SUB:ALU@110 | RS: ['MOV:F@103', 'ADD:W@106', 'SUB:W@110', 'JMP:F@114', 'MOV:F@116', 'MOV:F@119']
+  TICK   46 | EXEC: MOV:ALU@103 + JMP:ALU@114 | RS: ['MOV:W@103', 'ADD:W@106', 'SUB:W@110', 'JMP:R@114']
+  TICK   47 | EXEC: IDLE                      | RS: []
+  TICK   48 | EXEC: IDLE                      | RS: ['CMP:F@95']
+  TICK   49 | EXEC: CMP:ALU@95                | RS: ['CMP:W@95', 'JEQ:F@98', 'MOV:F@100']
+  TICK   50 | EXEC: JEQ:ALU@98 + MOV:MEM@100  | RS: ['JEQ:R@98']
+  TICK   51 | EXEC: IDLE                      | RS: []
+  TICK   52 | EXEC: IDLE                      | RS: ['MOV:F@116']
+  TICK   53 | EXEC: MOV:ALU@116               | RS: ['MOV:W@116', 'MOV:F@119']
+  TICK   54 | EXEC: MOV:MEM@119               | RS: ['MOV:F@119', 'MOV:F@122', 'MOV:F@125']
+  TICK   55 | EXEC: MOV:ALU@119 + MOV:ALU@122 | RS: ['MOV:W@119', 'MOV:W@122', 'MOV:F@125', 'CMP:F@128']
+  TICK   56 | EXEC: MOV:MEM@125               | RS: ['MOV:F@125', 'CMP:F@128', 'JGT:F@131', 'MOV:F@133']
+  TICK   57 | EXEC: MOV:ALU@125 + CMP:ALU@128 | RS: ['MOV:W@125', 'CMP:W@128', 'JGT:F@131', 'MOV:F@133', 'PUSH:F@136']
+  TICK   58 | EXEC: JGT:ALU@131 + MOV:MEM@133 | RS: ['JGT:R@131', 'MOV:F@133', 'PUSH:F@136', 'MOV:F@138', 'POP:F@141']
+  TICK   59 | EXEC: MOV:ALU@133 + MOV:ALU@138 | RS: ['MOV:W@133', 'PUSH:F@136', 'MOV:W@138', 'POP:F@141', 'ADD:F@143']
+  TICK   60 | EXEC: PUSH:ALU@136              | RS: ['PUSH:W@136', 'MOV:W@138', 'POP:F@141', 'ADD:F@143', 'MOV:F@147']
+  TICK   61 | EXEC: POP:ALU@141 + ADD:ALU@143 | RS: ['POP:W@141', 'ADD:W@143', 'MOV:F@147', 'MOV:F@150']
+  TICK   62 | EXEC: MOV:MEM@147               | RS: ['MOV:F@147', 'MOV:F@150', 'ADD:F@153', 'MOV:F@157']
+  TICK   63 | EXEC: MOV:ALU@147               | RS: ['MOV:W@147', 'MOV:F@150', 'ADD:F@153', 'MOV:F@157', 'JMP:F@160']
+  TICK   64 | EXEC: MOV:MEM@150 + JMP:ALU@160 | RS: ['MOV:F@150', 'ADD:F@153', 'MOV:F@157', 'JMP:R@160']
+  TICK   65 | EXEC: MOV:ALU@150               | RS: ['MOV:W@150', 'ADD:F@153', 'MOV:F@157', 'JMP:R@160']
+  TICK   66 | EXEC: ADD:ALU@153 + MOV:MEM@157 | RS: ['ADD:W@153', 'MOV:F@157', 'JMP:R@160', 'MOV:F@122']
+  TICK   67 | EXEC: MOV:ALU@157 + MOV:ALU@122 | RS: ['MOV:W@157', 'JMP:R@160', 'MOV:W@122', 'MOV:F@125']
+  TICK   68 | EXEC: MOV:MEM@125               | RS: ['MOV:F@125', 'CMP:F@128', 'JGT:F@131']
+  TICK   69 | EXEC: MOV:ALU@125 + CMP:ALU@128 | RS: ['MOV:W@125', 'CMP:W@128', 'JGT:F@131', 'MOV:F@133', 'PUSH:F@136']
+  TICK   70 | EXEC: JGT:ALU@131 + MOV:MEM@133 | RS: ['JGT:R@131', 'MOV:F@133', 'PUSH:F@136', 'MOV:F@138']
+  TICK   71 | EXEC: MOV:ALU@133 + MOV:ALU@138 | RS: ['MOV:W@133', 'PUSH:F@136', 'MOV:W@138', 'POP:F@141']
+  TICK   72 | EXEC: PUSH:ALU@136              | RS: ['PUSH:W@136', 'MOV:W@138', 'POP:F@141', 'ADD:F@143', 'MOV:F@147']
+  TICK   73 | EXEC: POP:ALU@141 + ADD:ALU@143 | RS: ['POP:W@141', 'ADD:W@143', 'MOV:F@147', 'MOV:F@150']
+  TICK   74 | EXEC: MOV:MEM@147               | RS: ['MOV:F@147', 'MOV:F@150', 'ADD:F@153']
+  TICK   75 | EXEC: MOV:ALU@147               | RS: ['MOV:W@147', 'MOV:F@150', 'ADD:F@153', 'MOV:F@157', 'JMP:F@160']
+  TICK   76 | EXEC: MOV:MEM@150 + JMP:ALU@160 | RS: ['MOV:F@150', 'ADD:F@153', 'MOV:F@157', 'JMP:R@160']
+  TICK   77 | EXEC: MOV:ALU@150               | RS: ['MOV:W@150', 'ADD:F@153', 'MOV:F@157', 'JMP:R@160']
+  TICK   78 | EXEC: ADD:ALU@153 + MOV:MEM@157 | RS: ['ADD:W@153', 'MOV:F@157', 'JMP:R@160', 'MOV:F@122']
+  TICK   79 | EXEC: MOV:ALU@157 + MOV:ALU@122 | RS: ['MOV:W@157', 'JMP:R@160', 'MOV:W@122', 'MOV:F@125']
+  TICK   80 | EXEC: MOV:MEM@125               | RS: ['MOV:F@125', 'CMP:F@128', 'JGT:F@131']
+  TICK   81 | EXEC: MOV:ALU@125 + CMP:ALU@128 | RS: ['MOV:W@125', 'CMP:W@128', 'JGT:F@131', 'MOV:F@133', 'PUSH:F@136']
+  TICK   82 | EXEC: JGT:ALU@131 + MOV:MEM@133 | RS: ['JGT:R@131', 'MOV:F@133', 'PUSH:F@136', 'MOV:F@138']
+  TICK   83 | EXEC: MOV:ALU@133 + MOV:ALU@138 | RS: ['MOV:W@133', 'PUSH:F@136', 'MOV:W@138', 'POP:F@141']
+  TICK   84 | EXEC: PUSH:ALU@136              | RS: ['PUSH:W@136', 'MOV:W@138', 'POP:F@141', 'ADD:F@143', 'MOV:F@147']
+  TICK   85 | EXEC: POP:ALU@141 + ADD:ALU@143 | RS: ['POP:W@141', 'ADD:W@143', 'MOV:F@147', 'MOV:F@150']
+  TICK   86 | EXEC: MOV:MEM@147               | RS: ['MOV:F@147', 'MOV:F@150', 'ADD:F@153']
+  TICK   87 | EXEC: MOV:ALU@147               | RS: ['MOV:W@147', 'MOV:F@150', 'ADD:F@153', 'MOV:F@157', 'JMP:F@160']
+  TICK   88 | EXEC: MOV:MEM@150 + JMP:ALU@160 | RS: ['MOV:F@150', 'ADD:F@153', 'MOV:F@157', 'JMP:R@160']
+  TICK   89 | EXEC: MOV:ALU@150               | RS: ['MOV:W@150', 'ADD:F@153', 'MOV:F@157', 'JMP:R@160']
+  TICK   90 | EXEC: ADD:ALU@153 + MOV:MEM@157 | RS: ['ADD:W@153', 'MOV:F@157', 'JMP:R@160', 'MOV:F@122']
+  TICK   91 | EXEC: MOV:ALU@157 + MOV:ALU@122 | RS: ['MOV:W@157', 'JMP:R@160', 'MOV:W@122', 'MOV:F@125']
+  TICK   92 | EXEC: MOV:MEM@125               | RS: ['MOV:F@125', 'CMP:F@128', 'JGT:F@131']
+  TICK   93 | EXEC: MOV:ALU@125 + CMP:ALU@128 | RS: ['MOV:W@125', 'CMP:W@128', 'JGT:F@131', 'MOV:F@133', 'PUSH:F@136']
+  TICK   94 | EXEC: JGT:ALU@131 + MOV:MEM@133 | RS: ['JGT:R@131', 'MOV:F@133', 'PUSH:F@136', 'MOV:F@138']
+  TICK   95 | EXEC: MOV:ALU@133 + MOV:ALU@138 | RS: ['MOV:W@133', 'PUSH:F@136', 'MOV:W@138', 'POP:F@141']
+  TICK   96 | EXEC: PUSH:ALU@136              | RS: ['PUSH:W@136', 'MOV:W@138', 'POP:F@141', 'ADD:F@143', 'MOV:F@147']
+  TICK   97 | EXEC: POP:ALU@141 + ADD:ALU@143 | RS: ['POP:W@141', 'ADD:W@143', 'MOV:F@147', 'MOV:F@150']
+  TICK   98 | EXEC: MOV:MEM@147               | RS: ['MOV:F@147', 'MOV:F@150', 'ADD:F@153']
+  TICK   99 | EXEC: MOV:ALU@147               | RS: ['MOV:W@147', 'MOV:F@150', 'ADD:F@153', 'MOV:F@157', 'JMP:F@160']
+  TICK  100 | EXEC: MOV:MEM@150 + JMP:ALU@160 | RS: ['MOV:F@150', 'ADD:F@153', 'MOV:F@157', 'JMP:R@160']
+  TICK  101 | EXEC: MOV:ALU@150               | RS: ['MOV:W@150', 'ADD:F@153', 'MOV:F@157', 'JMP:R@160']
+  TICK  102 | EXEC: ADD:ALU@153 + MOV:MEM@157 | RS: ['ADD:W@153', 'MOV:F@157', 'JMP:R@160', 'MOV:F@122']
+  TICK  103 | EXEC: MOV:ALU@157 + MOV:ALU@122 | RS: ['MOV:W@157', 'JMP:R@160', 'MOV:W@122', 'MOV:F@125']
+  TICK  104 | EXEC: MOV:MEM@125               | RS: ['MOV:F@125', 'CMP:F@128', 'JGT:F@131']
+  TICK  105 | EXEC: MOV:ALU@125 + CMP:ALU@128 | RS: ['MOV:W@125', 'CMP:W@128', 'JGT:F@131', 'MOV:F@133', 'PUSH:F@136']
+  TICK  106 | EXEC: JGT:ALU@131 + MOV:MEM@133 | RS: ['JGT:R@131', 'MOV:F@133', 'PUSH:F@136', 'MOV:F@138']
+  TICK  107 | EXEC: MOV:ALU@133 + MOV:ALU@138 | RS: ['MOV:W@133', 'PUSH:F@136', 'MOV:W@138', 'POP:F@141']
+  TICK  108 | EXEC: PUSH:ALU@136              | RS: ['PUSH:W@136', 'MOV:W@138', 'POP:F@141', 'ADD:F@143', 'MOV:F@147']
+  TICK  109 | EXEC: POP:ALU@141 + ADD:ALU@143 | RS: ['POP:W@141', 'ADD:W@143', 'MOV:F@147', 'MOV:F@150']
+  TICK  110 | EXEC: MOV:MEM@147               | RS: ['MOV:F@147', 'MOV:F@150', 'ADD:F@153']
+  TICK  111 | EXEC: MOV:ALU@147               | RS: ['MOV:W@147', 'MOV:F@150', 'ADD:F@153', 'MOV:F@157', 'JMP:F@160']
+  TICK  112 | EXEC: MOV:MEM@150 + JMP:ALU@160 | RS: ['MOV:F@150', 'ADD:F@153', 'MOV:F@157', 'JMP:R@160']
+  TICK  113 | EXEC: MOV:ALU@150               | RS: ['MOV:W@150', 'ADD:F@153', 'MOV:F@157', 'JMP:R@160']
+  TICK  114 | EXEC: ADD:ALU@153 + MOV:MEM@157 | RS: ['ADD:W@153', 'MOV:F@157', 'JMP:R@160', 'MOV:F@122']
+  TICK  115 | EXEC: MOV:ALU@157 + MOV:ALU@122 | RS: ['MOV:W@157', 'JMP:R@160', 'MOV:W@122', 'MOV:F@125']
+  TICK  116 | EXEC: MOV:MEM@125               | RS: ['MOV:F@125', 'CMP:F@128', 'JGT:F@131']
+  TICK  117 | EXEC: MOV:ALU@125 + CMP:ALU@128 | RS: ['MOV:W@125', 'CMP:W@128', 'JGT:F@131', 'MOV:F@133', 'PUSH:F@136']
+  TICK  118 | EXEC: JGT:ALU@131 + MOV:MEM@133 | RS: ['JGT:R@131']
+  TICK  119 | EXEC: IDLE                      | RS: []
+  TICK  120 | EXEC: IDLE                      | RS: ['MOV:F@162']
+  TICK  121 | EXEC: MOV:MEM@162               | RS: ['MOV:F@162', 'MOV:F@165']
+  TICK  122 | EXEC: MOV:ALU@162               | RS: ['MOV:W@162', 'MOV:F@165', 'MOV:F@168', 'MOV:F@171']
+  TICK  123 | EXEC: MOV:MEM@165               | RS: ['MOV:F@165', 'MOV:F@168', 'MOV:F@171', 'MOV:F@174']
+  TICK  124 | EXEC: MOV:ALU@165 + MOV:ALU@174 | RS: ['MOV:W@165', 'MOV:F@168', 'MOV:F@171', 'MOV:W@174', 'MOV:F@177']
+  TICK  125 | EXEC: MOV:MEM@168               | RS: ['MOV:F@168', 'MOV:F@171', 'MOV:W@174', 'MOV:F@177', 'CMP:F@180', 'JEQ:F@183']
+  TICK  126 | EXEC: MOV:ALU@168               | RS: ['MOV:W@168', 'MOV:F@171', 'MOV:W@174', 'MOV:F@177', 'CMP:F@180', 'JEQ:F@183']
+  TICK  127 | EXEC: MOV:MEM@171               | RS: ['MOV:F@171', 'MOV:W@174', 'MOV:F@177', 'CMP:F@180', 'JEQ:F@183', 'MOV:F@185']
+  TICK  128 | EXEC: MOV:ALU@171               | RS: ['MOV:W@171', 'MOV:W@174', 'MOV:F@177', 'CMP:F@180', 'JEQ:F@183', 'MOV:F@185']
+  TICK  129 | EXEC: MOV:MEM@177               | RS: ['MOV:F@177', 'CMP:F@180', 'JEQ:F@183', 'MOV:F@185', 'MOV:F@188', 'ADD:F@191']
+  TICK  130 | EXEC: MOV:ALU@177 + CMP:ALU@180 | RS: ['MOV:W@177', 'CMP:W@180', 'JEQ:F@183', 'MOV:F@185', 'MOV:F@188', 'ADD:F@191']
+  TICK  131 | EXEC: JEQ:ALU@183 + MOV:MEM@185 | RS: ['JEQ:R@183', 'MOV:F@185', 'MOV:F@188', 'ADD:F@191', 'SUB:F@195', 'JMP:F@199']
+  TICK  132 | EXEC: MOV:ALU@185 + ADD:ALU@191 | RS: ['MOV:W@185', 'MOV:F@188', 'ADD:W@191', 'SUB:F@195', 'JMP:F@199', 'MOV:F@201']
+  TICK  133 | EXEC: MOV:MEM@188 + SUB:ALU@195 | RS: ['MOV:F@188', 'ADD:W@191', 'SUB:W@195', 'JMP:F@199', 'MOV:F@201', 'MOV:F@204']
+  TICK  134 | EXEC: MOV:ALU@188 + JMP:ALU@199 | RS: ['MOV:W@188', 'ADD:W@191', 'SUB:W@195', 'JMP:R@199']
+  TICK  135 | EXEC: IDLE                      | RS: []
+  TICK  136 | EXEC: IDLE                      | RS: ['CMP:F@180']
+  TICK  137 | EXEC: CMP:ALU@180               | RS: ['CMP:W@180', 'JEQ:F@183', 'MOV:F@185']
+  TICK  138 | EXEC: JEQ:ALU@183 + MOV:MEM@185 | RS: ['JEQ:R@183']
+  TICK  139 | EXEC: IDLE                      | RS: []
+  TICK  140 | EXEC: IDLE                      | RS: ['MOV:F@201']
+  TICK  141 | EXEC: MOV:MEM@201               | RS: ['MOV:F@201', 'MOV:F@204']
+  TICK  142 | EXEC: MOV:ALU@201 + MOV:ALU@204 | RS: ['MOV:W@201', 'MOV:W@204', 'CMP:F@207', 'MOV:F@210']
+  TICK  143 | EXEC: CMP:ALU@207 + MOV:ALU@210 | RS: ['CMP:W@207', 'MOV:W@210', 'JEQ:F@213']
+  TICK  144 | EXEC: JEQ:ALU@213               | RS: ['JEQ:R@213']
+  TICK  145 | EXEC: IDLE                      | RS: []
+  TICK  146 | EXEC: IDLE                      | RS: ['CMP:F@218']
+  TICK  147 | EXEC: CMP:ALU@218               | RS: ['CMP:W@218', 'JEQ:F@221', 'MOV:F@223']
+  TICK  148 | EXEC: JEQ:ALU@221 + MOV:ALU@223 | RS: ['JEQ:R@221', 'MOV:W@223', 'JMP:F@226']
+  TICK  149 | EXEC: JMP:ALU@226               | RS: ['JMP:R@226']
+  TICK  150 | EXEC: IDLE                      | RS: []
+  TICK  151 | EXEC: IDLE                      | RS: ['PUSH:F@231']
+  TICK  152 | EXEC: PUSH:ALU@231              | RS: ['PUSH:W@231', 'MOV:F@233', 'MOV:F@236']
+  TICK  153 | EXEC: MOV:ALU@233 + MOV:MEM@236 | RS: ['MOV:W@233', 'MOV:F@236', 'POP:F@239']
+  TICK  154 | EXEC: MOV:ALU@236               | RS: ['MOV:W@236', 'POP:F@239', 'ADD:F@241']
+  TICK  155 | EXEC: POP:ALU@239 + ADD:ALU@241 | RS: ['POP:W@239', 'ADD:W@241', 'MOV:F@245', 'MOV:F@248']
+  TICK  156 | EXEC: MOV:MEM@245 + MOV:ALU@248 | RS: ['MOV:F@245', 'MOV:W@248', 'MOV:F@251']
+  TICK  157 | EXEC: MOV:ALU@245               | RS: ['MOV:W@245', 'MOV:W@248', 'MOV:F@251', 'CMP:F@254', 'JEQ:F@257']
+  TICK  158 | EXEC: MOV:MEM@251               | RS: ['MOV:F@251', 'CMP:F@254', 'JEQ:F@257', 'MOV:F@259']
+  TICK  159 | EXEC: MOV:ALU@251 + CMP:ALU@254 | RS: ['MOV:W@251', 'CMP:W@254', 'JEQ:F@257', 'MOV:F@259', 'MOV:F@262']
+  TICK  160 | EXEC: JEQ:ALU@257 + MOV:MEM@259 | RS: ['JEQ:R@257', 'MOV:F@259', 'MOV:F@262', 'ADD:F@265']
+  TICK  161 | EXEC: MOV:ALU@259 + ADD:ALU@265 | RS: ['MOV:W@259', 'MOV:F@262', 'ADD:W@265', 'SUB:F@269', 'JMP:F@273']
+  TICK  162 | EXEC: MOV:MEM@262 + SUB:ALU@269 | RS: ['MOV:F@262', 'ADD:W@265', 'SUB:W@269', 'JMP:F@273', 'HALT:F@275', 'NOP:F@276']
+  TICK  163 | EXEC: MOV:ALU@262 + JMP:ALU@273 | RS: ['MOV:W@262', 'ADD:W@265', 'SUB:W@269', 'JMP:R@273']
+  TICK  164 | EXEC: IDLE                      | RS: []
+  TICK  165 | EXEC: IDLE                      | RS: ['CMP:F@254']
+  TICK  166 | EXEC: CMP:ALU@254               | RS: ['CMP:W@254', 'JEQ:F@257', 'MOV:F@259']
+  TICK  167 | EXEC: JEQ:ALU@257 + MOV:MEM@259 | RS: ['JEQ:R@257']
+  TICK  168 | EXEC: IDLE                      | RS: []
+  TICK  169 | EXEC: IDLE                      | RS: ['HALT:F@275', 'NOP:F@276']
+  TICK  170 | EXEC: HALT:ALU@275 + NOP:ALU@276 | RS: ['HALT:W@275', 'NOP:E@276', 'NOP:F@277', 'NOP:F@278']
+  TICK  171 | EXEC: NOP:ALU@276 + NOP:ALU@277 | RS: ['NOP:E@276', 'NOP:E@277', 'NOP:F@278', 'NOP:F@279', 'NOP:F@280']
 
-  Ticks (Opt/Seq): 809 / 1117
+  Ticks: 171
   Output: 13 100 15 15
 out_code_log: |-
   0000: 00001107  JMP    -> 0014 
