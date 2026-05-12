@@ -21,6 +21,18 @@ class InstrState(Enum):
     RETIRED = 4
 
 
+FLAG_WRITERS = {
+    Opcode.CMP,
+    Opcode.ADD,
+    Opcode.SUB,
+    Opcode.ADC,
+    Opcode.SBC,
+    Opcode.MUL,
+    Opcode.MOD,
+}
+FLAG_READERS = {Opcode.JEQ, Opcode.JGT}
+
+
 class Instruction:
     def __init__(self, opcode, modes, args, pc):
         self.opcode = opcode
@@ -30,41 +42,11 @@ class Instruction:
         self.state = InstrState.FETCHING_OPERANDS
         self.result = None
         self.operands = None
-        self.cycles_left = 0
+        self.cycles_left = 1
+        self.f_n, self.f_z, self.f_c, self.f_v = False, False, False, False
         for m in modes:
             if m in [AddrMode.MEM, AddrMode.REG_INDIRECT]:
                 self.cycles_left += 1
-
-    def modifies_sp(self):
-        return self.opcode in [
-            Opcode.PUSH,
-            Opcode.POP,
-            Opcode.CALL,
-            Opcode.RET,
-            Opcode.IRET,
-        ]
-
-    def writes_to_reg(self):
-        if not self.args or not self.modes or self.modes[0] != AddrMode.REG:
-            return False
-        if self.opcode in [
-            Opcode.CMP,
-            Opcode.PUSH,
-            Opcode.JMP,
-            Opcode.JEQ,
-            Opcode.JGT,
-            Opcode.CALL,
-            Opcode.HALT,
-        ]:
-            return False
-        return True
-
-    def get_target_reg(self):
-        if self.writes_to_reg():
-            return self.args[0]
-        if self.modifies_sp():
-            return Registers.SP
-        return None
 
     def __repr__(self):
         return f"{self.opcode.name}:{self.state.name[0]}@{self.pc}"
@@ -92,10 +74,10 @@ class DataPath:
     def alu(self, op, a, b=0, carry=0):
         a &= 0xFFFFFFFF
         b &= 0xFFFFFFFF
-        if op in [Opcode.MOV, Opcode.PUSH, Opcode.POP]:
-            return a
         res = 0
-        if op in [Opcode.ADD, Opcode.ADC]:
+        if op in [Opcode.MOV, Opcode.PUSH, Opcode.POP]:
+            res = a
+        elif op in [Opcode.ADD, Opcode.ADC]:
             res = a + b + carry
         elif op in [Opcode.SUB, Opcode.SBC, Opcode.CMP]:
             res = a - b - carry
@@ -105,15 +87,17 @@ class DataPath:
             res = a % b if b != 0 else 0
 
         res32 = res & 0xFFFFFFFF
-        self.z = res32 == 0
-        self.n = bool(res32 & 0x80000000)
-        if op in [Opcode.ADD, Opcode.ADC, Opcode.SUB, Opcode.SBC, Opcode.CMP]:
-            self.c = res > 0xFFFFFFFF or res < 0
+
+        z = res32 == 0
+        n = bool(res32 & 0x80000000)
+        c = res > 0xFFFFFFFF or res < 0
+        v = False
         if op in [Opcode.ADD, Opcode.ADC]:
-            self.v = bool((~(a ^ b) & (a ^ res32) & 0x80000000))
+            v = bool((~(a ^ b) & (a ^ res32) & 0x80000000))
         elif op in [Opcode.SUB, Opcode.SBC, Opcode.CMP]:
-            self.v = bool(((a ^ b) & (a ^ res32) & 0x80000000))
-        return res32
+            v = bool(((a ^ b) & (a ^ res32) & 0x80000000))
+
+        return res32, z, n, c, v
 
 
 class ControlUnit:
@@ -130,9 +114,9 @@ class ControlUnit:
         self.output = []
         self.decode_queue = []
         self.fetch_buffer = []
+        self.retire_buffer = []
         self.rs = []
         self.superscalar = superscalar
-        self.current_executing = []
 
     def pipeline_flush(self, new_pc):
         self.fetch_pc = new_pc
@@ -141,130 +125,249 @@ class ControlUnit:
         self.rs.clear()
 
     def _read_forward(self, mode, val, current_instr):
-        if mode == AddrMode.IMM:
-            return val
+        idx = self.decode_queue.index(current_instr)
+        older_instrs = self.decode_queue[:idx]
 
         if mode == AddrMode.REG:
-            try:
-                idx = self.rs.index(current_instr)
-                for prev in reversed(self.rs[:idx]):
-                    if prev.writes_to_reg() and prev.args[0] == val:
+            for prev in reversed(older_instrs):
+                if prev.modes and prev.modes[0] == AddrMode.REG and prev.args[0] == val:
+                    if prev.result is not None:
                         return prev.result
-            except ValueError:
-                pass
             return self.dp.regs[val]
-
+        if mode == AddrMode.IMM:
+            return val
         if mode == AddrMode.MEM:
             return self.dp.mem[val]
-
         if mode == AddrMode.REG_INDIRECT:
             addr = self._read_forward(AddrMode.REG, val, current_instr)
-            if addr is None:
-                return None
             return self.dp.mem[addr]
-
         return 0
 
-    def _check_hazard(self, instr):
-        try:
-            idx = self.rs.index(instr)
-            older = self.rs[:idx]
-        except ValueError:
-            return False
+    def _is_ready_to_dispatch(self, instr):
+        idx = self.decode_queue.index(instr)
+        older_instrs = self.decode_queue[:idx]
 
-        for i, (m, a) in enumerate(zip(instr.modes, instr.args)):
-            is_read = (i > 0) or (instr.opcode in [Opcode.CMP, Opcode.PUSH])
-            if is_read and m == AddrMode.REG:
-                for prev in older:
-                    if prev.get_target_reg() == a:
-                        if prev.result is None and prev.state != InstrState.RETIRED:
-                            return True
+        NON_WRITING_OPCODES = {
+            Opcode.CMP,
+            Opcode.PUSH,
+            Opcode.JMP,
+            Opcode.JEQ,
+            Opcode.JGT,
+            Opcode.CALL,
+            Opcode.RET,
+            Opcode.IRET,
+            Opcode.HALT,
+        }
 
-        curr_target = instr.get_target_reg()
-        if curr_target is None:
-            for prev in older:
-                if prev.get_target_reg() == curr_target:
-                    if prev.state != InstrState.RETIRED:
-                        return True
-
-        curr_uses_mem = any(
-            mod in [AddrMode.MEM, AddrMode.REG_INDIRECT] for mod in instr.modes
-        )
-        curr_uses_mem |= instr.modifies_sp()
-
-        if curr_uses_mem:
-            for prev in older:
-                prev_uses_mem = any(
-                    mod in [AddrMode.MEM, AddrMode.REG_INDIRECT] for mod in prev.modes
-                )
-                prev_uses_mem |= prev.modifies_sp()
-                if prev_uses_mem and prev.state != InstrState.RETIRED:
-                    return True
-
-        if instr.opcode in [Opcode.JEQ, Opcode.JGT, Opcode.ADC, Opcode.SBC]:
-            for prev in older:
+        if instr.opcode in [
+            Opcode.PUSH,
+            Opcode.POP,
+            Opcode.CALL,
+            Opcode.RET,
+            Opcode.IRET,
+        ]:
+            for prev in older_instrs:
                 if prev.opcode in [
-                    Opcode.ADD,
-                    Opcode.SUB,
-                    Opcode.MUL,
-                    Opcode.CMP,
-                    Opcode.ADC,
-                    Opcode.SBC,
-                    Opcode.MOD,
+                    Opcode.PUSH,
+                    Opcode.POP,
+                    Opcode.CALL,
+                    Opcode.RET,
+                    Opcode.IRET,
                 ]:
                     if prev.state != InstrState.RETIRED:
-                        return True
+                        return False
+
+        if instr.opcode in FLAG_READERS:
+            for prev in older_instrs:
+                if prev.opcode in FLAG_WRITERS:
+                    if prev.state != InstrState.RETIRED:
+                        return False
+
+        for i, (m, a) in enumerate(zip(instr.modes, instr.args)):
+            if m not in (AddrMode.REG, AddrMode.REG_INDIRECT):
+                continue
+
+            is_write = (
+                i == 0 and m == AddrMode.REG and instr.opcode not in NON_WRITING_OPCODES
+            )
+            is_read = not is_write or instr.opcode != Opcode.MOV
+
+            for prev in older_instrs:
+                prev_writes = (
+                    prev.modes
+                    and prev.modes[0] == AddrMode.REG
+                    and prev.args[0] == a
+                    and prev.opcode not in NON_WRITING_OPCODES
+                )
+
+                if prev_writes and (is_read or is_write):
+                    if prev.state not in [InstrState.WRITING_BACK, InstrState.RETIRED]:
+                        return False
+
+                if is_write and prev.operands is None:
+                    for p_i, (p_m, p_a) in enumerate(zip(prev.modes, prev.args)):
+                        if p_m == AddrMode.REG_INDIRECT and p_a == a:
+                            return False
+                        if p_m == AddrMode.REG and p_a == a:
+                            p_is_w = p_i == 0 and prev.opcode not in NON_WRITING_OPCODES
+                            if not p_is_w or prev.opcode != Opcode.MOV:
+                                return False
+
+        reads_mem = instr.modes and any(
+            m in [AddrMode.MEM, AddrMode.REG_INDIRECT] for m in instr.modes[1:]
+        )
+
+        writes_mem = instr.modes and instr.modes[0] in [
+            AddrMode.MEM,
+            AddrMode.REG_INDIRECT,
+        ]
+
+        if reads_mem or writes_mem:
+            for prev in older_instrs:
+                prev_writes_mem = (
+                    prev.modes
+                    and prev.modes[0] in [AddrMode.MEM, AddrMode.REG_INDIRECT]
+                ) or (prev.opcode == Opcode.PUSH)
+                if prev_writes_mem:
+                    if prev.state != InstrState.RETIRED:
+                        return False
+        return True
+
+    def _check_hazard(self, instr):
+        NON_WRITING_OPCODES = {
+            Opcode.CMP,
+            Opcode.PUSH,
+            Opcode.JMP,
+            Opcode.JEQ,
+            Opcode.JGT,
+            Opcode.CALL,
+            Opcode.RET,
+            Opcode.IRET,
+            Opcode.HALT,
+        }
+
+        if instr.opcode in FLAG_READERS:
+            for prev in self.rs:
+                if prev == instr:
+                    break
+                if prev.opcode in FLAG_WRITERS and prev.result is None:
+                    return True
+
+        for i, (m, a) in enumerate(zip(instr.modes, instr.args)):
+            if m not in (AddrMode.REG, AddrMode.REG_INDIRECT):
+                continue
+
+            is_write = (
+                i == 0 and m == AddrMode.REG and instr.opcode not in NON_WRITING_OPCODES
+            )
+
+            for prev in self.rs:
+                if prev == instr:
+                    break
+
+                prev_writes = (
+                    prev.modes
+                    and prev.modes[0] == AddrMode.REG
+                    and prev.args[0] == a
+                    and prev.opcode not in NON_WRITING_OPCODES
+                )
+
+                if prev_writes and prev.result is None:
+                    return True
+
+                if is_write and prev.operands is None:
+                    for p_i, (p_m, p_a) in enumerate(zip(prev.modes, prev.args)):
+                        if p_m == AddrMode.REG_INDIRECT and p_a == a:
+                            return True
+                        if p_m == AddrMode.REG and p_a == a:
+                            p_is_write = (
+                                p_i == 0 and prev.opcode not in NON_WRITING_OPCODES
+                            )
+                            if not p_is_write or prev.opcode != Opcode.MOV:
+                                return True
+
+        if instr.opcode == Opcode.POP:
+            for prev in self.rs:
+                if prev == instr:
+                    break
+                if prev.opcode == Opcode.PUSH and prev.operands is None:
+                    return True
 
         return False
 
     def step_fetch(self):
-        fetch_width = 4 if self.superscalar else 1
-        limit = 12 if self.superscalar else 5
-        for _ in range(fetch_width):
-            if len(self.fetch_buffer) < limit and not self.halted:
-                self.fetch_buffer.append((self.fetch_pc, self.dp.mem[self.fetch_pc]))
-                self.fetch_pc += 1
+        limit = 8 if self.superscalar else 5
+        if len(self.fetch_buffer) < limit and not self.halted:
+            self.fetch_buffer.append((self.fetch_pc, self.dp.mem[self.fetch_pc]))
+            self.fetch_pc += 1
 
     def step_decode(self):
-        decode_width = 2 if self.superscalar else 1
-        for _ in range(decode_width):
-            if self.fetch_buffer:
-                pc, h = self.fetch_buffer[0]
-                try:
-                    op, cnt = Opcode(h & 0xFF), (h >> 8) & 0xF
-                    if len(self.fetch_buffer) >= 1 + cnt:
-                        self.fetch_buffer.pop(0)
-                        ms = [AddrMode((h >> (12 + i * 4)) & 0xF) for i in range(cnt)]
-                        args = [self.fetch_buffer.pop(0)[1] for _ in range(cnt)]
-                        self.decode_queue.append(Instruction(op, ms, args, pc))
-                    else:
-                        break
-                except ValueError:
+        limit = 8 if self.superscalar else 4
+        if self.fetch_buffer and len(self.decode_queue) < limit:
+            pc, h = self.fetch_buffer[0]
+            try:
+                op, cnt = Opcode(h & 0xFF), (h >> 8) & 0xF
+                if len(self.fetch_buffer) >= 1 + cnt:
                     self.fetch_buffer.pop(0)
+                    ms = [AddrMode((h >> (12 + i * 4)) & 0xF) for i in range(cnt)]
+                    args = [self.fetch_buffer.pop(0)[1] for _ in range(cnt)]
+                    self.decode_queue.append(Instruction(op, ms, args, pc))
+            except ValueError:
+                self.fetch_buffer.pop(0)
 
     def step_dispatch(self):
         width = 2 if self.superscalar else 1
-        rs_limit = 6 if self.superscalar else 1
-        for _ in range(width):
-            if len(self.rs) < rs_limit and self.decode_queue:
-                self.rs.append(self.decode_queue.pop(0))
+        rs_limit = 4 if self.superscalar else 1
+        dispatched = 0
+
+        BARRIER_OPS = {
+            Opcode.JMP,
+            Opcode.JEQ,
+            Opcode.JGT,
+            Opcode.CALL,
+            Opcode.RET,
+            Opcode.IRET,
+            Opcode.HALT,
+        }
+
+        for instr in self.decode_queue:
+            if dispatched >= width or len(self.rs) >= rs_limit:
+                break
+
+            if instr in self.rs or instr.state in [
+                InstrState.EXECUTING,
+                InstrState.WRITING_BACK,
+                InstrState.RETIRED,
+            ]:
+                continue
+
+            idx = self.decode_queue.index(instr)
+            older_instrs = self.decode_queue[:idx]
+
+            if instr.opcode in BARRIER_OPS and older_instrs:
+                break
+
+            if any(p.opcode in BARRIER_OPS for p in older_instrs):
+                break
+
+            if self._is_ready_to_dispatch(instr):
+                self.rs.append(instr)
+                dispatched += 1
 
     def step_execute(self):
         exec_limit = 2 if self.superscalar else 1
         executed_this_tick = 0
+        to_remove = []
 
-        for instr in list(self.rs):
+        for instr in self.rs:
             if executed_this_tick >= exec_limit:
                 break
 
+            executed_this_tick += 1
+
             if instr.state == InstrState.FETCHING_OPERANDS:
-                if self._check_hazard(instr):
-                    continue
                 if instr.cycles_left > 0:
                     instr.cycles_left -= 1
-                    executed_this_tick += 1
-                    self.current_executing.append(f"{instr.opcode.name}:MEM@{instr.pc}")
-                    continue
                 else:
                     instr.operands = [
                         self._read_forward(m, a, instr)
@@ -272,12 +375,7 @@ class ControlUnit:
                     ]
                     instr.state = InstrState.EXECUTING
 
-            if instr.state == InstrState.EXECUTING:
-                if executed_this_tick >= exec_limit:
-                    break
-                executed_this_tick += 1
-                self.current_executing.append(f"{instr.opcode.name}:ALU@{instr.pc}")
-
+            elif instr.state == InstrState.EXECUTING:
                 op, vals = instr.opcode, instr.operands
                 if op in [Opcode.JMP, Opcode.JEQ, Opcode.JGT]:
                     cond = (
@@ -290,16 +388,14 @@ class ControlUnit:
                         )
                     )
                     if cond:
-                        try:
-                            idx = self.rs.index(instr)
-                            self.fetch_pc = instr.args[0]
-                            self.fetch_buffer.clear()
-                            self.decode_queue.clear()
-                            self.rs = self.rs[: idx + 1]
-                        except ValueError:
-                            pass
-                    instr.state = InstrState.RETIRED
-
+                        instr.result = instr.args[0]
+                    else:
+                        instr.result = None
+                    instr.state = InstrState.WRITING_BACK
+                    to_remove.append(instr)
+                elif op in [Opcode.HALT, Opcode.CALL, Opcode.RET]:
+                    instr.state = InstrState.WRITING_BACK
+                    to_remove.append(instr)
                 elif op in [
                     Opcode.MOV,
                     Opcode.ADD,
@@ -312,49 +408,80 @@ class ControlUnit:
                 ]:
                     carry = int(self.dp.c) if op in [Opcode.ADC, Opcode.SBC] else 0
                     if op == Opcode.MOV:
-                        instr.result = vals[1]
+                        instr.result, _, _, _, _ = self.dp.alu(op, vals[1])
                     else:
                         v1, v2 = (
                             (vals[1], vals[2]) if len(vals) > 2 else (vals[0], vals[1])
                         )
-                        instr.result = self.dp.alu(op, v1, v2, carry)
+                        instr.result, instr.f_z, instr.f_n, instr.f_c, instr.f_v = (
+                            self.dp.alu(op, v1, v2, carry)
+                        )
                     instr.state = InstrState.WRITING_BACK
-
+                    to_remove.append(instr)
                 elif op == Opcode.PUSH:
                     instr.result = vals[0]
                     instr.state = InstrState.WRITING_BACK
-
+                    to_remove.append(instr)
                 elif op == Opcode.POP:
-                    instr.result = self.dp.mem[self.dp.regs[Registers.SP]]
+                    instr.result = self._read_forward(
+                        AddrMode.MEM, self.dp.regs[Registers.SP], instr
+                    )
                     instr.state = InstrState.WRITING_BACK
+                    to_remove.append(instr)
+                elif op == Opcode.IRET:
+                    instr.state = InstrState.WRITING_BACK
+                    to_remove.append(instr)
 
-                elif op in [Opcode.HALT, Opcode.IRET, Opcode.CALL, Opcode.RET]:
-                    instr.state = InstrState.WRITING_BACK
+                self.retire_buffer.append(instr)
+
+        for instr in to_remove:
+            if instr in self.rs:
+                self.rs.remove(instr)
 
     def step_retire(self):
-        while self.rs and self.rs[0].state in [
-            InstrState.WRITING_BACK,
-            InstrState.RETIRED,
-        ]:
-            instr = self.rs.pop(0)
+        while self.decode_queue:
+            instr = self.decode_queue[0]
+
+            if instr not in self.retire_buffer:
+                break
+
+            if not hasattr(instr, "write_lat"):
+                if instr.modes and instr.modes[0] == AddrMode.MEM:
+                    instr.write_lat = 2
+                elif instr.modes and instr.modes[0] == AddrMode.REG_INDIRECT:
+                    instr.write_lat = 3
+                else:
+                    instr.write_lat = 1
+
+            if instr.write_lat > 1:
+                instr.write_lat -= 1
+                break
+
+            self.decode_queue.pop(0)
+            self.retire_buffer.remove(instr)
+
             if instr.state == InstrState.RETIRED:
                 continue
 
-            if instr.opcode == Opcode.PUSH:
-                self.dp.regs[Registers.SP] -= 1
-                self.dp.mem[self.dp.regs[Registers.SP]] = instr.result
-            elif instr.opcode == Opcode.POP:
-                self.dp.regs[instr.args[0]] = instr.result
-                self.dp.regs[Registers.SP] += 1
+            if instr.opcode in [Opcode.JMP, Opcode.JEQ, Opcode.JGT]:
+                if instr.result is not None:
+                    self.pipeline_flush(instr.result)
+                continue
 
-            elif instr.opcode == Opcode.HALT:
+            if instr.opcode in FLAG_WRITERS:
+                self.dp.z = instr.f_z
+                self.dp.n = instr.f_n
+                self.dp.c = instr.f_c
+                self.dp.v = instr.f_v
+
+            if instr.opcode == Opcode.HALT:
                 self.halted = True
                 break
-            elif instr.opcode == Opcode.IRET:
+            if instr.opcode == Opcode.IRET:
                 self.cu_state = CUState.IRET_SEQ
                 self.seq_step = 0
                 return
-            elif instr.opcode == Opcode.CALL:
+            if instr.opcode == Opcode.CALL:
                 self.cu_state = CUState.CALL_SEQ
                 self.seq_step = 0
                 self.seq_data = {
@@ -362,23 +489,29 @@ class ControlUnit:
                     "ret_pc": instr.pc + 1 + len(instr.args),
                 }
                 return
-            elif instr.opcode == Opcode.RET:
+            if instr.opcode == Opcode.RET:
                 self.cu_state = CUState.RET_SEQ
                 self.seq_step = 0
                 return
 
+            if instr.opcode == Opcode.PUSH:
+                self.dp.regs[Registers.SP] -= 1
+                self.dp.mem[self.dp.regs[Registers.SP]] = instr.result
+            elif instr.opcode == Opcode.POP:
+                self.dp.regs[Registers.SP] += 1
+                self.dp.regs[instr.args[0]] = instr.result
             elif instr.opcode != Opcode.CMP and instr.result is not None:
                 m, a = instr.modes[0], instr.args[0]
+                val = instr.result & 0xFFFFFFFF
                 if m == AddrMode.REG:
-                    self.dp.regs[a] = instr.result
+                    self.dp.regs[a] = val
                 else:
                     addr = a if m == AddrMode.MEM else self.dp.regs[a]
-                    self.dp.mem[addr] = instr.result
+                    self.dp.mem[addr] = val
                     if addr == OUT_CHAR:
-                        self.output.append(chr(instr.result & 0xFF))
+                        self.output.append(chr(val & 0xFF))
                     elif addr == OUT_INT:
-                        self.output.append(str(instr.result))
-
+                        self.output.append(str(val))
             instr.state = InstrState.RETIRED
 
     def process_call_sequence(self):
@@ -386,6 +519,9 @@ class ControlUnit:
         if self.seq_step == 1:
             self.dp.regs[Registers.SP] -= 1
             self.dp.mem[self.dp.regs[Registers.SP]] = self.seq_data["ret_pc"]
+            logging.info(
+                f"TICK {self.tick:4} | [CALL] Push RetPC {self.seq_data['ret_pc']}"
+            )
         elif self.seq_step == 2:
             self.pipeline_flush(self.seq_data["target"])
             self.cu_state = CUState.NORMAL
@@ -406,36 +542,21 @@ class ControlUnit:
         if s == 1:
             self.ie = False
             self.dp.mem[TRAP_BUFFER] = ord(self.seq_data["char"])
-            sym = self.seq_data["char"].replace("\n", "\\n").replace("\0", "\\0")
-            logging.info(
-                f"TICK {self.tick:4} | [TRAP-SEQ] IE=0, Save '{sym}' to [{TRAP_BUFFER}]"
-            )
+            logging.info(f"TICK {self.tick:4} | [TRAP] Char saved")
         elif s == 2:
             self.dp.regs[Registers.SP] -= 1
             self.dp.mem[self.dp.regs[Registers.SP]] = self.seq_data["ret_pc"]
-            logging.info(
-                f"TICK {self.tick:4} | [TRAP-SEQ] Stack Push RetPC:{self.seq_data['ret_pc']} (SP={self.dp.regs[Registers.SP]})"
-            )
         elif s == 3:
             self.dp.regs[Registers.SP] -= 1
-            f = self.dp.get_flags()
-            self.dp.mem[self.dp.regs[Registers.SP]] = f
-            logging.info(
-                f"TICK {self.tick:4} | [TRAP-SEQ] Stack Push Flags:{bin(f)} (SP={self.dp.regs[Registers.SP]})"
-            )
+            self.dp.mem[self.dp.regs[Registers.SP]] = self.dp.get_flags()
         elif s <= 7:
             reg = s - 4
             self.dp.regs[Registers.SP] -= 1
             self.dp.mem[self.dp.regs[Registers.SP]] = self.dp.regs[reg]
-            logging.info(
-                f"TICK {self.tick:4} | [TRAP-SEQ] Stack Push R{reg}:{self.dp.regs[reg]} (SP={self.dp.regs[Registers.SP]})"
-            )
         elif s == 8:
-            logging.info(
-                f"TICK {self.tick:4} | [TRAP-SEQ] Jump to VECTOR_TRAP (0x{VECTOR_TRAP:02X})"
-            )
             self.pipeline_flush(VECTOR_TRAP)
             self.cu_state = CUState.NORMAL
+            self.seq_step = 0
 
     def process_iret_sequence(self):
         self.seq_step += 1
@@ -443,31 +564,20 @@ class ControlUnit:
         if s <= 4:
             reg = 4 - s
             self.dp.regs[reg] = self.dp.mem[self.dp.regs[Registers.SP]]
-            logging.info(
-                f"TICK {self.tick:4} | [IRET-SEQ] Pop R{reg}:{self.dp.regs[reg]} (SP now {self.dp.regs[Registers.SP] + 1})"
-            )
             self.dp.regs[Registers.SP] += 1
         elif s == 5:
-            f = self.dp.mem[self.dp.regs[Registers.SP]]
-            self.dp.set_flags(f)
-            logging.info(
-                f"TICK {self.tick:4} | [IRET-SEQ] Pop Flags:{bin(f)} (SP now {self.dp.regs[Registers.SP] + 1})"
-            )
+            self.dp.set_flags(self.dp.mem[self.dp.regs[Registers.SP]])
             self.dp.regs[Registers.SP] += 1
         elif s == 6:
             ret_pc = self.dp.mem[self.dp.regs[Registers.SP]]
             self.dp.regs[Registers.SP] += 1
             self.ie = True
-            logging.info(
-                f"TICK {self.tick:4} | [IRET-SEQ] Pop RetPC:{ret_pc}, IE=1. Returning..."
-            )
             self.pipeline_flush(ret_pc)
             self.cu_state = CUState.NORMAL
+            self.seq_step = 0
 
     def tick_machine(self):
         self.tick += 1
-        self.current_executing = []
-
         if self.cu_state != CUState.NORMAL:
             if self.cu_state == CUState.INTERRUPT_SEQ:
                 self.process_interrupt_sequence()
@@ -481,49 +591,47 @@ class ControlUnit:
             if self.schedule and self.tick >= self.schedule[0]["tick"]:
                 event = self.schedule.pop(0)
                 if self.ie:
-                    ret_pc = (
-                        self.rs[0].pc
-                        if self.rs
-                        else (
-                            self.decode_queue[0].pc
-                            if self.decode_queue
-                            else self.fetch_pc
-                        )
-                    )
+                    if self.decode_queue:
+                        ret_pc = self.decode_queue[0].pc
+                    elif self.fetch_buffer:
+                        ret_pc = self.fetch_buffer[0][0]
+                    else:
+                        ret_pc = self.fetch_pc
 
-                    sym = event["char"].replace("\n", "\\n").replace("\0", "\\0")
-                    logging.info(
-                        f"TICK {self.tick:4} | [!] INTERRUPT TRIGGERED: '{sym}' (Return to PC:{ret_pc})"
-                    )
+                    self.pipeline_flush(VECTOR_TRAP)
 
                     self.cu_state = CUState.INTERRUPT_SEQ
                     self.seq_step = 0
                     self.seq_data = {"char": event["char"], "ret_pc": ret_pc}
+
+                    sym = event["char"].replace("\n", "\\n").replace("\0", "\\0")
+
+                    logging.info(
+                        f"TICK {self.tick:4} | [INTERRUPT] Accepted sym {sym}. RetPC set to: {ret_pc}"
+                    )
                     return
 
-            self.step_retire()
             self.step_execute()
+            self.step_retire()
             self.step_dispatch()
             self.step_decode()
             self.step_fetch()
 
-        if self.tick < 500:
-            exec_s = (
-                " + ".join(self.current_executing) if self.current_executing else "IDLE"
-            )
+        if self.tick < 1000 or self.tick % 500 == 0:
+            mode = "SS" if self.superscalar else "SC"
+            rs_s = ",".join([str(i) for i in self.rs])
             logging.info(
-                f"TICK {self.tick:4} | "
-                f"EXEC: {exec_s:25} | "
-                f"RS: {[str(i) for i in self.rs]}"
+                f"TICK {self.tick:4} | {mode} | PC:{self.fetch_pc:3} | RS:[{rs_s:20}] | SP:{self.dp.regs[Registers.SP]} Z:{int(self.dp.z)}"
             )
 
 
 def main(target, sched_file=None, superscalar_str="True"):
-    logging.basicConfig(level=logging.INFO, format="%(message)s")
-
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(message)s",
+    )
     with open(target, "rb") as f:
         mem = from_bytes(f.read())
-
     sch = []
     if sched_file and sched_file.lower() != "none":
         try:
@@ -533,17 +641,12 @@ def main(target, sched_file=None, superscalar_str="True"):
             pass
 
     is_ss = superscalar_str.lower() not in ["false", "0", "off"]
-    mode_name = "SS (Superscalar)" if is_ss else "SC (Scalar)"
-    logging.info(f"--- STARTING SIMULATION IN {mode_name} MODE ---")
-
     cu = ControlUnit(DataPath(mem), sch, superscalar=is_ss)
-
     try:
-        while cu.tick < 500000 and not cu.halted:
+        while cu.tick < 10_000 and not cu.halted:
             cu.tick_machine()
     except StopIteration:
         pass
-
     logging.info(f"\nTicks: {cu.tick}\nOutput: {''.join(cu.output)}")
 
 

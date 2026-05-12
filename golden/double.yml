@@ -13,54 +13,114 @@ in_source: |-
 in_schedule: |-
   []
 out_log: |-
-  --- STARTING SIMULATION IN SS (Superscalar) MODE ---
-  TICK    1 | EXEC: IDLE                      | RS: []
-  TICK    2 | EXEC: IDLE                      | RS: []
-  TICK    3 | EXEC: IDLE                      | RS: ['JMP:F@0', 'JMP:F@2']
-  TICK    4 | EXEC: JMP:ALU@0 + JMP:ALU@2     | RS: ['JMP:R@0']
-  TICK    5 | EXEC: IDLE                      | RS: []
-  TICK    6 | EXEC: IDLE                      | RS: ['MOV:F@16']
-  TICK    7 | EXEC: MOV:MEM@16                | RS: ['MOV:F@16', 'PUSH:F@19', 'MOV:F@21']
-  TICK    8 | EXEC: MOV:ALU@16                | RS: ['MOV:W@16', 'PUSH:F@19', 'MOV:F@21', 'POP:F@24']
-  TICK    9 | EXEC: PUSH:ALU@19               | RS: ['PUSH:W@19', 'MOV:F@21', 'POP:F@24', 'ADD:F@26']
-  TICK   10 | EXEC: MOV:MEM@21                | RS: ['MOV:F@21', 'POP:F@24', 'ADD:F@26', 'MOV:F@30', 'MOV:F@33']
-  TICK   11 | EXEC: MOV:ALU@21                | RS: ['MOV:W@21', 'POP:F@24', 'ADD:F@26', 'MOV:F@30', 'MOV:F@33', 'PUSH:F@36']
-  TICK   12 | EXEC: POP:ALU@24 + ADD:ALU@26   | RS: ['POP:W@24', 'ADD:W@26', 'MOV:F@30', 'MOV:F@33', 'PUSH:F@36', 'MOV:F@38']
-  TICK   13 | EXEC: MOV:MEM@30                | RS: ['MOV:F@30', 'MOV:F@33', 'PUSH:F@36', 'MOV:F@38', 'POP:F@41', 'ADC:F@43']
-  TICK   14 | EXEC: MOV:ALU@30                | RS: ['MOV:W@30', 'MOV:F@33', 'PUSH:F@36', 'MOV:F@38', 'POP:F@41', 'ADC:F@43']
-  TICK   15 | EXEC: MOV:MEM@33                | RS: ['MOV:F@33', 'PUSH:F@36', 'MOV:F@38', 'POP:F@41', 'ADC:F@43', 'MOV:F@47']
-  TICK   16 | EXEC: MOV:ALU@33                | RS: ['MOV:W@33', 'PUSH:F@36', 'MOV:F@38', 'POP:F@41', 'ADC:F@43', 'MOV:F@47']
-  TICK   17 | EXEC: PUSH:ALU@36               | RS: ['PUSH:W@36', 'MOV:F@38', 'POP:F@41', 'ADC:F@43', 'MOV:F@47', 'MOV:F@50']
-  TICK   18 | EXEC: MOV:MEM@38                | RS: ['MOV:F@38', 'POP:F@41', 'ADC:F@43', 'MOV:F@47', 'MOV:F@50', 'MOV:F@53']
-  TICK   19 | EXEC: MOV:ALU@38                | RS: ['MOV:W@38', 'POP:F@41', 'ADC:F@43', 'MOV:F@47', 'MOV:F@50', 'MOV:F@53']
-  TICK   20 | EXEC: POP:ALU@41 + ADC:ALU@43   | RS: ['POP:W@41', 'ADC:W@43', 'MOV:F@47', 'MOV:F@50', 'MOV:F@53', 'MOV:F@56']
-  TICK   21 | EXEC: MOV:MEM@47 + MOV:ALU@56   | RS: ['MOV:F@47', 'MOV:F@50', 'MOV:F@53', 'MOV:W@56', 'MOV:F@59', 'CMP:F@62']
-  TICK   22 | EXEC: MOV:ALU@47                | RS: ['MOV:W@47', 'MOV:F@50', 'MOV:F@53', 'MOV:W@56', 'MOV:F@59', 'CMP:F@62']
-  TICK   23 | EXEC: MOV:MEM@50                | RS: ['MOV:F@50', 'MOV:F@53', 'MOV:W@56', 'MOV:F@59', 'CMP:F@62', 'JEQ:F@65']
-  TICK   24 | EXEC: MOV:ALU@50                | RS: ['MOV:W@50', 'MOV:F@53', 'MOV:W@56', 'MOV:F@59', 'CMP:F@62', 'JEQ:F@65']
-  TICK   25 | EXEC: MOV:MEM@53                | RS: ['MOV:F@53', 'MOV:W@56', 'MOV:F@59', 'CMP:F@62', 'JEQ:F@65', 'MOV:F@67']
-  TICK   26 | EXEC: MOV:ALU@53                | RS: ['MOV:W@53', 'MOV:W@56', 'MOV:F@59', 'CMP:F@62', 'JEQ:F@65', 'MOV:F@67']
-  TICK   27 | EXEC: MOV:MEM@59                | RS: ['MOV:F@59', 'CMP:F@62', 'JEQ:F@65', 'MOV:F@67', 'MOV:F@70', 'ADD:F@73']
-  TICK   28 | EXEC: MOV:ALU@59 + CMP:ALU@62   | RS: ['MOV:W@59', 'CMP:W@62', 'JEQ:F@65', 'MOV:F@67', 'MOV:F@70', 'ADD:F@73']
-  TICK   29 | EXEC: JEQ:ALU@65 + MOV:MEM@67   | RS: ['JEQ:R@65', 'MOV:F@67', 'MOV:F@70', 'ADD:F@73', 'SUB:F@77', 'JMP:F@81']
-  TICK   30 | EXEC: MOV:ALU@67 + ADD:ALU@73   | RS: ['MOV:W@67', 'MOV:F@70', 'ADD:W@73', 'SUB:F@77', 'JMP:F@81', 'MOV:F@83']
-  TICK   31 | EXEC: MOV:MEM@70 + SUB:ALU@77   | RS: ['MOV:F@70', 'ADD:W@73', 'SUB:W@77', 'JMP:F@81', 'MOV:F@83', 'MOV:F@86']
-  TICK   32 | EXEC: MOV:ALU@70                | RS: ['MOV:W@70', 'ADD:W@73', 'SUB:W@77', 'JMP:F@81', 'MOV:F@83', 'MOV:F@86']
-  TICK   33 | EXEC: JMP:ALU@81 + MOV:MEM@83   | RS: ['JMP:R@81']
-  TICK   34 | EXEC: IDLE                      | RS: []
-  TICK   35 | EXEC: IDLE                      | RS: ['CMP:F@62']
-  TICK   36 | EXEC: CMP:ALU@62                | RS: ['CMP:W@62', 'JEQ:F@65', 'MOV:F@67']
-  TICK   37 | EXEC: JEQ:ALU@65 + MOV:MEM@67   | RS: ['JEQ:R@65']
-  TICK   38 | EXEC: IDLE                      | RS: []
-  TICK   39 | EXEC: IDLE                      | RS: ['MOV:F@83']
-  TICK   40 | EXEC: MOV:MEM@83                | RS: ['MOV:F@83', 'MOV:F@86', 'HALT:F@89']
-  TICK   41 | EXEC: MOV:ALU@83                | RS: ['MOV:W@83', 'MOV:F@86', 'HALT:F@89', 'NOP:F@90', 'NOP:F@91']
-  TICK   42 | EXEC: MOV:MEM@86                | RS: ['MOV:F@86', 'HALT:F@89', 'NOP:F@90', 'NOP:F@91', 'NOP:F@92', 'NOP:F@93']
-  TICK   43 | EXEC: MOV:ALU@86                | RS: ['MOV:W@86', 'HALT:F@89', 'NOP:F@90', 'NOP:F@91', 'NOP:F@92', 'NOP:F@93']
-  TICK   44 | EXEC: HALT:ALU@89               | RS: ['HALT:W@89', 'NOP:F@90', 'NOP:F@91', 'NOP:F@92', 'NOP:F@93', 'NOP:F@94']
-  TICK   45 | EXEC: NOP:ALU@90                | RS: ['NOP:E@90', 'NOP:F@91', 'NOP:F@92', 'NOP:F@93', 'NOP:F@94', 'NOP:F@95']
+  TICK    1 | SS | PC:  1 | RS:[                    ] | SP:9000 Z:0
+  TICK    2 | SS | PC:  2 | RS:[                    ] | SP:9000 Z:0
+  TICK    3 | SS | PC:  3 | RS:[                    ] | SP:9000 Z:0
+  TICK    4 | SS | PC:  4 | RS:[JMP:F@0             ] | SP:9000 Z:0
+  TICK    5 | SS | PC:  5 | RS:[JMP:F@0             ] | SP:9000 Z:0
+  TICK    6 | SS | PC:  6 | RS:[JMP:E@0             ] | SP:9000 Z:0
+  TICK    7 | SS | PC: 17 | RS:[                    ] | SP:9000 Z:0
+  TICK    8 | SS | PC: 18 | RS:[                    ] | SP:9000 Z:0
+  TICK    9 | SS | PC: 19 | RS:[                    ] | SP:9000 Z:0
+  TICK   10 | SS | PC: 20 | RS:[                    ] | SP:9000 Z:0
+  TICK   11 | SS | PC: 21 | RS:[MOV:F@16            ] | SP:9000 Z:0
+  TICK   12 | SS | PC: 22 | RS:[MOV:F@16            ] | SP:9000 Z:0
+  TICK   13 | SS | PC: 23 | RS:[MOV:F@16            ] | SP:9000 Z:0
+  TICK   14 | SS | PC: 24 | RS:[MOV:E@16            ] | SP:9000 Z:0
+  TICK   15 | SS | PC: 25 | RS:[PUSH:F@19           ] | SP:9000 Z:0
+  TICK   16 | SS | PC: 26 | RS:[PUSH:F@19           ] | SP:9000 Z:0
+  TICK   17 | SS | PC: 27 | RS:[PUSH:E@19           ] | SP:9000 Z:0
+  TICK   18 | SS | PC: 28 | RS:[MOV:F@21,POP:F@24   ] | SP:8999 Z:0
+  TICK   19 | SS | PC: 29 | RS:[MOV:F@21,POP:F@24   ] | SP:8999 Z:0
+  TICK   20 | SS | PC: 30 | RS:[MOV:F@21,POP:E@24   ] | SP:8999 Z:0
+  TICK   21 | SS | PC: 31 | RS:[MOV:E@21            ] | SP:8999 Z:0
+  TICK   22 | SS | PC: 32 | RS:[ADD:F@26            ] | SP:9000 Z:0
+  TICK   23 | SS | PC: 33 | RS:[ADD:F@26            ] | SP:9000 Z:0
+  TICK   24 | SS | PC: 34 | RS:[ADD:E@26            ] | SP:9000 Z:0
+  TICK   25 | SS | PC: 35 | RS:[MOV:F@30            ] | SP:9000 Z:0
+  TICK   26 | SS | PC: 36 | RS:[MOV:F@30            ] | SP:9000 Z:0
+  TICK   27 | SS | PC: 37 | RS:[MOV:F@30            ] | SP:9000 Z:0
+  TICK   28 | SS | PC: 38 | RS:[MOV:E@30            ] | SP:9000 Z:0
+  TICK   29 | SS | PC: 39 | RS:[                    ] | SP:9000 Z:0
+  TICK   30 | SS | PC: 40 | RS:[MOV:F@33            ] | SP:9000 Z:0
+  TICK   31 | SS | PC: 41 | RS:[MOV:F@33            ] | SP:9000 Z:0
+  TICK   32 | SS | PC: 42 | RS:[MOV:F@33            ] | SP:9000 Z:0
+  TICK   33 | SS | PC: 43 | RS:[MOV:E@33            ] | SP:9000 Z:0
+  TICK   34 | SS | PC: 44 | RS:[PUSH:F@36           ] | SP:9000 Z:0
+  TICK   35 | SS | PC: 45 | RS:[PUSH:F@36           ] | SP:9000 Z:0
+  TICK   36 | SS | PC: 46 | RS:[PUSH:E@36           ] | SP:9000 Z:0
+  TICK   37 | SS | PC: 47 | RS:[MOV:F@38,POP:F@41   ] | SP:8999 Z:0
+  TICK   38 | SS | PC: 48 | RS:[MOV:F@38,POP:F@41   ] | SP:8999 Z:0
+  TICK   39 | SS | PC: 49 | RS:[MOV:F@38,POP:E@41   ] | SP:8999 Z:0
+  TICK   40 | SS | PC: 50 | RS:[MOV:E@38            ] | SP:8999 Z:0
+  TICK   41 | SS | PC: 51 | RS:[ADC:F@43            ] | SP:9000 Z:0
+  TICK   42 | SS | PC: 52 | RS:[ADC:F@43            ] | SP:9000 Z:0
+  TICK   43 | SS | PC: 53 | RS:[ADC:E@43            ] | SP:9000 Z:0
+  TICK   44 | SS | PC: 54 | RS:[MOV:F@47            ] | SP:9000 Z:0
+  TICK   45 | SS | PC: 55 | RS:[MOV:F@47            ] | SP:9000 Z:0
+  TICK   46 | SS | PC: 56 | RS:[MOV:F@47            ] | SP:9000 Z:0
+  TICK   47 | SS | PC: 57 | RS:[MOV:E@47            ] | SP:9000 Z:0
+  TICK   48 | SS | PC: 58 | RS:[                    ] | SP:9000 Z:0
+  TICK   49 | SS | PC: 59 | RS:[MOV:F@50            ] | SP:9000 Z:0
+  TICK   50 | SS | PC: 60 | RS:[MOV:F@50            ] | SP:9000 Z:0
+  TICK   51 | SS | PC: 61 | RS:[MOV:F@50,MOV:F@56   ] | SP:9000 Z:0
+  TICK   52 | SS | PC: 62 | RS:[MOV:E@50,MOV:F@56   ] | SP:9000 Z:0
+  TICK   53 | SS | PC: 63 | RS:[MOV:E@56,MOV:F@53   ] | SP:9000 Z:0
+  TICK   54 | SS | PC: 64 | RS:[MOV:F@53            ] | SP:9000 Z:0
+  TICK   55 | SS | PC: 65 | RS:[MOV:F@53            ] | SP:9000 Z:0
+  TICK   56 | SS | PC: 66 | RS:[MOV:E@53            ] | SP:9000 Z:0
+  TICK   57 | SS | PC: 67 | RS:[                    ] | SP:9000 Z:0
+  TICK   58 | SS | PC: 68 | RS:[MOV:F@59            ] | SP:9000 Z:0
+  TICK   59 | SS | PC: 69 | RS:[MOV:F@59            ] | SP:9000 Z:0
+  TICK   60 | SS | PC: 70 | RS:[MOV:F@59            ] | SP:9000 Z:0
+  TICK   61 | SS | PC: 71 | RS:[MOV:E@59            ] | SP:9000 Z:0
+  TICK   62 | SS | PC: 72 | RS:[CMP:F@62            ] | SP:9000 Z:0
+  TICK   63 | SS | PC: 73 | RS:[CMP:F@62            ] | SP:9000 Z:0
+  TICK   64 | SS | PC: 74 | RS:[CMP:E@62            ] | SP:9000 Z:0
+  TICK   65 | SS | PC: 75 | RS:[JEQ:F@65            ] | SP:9000 Z:0
+  TICK   66 | SS | PC: 76 | RS:[JEQ:F@65            ] | SP:9000 Z:0
+  TICK   67 | SS | PC: 77 | RS:[JEQ:E@65            ] | SP:9000 Z:0
+  TICK   68 | SS | PC: 78 | RS:[MOV:F@67            ] | SP:9000 Z:0
+  TICK   69 | SS | PC: 79 | RS:[MOV:F@67            ] | SP:9000 Z:0
+  TICK   70 | SS | PC: 80 | RS:[MOV:F@67            ] | SP:9000 Z:0
+  TICK   71 | SS | PC: 81 | RS:[MOV:E@67,ADD:F@73   ] | SP:9000 Z:0
+  TICK   72 | SS | PC: 82 | RS:[ADD:F@73,MOV:F@70   ] | SP:9000 Z:0
+  TICK   73 | SS | PC: 83 | RS:[ADD:E@73,MOV:F@70,SUB:F@77] | SP:9000 Z:0
+  TICK   74 | SS | PC: 84 | RS:[MOV:F@70,SUB:F@77   ] | SP:9000 Z:0
+  TICK   75 | SS | PC: 85 | RS:[MOV:E@70,SUB:F@77   ] | SP:9000 Z:0
+  TICK   76 | SS | PC: 86 | RS:[SUB:E@77            ] | SP:9000 Z:0
+  TICK   77 | SS | PC: 87 | RS:[JMP:F@81            ] | SP:9000 Z:1
+  TICK   78 | SS | PC: 88 | RS:[JMP:F@81            ] | SP:9000 Z:1
+  TICK   79 | SS | PC: 89 | RS:[JMP:E@81            ] | SP:9000 Z:1
+  TICK   80 | SS | PC: 63 | RS:[                    ] | SP:9000 Z:1
+  TICK   81 | SS | PC: 64 | RS:[                    ] | SP:9000 Z:1
+  TICK   82 | SS | PC: 65 | RS:[                    ] | SP:9000 Z:1
+  TICK   83 | SS | PC: 66 | RS:[                    ] | SP:9000 Z:1
+  TICK   84 | SS | PC: 67 | RS:[CMP:F@62            ] | SP:9000 Z:1
+  TICK   85 | SS | PC: 68 | RS:[CMP:F@62            ] | SP:9000 Z:1
+  TICK   86 | SS | PC: 69 | RS:[CMP:E@62            ] | SP:9000 Z:1
+  TICK   87 | SS | PC: 70 | RS:[JEQ:F@65            ] | SP:9000 Z:1
+  TICK   88 | SS | PC: 71 | RS:[JEQ:F@65            ] | SP:9000 Z:1
+  TICK   89 | SS | PC: 72 | RS:[JEQ:E@65            ] | SP:9000 Z:1
+  TICK   90 | SS | PC: 84 | RS:[                    ] | SP:9000 Z:1
+  TICK   91 | SS | PC: 85 | RS:[                    ] | SP:9000 Z:1
+  TICK   92 | SS | PC: 86 | RS:[                    ] | SP:9000 Z:1
+  TICK   93 | SS | PC: 87 | RS:[                    ] | SP:9000 Z:1
+  TICK   94 | SS | PC: 88 | RS:[MOV:F@83            ] | SP:9000 Z:1
+  TICK   95 | SS | PC: 89 | RS:[MOV:F@83            ] | SP:9000 Z:1
+  TICK   96 | SS | PC: 90 | RS:[MOV:F@83            ] | SP:9000 Z:1
+  TICK   97 | SS | PC: 91 | RS:[MOV:E@83            ] | SP:9000 Z:1
+  TICK   98 | SS | PC: 92 | RS:[MOV:F@86            ] | SP:9000 Z:1
+  TICK   99 | SS | PC: 93 | RS:[MOV:F@86            ] | SP:9000 Z:1
+  TICK  100 | SS | PC: 94 | RS:[MOV:F@86            ] | SP:9000 Z:1
+  TICK  101 | SS | PC: 95 | RS:[MOV:E@86            ] | SP:9000 Z:1
+  TICK  102 | SS | PC: 96 | RS:[                    ] | SP:9000 Z:1
+  TICK  103 | SS | PC: 97 | RS:[HALT:F@89           ] | SP:9000 Z:1
+  TICK  104 | SS | PC: 98 | RS:[HALT:F@89           ] | SP:9000 Z:1
+  TICK  105 | SS | PC: 99 | RS:[HALT:E@89           ] | SP:9000 Z:1
+  TICK  106 | SS | PC: 99 | RS:[NOP:F@90,NOP:F@91   ] | SP:9000 Z:1
 
-  Ticks: 45
+  Ticks: 106
   Output: 4 705032704
 out_code_log: |-
   0000: 00001107  JMP    -> 0016 
