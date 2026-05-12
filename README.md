@@ -178,21 +178,47 @@ pytest .\golden_test.py -v
 
 | Алгоритм   | Без суперскалярности (Такты) | С суперскалярностью (Такты) | Прирост скорости |
 |------------|------------------------------|-----------------------------|------------------|
-| cat        | 603                       | 756                           |  20,2%           |
-| hello | 517                         | 677                        | 23,6%             |
-| hello_user_name | 2183                         | 2884                        |24,3%          |
-| double | 153                         | 219                        | 30,1%            |
-| fact       | 1180                         | 1702                        | 30,7%             |
-| sort       | 4196                         | 5730                        | 26,8%              |
-| test       | 809                         | 1117                        | 27,6%            |
-| prob2      | 14278                      | 21602                     | 33.9%              |
+| cat        | 550                       | 579                           |  5%           |
+| hello | 366                         | 380                        | 11,57%             |
+| hello_user_name | 1608                         | 1625                        |1,04%          |
+| double | 106                         | 119                        | 10,924%            |
+| fact       | 792                         | 851                        | 6,93%             |
+| sort       | 3372                         | 3525                        | 4,34%              |
+| test       | 570                         | 610                        | 6,55%            |
+| prob2      | 9094                      | 21602                     | 7,40%              |
 
 Пример лога с суперсколярным исполнением и прерыванием:
 ```
-    --- TRAP: 8 at 1100 ---
-    TICK:    1100 | PC:    4 | JMP     #31
-    TICK:    1116 | PC:   34 | MOV     R0, [4]
-    TICK:    1126 | PC:   37 | MOV     [13], R0
-    TICK:    1132 | PC:   40 | MOV     R1, [13] & MOV     R2, #10           (SUPERSCALAR)
-    TICK:    1138 | PC:   46 | CMP     R1, R2 & MOV     R0, #1            (SUPERSCALAR)
+    TICK  350 | [INTERRUPT] Accepted sym \0. RetPC set to: 101
+    TICK  351 | [TRAP] Char saved
+    TICK  351 | SS | PC:  2 | RS:[                    ] | SP:9000 Z:1
+    TICK  352 | SS | PC:  2 | RS:[                    ] | SP:8999 Z:1
+    TICK  353 | SS | PC:  2 | RS:[                    ] | SP:8998 Z:1
+    TICK  354 | SS | PC:  2 | RS:[                    ] | SP:8997 Z:1
+    TICK  355 | SS | PC:  2 | RS:[                    ] | SP:8996 Z:1
+    TICK  356 | SS | PC:  2 | RS:[                    ] | SP:8995 Z:1
+    TICK  357 | SS | PC:  2 | RS:[                    ] | SP:8994 Z:1
+    TICK  358 | SS | PC:  2 | RS:[                    ] | SP:8994 Z:1
+    TICK  359 | SS | PC:  3 | RS:[                    ] | SP:8994 Z:1
+    TICK  360 | SS | PC:  4 | RS:[                    ] | SP:8994 Z:1
+    TICK  361 | SS | PC:  5 | RS:[                    ] | SP:8994 Z:1
+    TICK  362 | SS | PC:  6 | RS:[JMP:F@2             ] | SP:8994 Z:1
+    TICK  363 | SS | PC:  7 | RS:[JMP:F@2             ] | SP:8994 Z:1
+    TICK  364 | SS | PC:  8 | RS:[JMP:E@2             ] | SP:8994 Z:1
+    TICK  365 | SS | PC: 12 | RS:[                    ] | SP:8994 Z:1
+    TICK  366 | SS | PC: 13 | RS:[                    ] | SP:8994 Z:1
+    TICK  367 | SS | PC: 14 | RS:[                    ] | SP:8994 Z:1
+    TICK  368 | SS | PC: 15 | RS:[                    ] | SP:8994 Z:1
+    TICK  369 | SS | PC: 16 | RS:[MOV:F@11            ] | SP:8994 Z:1
+    TICK  370 | SS | PC: 17 | RS:[MOV:F@11            ] | SP:8994 Z:1
+    TICK  371 | SS | PC: 18 | RS:[MOV:F@11            ] | SP:8994 Z:1
+    TICK  372 | SS | PC: 19 | RS:[MOV:E@11            ] | SP:8994 Z:1
+    TICK  373 | SS | PC: 20 | RS:[MOV:F@14            ] | SP:8994 Z:1
+    TICK  374 | SS | PC: 21 | RS:[MOV:F@14            ] | SP:8994 Z:1
+    TICK  375 | SS | PC: 22 | RS:[MOV:F@14            ] | SP:8994 Z:1
+    TICK  376 | SS | PC: 23 | RS:[MOV:E@14            ] | SP:8994 Z:1
+    TICK  377 | SS | PC: 24 | RS:[                    ] | SP:8994 Z:1
+    TICK  378 | SS | PC: 25 | RS:[MOV:F@17,MOV:F@20   ] | SP:8994 Z:1
+    TICK  379 | SS | PC: 26 | RS:[MOV:F@17,MOV:F@20   ] | SP:8994 Z:1
+    TICK  380 | SS | PC: 27 | RS:[MOV:F@17,MOV:E@20   ] | SP:8994 Z:1
 ```
