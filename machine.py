@@ -1,666 +1,1182 @@
-import sys
-import logging
+from __future__ import annotations
+
 import ast
+import logging
+import sys
+from dataclasses import dataclass, field
 from enum import Enum
-from isa import Opcode, AddrMode, Registers, from_bytes
+
+from isa import AddrMode, Opcode, Registers, from_bytes
 from const import VECTOR_TRAP, OUT_INT, OUT_CHAR, TRAP_BUFFER
 
+WORD_MASK = 0xFFFFFFFF
+MEMORY_SIZE = 1024
+DEFAULT_TICK_LIMIT = 50_000
 
-class CUState(Enum):
-    NORMAL = 0
-    INTERRUPT_SEQ = 1
-    IRET_SEQ = 2
-    CALL_SEQ = 3
-    RET_SEQ = 4
+INT_OPCODE = 0xFF
 
 
-class InstrState(Enum):
-    FETCHING_OPERANDS = 1
-    EXECUTING = 2
-    WRITING_BACK = 3
-    RETIRED = 4
+def to_word(value: int) -> int:
+    return value & WORD_MASK
 
 
-FLAG_WRITERS = {
-    Opcode.CMP,
-    Opcode.ADD,
-    Opcode.SUB,
-    Opcode.ADC,
-    Opcode.SBC,
-    Opcode.MUL,
-    Opcode.MOD,
-}
-FLAG_READERS = {Opcode.JEQ, Opcode.JGT}
+def to_signed(value: int) -> int:
+    value &= WORD_MASK
+    if value & 0x80000000:
+        return value - 0x100000000
+    return value
 
 
-class Instruction:
-    def __init__(self, opcode, modes, args, pc):
-        self.opcode = opcode
-        self.modes = modes
-        self.args = args
-        self.pc = pc
-        self.state = InstrState.FETCHING_OPERANDS
-        self.result = None
-        self.operands = None
-        self.cycles_left = 1
-        self.f_n, self.f_z, self.f_c, self.f_v = False, False, False, False
-        for m in modes:
-            if m in [AddrMode.MEM, AddrMode.REG_INDIRECT]:
-                self.cycles_left += 1
+class PcSel(Enum):
+    INC = "pc+1"
+    DEC = "pc-1"
+    ALU_OUT = "alu_out"
+    TRAP_VECTOR = "trap_vector"
 
-    def __repr__(self):
-        return f"{self.opcode.name}:{self.state.name[0]}@{self.pc}"
+
+class IRQ(Enum):
+    MEM = "mem"
+    INT = "int"
+
+
+class StepCntrSel(Enum):
+    PLUS_ONE = "+1"
+    ZERO = "0"
+
+
+class OperandASel(Enum):
+    R0 = "R0"
+    R1 = "R1"
+    R2 = "R2"
+    R3 = "R3"
+    AR = "AR"
+    SP = "SP"
+
+
+class OperandBSel(Enum):
+    R0 = "R0"
+    R1 = "R1"
+    R2 = "R2"
+    R3 = "R3"
+    AR = "AR"
+    SP = "SP"
+
+
+class OpSrc1Sel(Enum):
+    OPERAND_A = "operand_a"
+    IMM1 = "imm1"
+
+
+class OpSrc2Sel(Enum):
+    OPERAND_B = "operand_b"
+    IMM2 = "imm2"
+    DATA_OUT = "data_out"
+
+
+class Operation(Enum):
+    PASS_A = "pass_a"
+    PASS_B = "pass_b"
+    ADD = "add"
+    SUB = "sub"
+    MUL = "mul"
+    MOD = "mod"
+    ADC = "adc"
+    SBC = "sbc"
+
+
+class SpSaveSel(Enum):
+    PLUS_ONE = "+1"
+    MINUS_ONE = "-1"
+    FROM_ALU = "from_alu"
+
+
+class MemWrSel(Enum):
+    ALU_OUT = "alu_out"
+    FLAGS = "flags"
+
+
+@dataclass
+class InputEvent:
+    tick: int
+    char: int
+
+
+class IOExternal:
+    def __init__(self, events: list[InputEvent]):
+        self.events = sorted(events, key=lambda e: e.tick)
+        self._pos = 0
+        self.irq = IRQ.MEM
+        self.ie = False
+
+    def _get_char(self, char_code: int) -> str:
+        return chr(char_code & 0xFF)
+
+    def update(self, tick: int, data_path: "DataPath") -> None:
+        while self._pos < len(self.events) and self.events[self._pos].tick <= tick:
+            event = self.events[self._pos]
+            self._pos += 1
+            if self.ie:
+                logging.info(
+                    "TICK:   %d char=%r DROPPED (IE=1)",
+                    event.tick,
+                    self._get_char(event.char),
+                )
+                continue
+            data_path.memory[TRAP_BUFFER] = to_word(event.char)
+            self.irq = IRQ.INT
+            self.ie = True
+            logging.info(
+                "TICK:   %d char=%r IRQ=1 IE=1",
+                event.tick,
+                self._get_char(event.char),
+            )
+
+    def ack_irq(self) -> None:
+        self.irq = IRQ.MEM
+
+    def reset_ie(self) -> None:
+        self.ie = False
 
 
 class DataPath:
-    def __init__(self, mem_words):
-        self.mem = mem_words + [0] * (10000 - len(mem_words))
-        self.regs = [0] * 5
-        self.regs[Registers.SP] = 9000
-        self.n, self.z, self.c, self.v = False, False, False, False
+    def __init__(self, memory_image: list[int]):
+        self.memory: list[int] = [0] * MEMORY_SIZE
+        for addr, word in enumerate(memory_image):
+            self.memory[addr] = to_word(word)
 
-    def get_flags(self):
+        self.registers: dict[Registers, int] = {
+            Registers.R0: 0,
+            Registers.R1: 0,
+            Registers.R2: 0,
+            Registers.R3: 0,
+            Registers.SP: MEMORY_SIZE - 1,
+        }
+        self.ar: int = 0
+        self.addr_reg: int = 0
+        self.alu_out: int = 0
+        self.flag_n = False
+        self.flag_z = False
+        self.flag_c = False
+        self.flag_v = False
+        self.op_a_sel: OperandASel = OperandASel.R0
+        self.op_b_sel: OperandBSel = OperandBSel.R0
+        self.imm1: int = 0
+        self.imm2: int = 0
+        self.output_buffer: list[str] = []
+        self._last_signals: dict[str, object] = {}
+
+    def _read_via_a(self) -> int:
+        s = self.op_a_sel
+        if s == OperandASel.R0:
+            return self.registers[Registers.R0]
+        if s == OperandASel.R1:
+            return self.registers[Registers.R1]
+        if s == OperandASel.R2:
+            return self.registers[Registers.R2]
+        if s == OperandASel.R3:
+            return self.registers[Registers.R3]
+        if s == OperandASel.AR:
+            return self.ar
+        if s == OperandASel.SP:
+            return self.registers[Registers.SP]
+        return 0
+
+    def _read_via_b(self) -> int:
+        s = self.op_b_sel
+        if s == OperandBSel.R0:
+            return self.registers[Registers.R0]
+        if s == OperandBSel.R1:
+            return self.registers[Registers.R1]
+        if s == OperandBSel.R2:
+            return self.registers[Registers.R2]
+        if s == OperandBSel.R3:
+            return self.registers[Registers.R3]
+        if s == OperandBSel.AR:
+            return self.ar
+        if s == OperandBSel.SP:
+            return self.registers[Registers.SP]
+        return 0
+
+    @property
+    def operand_a(self) -> int:
+        return self._read_via_a()
+
+    @property
+    def operand_b(self) -> int:
+        return self._read_via_b()
+
+    @property
+    def data_out(self) -> int:
+        if 0 <= self.addr_reg < MEMORY_SIZE:
+            return self.memory[self.addr_reg]
+        return 0
+
+    def read_instr(self, addr: int) -> int:
+        addr = to_word(addr) % MEMORY_SIZE
+        return self.memory[addr]
+
+    def begin_tick(self) -> None:
+        self._last_signals = {}
+
+    def signal_select_operand_a(self, sel: OperandASel) -> None:
+        self.op_a_sel = sel
+        self._last_signals["op_a_sel"] = sel.value
+
+    def signal_select_operand_b(self, sel: OperandBSel) -> None:
+        self.op_b_sel = sel
+        self._last_signals["op_b_sel"] = sel.value
+
+    def signal_set_imm(self, imm1: int | None = None, imm2: int | None = None) -> None:
+        if imm1 is not None:
+            self.imm1 = to_word(imm1)
+            self._last_signals["imm1"] = to_signed(self.imm1)
+        if imm2 is not None:
+            self.imm2 = to_word(imm2)
+            self._last_signals["imm2"] = to_signed(self.imm2)
+
+    def _alu_input_1(self, sel: OpSrc1Sel) -> int:
+        if sel == OpSrc1Sel.OPERAND_A:
+            return self.operand_a
+        if sel == OpSrc1Sel.IMM1:
+            return self.imm1
+        return 0
+
+    def _alu_input_2(self, sel: OpSrc2Sel) -> int:
+        if sel == OpSrc2Sel.OPERAND_B:
+            return self.operand_b
+        if sel == OpSrc2Sel.IMM2:
+            return self.imm2
+        if sel == OpSrc2Sel.DATA_OUT:
+            return self.data_out
+        return 0
+
+    def signal_alu(
+        self,
+        operation: Operation,
+        src1: OpSrc1Sel | None = None,
+        src2: OpSrc2Sel | None = None,
+        latch_flags: bool = False,
+    ) -> None:
+        if operation == Operation.PASS_A:
+            self.alu_out = to_word(self._alu_input_1(src1))
+            self._last_signals["alu_op"] = "PASS_A"
+            self._last_signals["op_src_1"] = src1.value if src1 else ""
+            self._last_signals["alu_out"] = to_signed(self.alu_out)
+            return
+
+        if operation == Operation.PASS_B:
+            self.alu_out = to_word(self._alu_input_2(src2))
+            self._last_signals["alu_op"] = "PASS_B"
+            self._last_signals["op_src_2"] = src2.value if src2 else ""
+            self._last_signals["alu_out"] = to_signed(self.alu_out)
+            return
+
+        left = self._alu_input_1(src1) if src1 else 0
+        right = self._alu_input_2(src2) if src2 else 0
+        a, b = to_signed(left), to_signed(right)
+
+        if operation in (Operation.ADD, Operation.ADC):
+            cin = 1 if (operation == Operation.ADC and self.flag_c) else 0
+            raw = (left & WORD_MASK) + (right & WORD_MASK) + cin
+            result = raw & WORD_MASK
+            carry = bool(raw & (1 << 32))
+            signed = to_signed(result)
+            overflow = (a >= 0 and b + cin >= 0 and signed < 0) or (
+                a < 0 and b + cin < 0 and signed >= 0
+            )
+        elif operation in (Operation.SUB, Operation.SBC):
+            borrow = 1 if (operation == Operation.SBC and not self.flag_c) else 0
+            raw = (left & WORD_MASK) - (right & WORD_MASK) - borrow
+            result = raw & WORD_MASK
+            carry = raw >= 0
+            signed = to_signed(result)
+            overflow = (a >= 0 and b < 0 and signed < 0) or (
+                a < 0 and b > 0 and signed > 0
+            )
+        elif operation == Operation.MUL:
+            result = to_word(a * b)
+            carry = (a * b) != to_signed(result)
+            overflow = carry
+        elif operation == Operation.MOD:
+            result = to_word(a - (a // b) * b) if b != 0 else 0
+            carry = False
+            overflow = False
+        else:
+            result = 0
+            carry = False
+            overflow = False
+
+        self.alu_out = result
+        if latch_flags:
+            self.flag_z = result == 0
+            self.flag_n = to_signed(result) < 0
+            self.flag_c = carry
+            self.flag_v = overflow
+            self._last_signals["latch_flags"] = True
+        self._last_signals["alu_op"] = operation.name
+        self._last_signals["op_src_1"] = src1.value if src1 else ""
+        self._last_signals["op_src_2"] = src2.value if src2 else ""
+        self._last_signals["alu_out"] = to_signed(result)
+
+    def signal_latch_addr_reg(self) -> None:
+        self.addr_reg = to_word(self.alu_out) % MEMORY_SIZE
+        self._last_signals["addr_reg"] = self.addr_reg
+
+    def signal_mem_read(self) -> None:
+        self._last_signals["read_data"] = True
+
+    def signal_mem_write(self, sel: MemWrSel = MemWrSel.ALU_OUT) -> None:
+        if sel == MemWrSel.ALU_OUT:
+            value = self.alu_out
+        elif sel == MemWrSel.FLAGS:
+            value = self._flags_to_word()
+        else:
+            value = 0
+
+        word = to_word(value)
+        if self.addr_reg == OUT_CHAR:
+            ch = chr(word & 0xFF)
+            self.output_buffer.append(ch)
+        elif self.addr_reg == OUT_INT:
+            self.output_buffer.append(str(to_signed(word)))
+        else:
+            self.memory[self.addr_reg] = word
+        self._last_signals["write_data"] = True
+        self._last_signals["mem_wr_sel"] = sel.value
+
+    def signal_latch_reg(self, reg: Registers) -> None:
+        self.registers[reg] = to_word(self.alu_out)
+        self._last_signals[f"latch_{reg.name}"] = to_signed(self.alu_out)
+
+    def signal_latch_ar(self) -> None:
+        self.ar = to_word(self.alu_out)
+        self._last_signals["latch_AR"] = to_signed(self.ar)
+
+    def signal_sp_save(self, sel: SpSaveSel) -> None:
+        sp = self.registers[Registers.SP]
+        if sel == SpSaveSel.PLUS_ONE:
+            new_sp = sp + 1
+        elif sel == SpSaveSel.MINUS_ONE:
+            new_sp = sp - 1
+        elif sel == SpSaveSel.FROM_ALU:
+            new_sp = self.alu_out
+        else:
+            new_sp = sp
+        self.registers[Registers.SP] = to_word(new_sp)
+        self._last_signals["sp_save"] = sel.value
+
+    def signal_restore_flags(self) -> None:
+        word = self.data_out
+        self.flag_z = bool(word & 0b0001)
+        self.flag_n = bool(word & 0b0010)
+        self.flag_c = bool(word & 0b0100)
+        self.flag_v = bool(word & 0b1000)
+        self._last_signals["restore_flags"] = True
+
+    def _flags_to_word(self) -> int:
         return (
-            (int(self.n) << 3) | (int(self.z) << 2) | (int(self.c) << 1) | int(self.v)
+            int(self.flag_z)
+            | (int(self.flag_n) << 1)
+            | (int(self.flag_c) << 2)
+            | (int(self.flag_v) << 3)
         )
 
-    def set_flags(self, word):
-        word = int(word)
-        self.n = bool(word & 8)
-        self.z = bool(word & 4)
-        self.c = bool(word & 2)
-        self.v = bool(word & 1)
 
-    def alu(self, op, a, b=0, carry=0):
-        a &= 0xFFFFFFFF
-        b &= 0xFFFFFFFF
-        res = 0
-        if op in [Opcode.MOV, Opcode.PUSH, Opcode.POP]:
-            res = a
-        elif op in [Opcode.ADD, Opcode.ADC]:
-            res = a + b + carry
-        elif op in [Opcode.SUB, Opcode.SBC, Opcode.CMP]:
-            res = a - b - carry
-        elif op == Opcode.MUL:
-            res = a * b
-        elif op == Opcode.MOD:
-            res = a % b if b != 0 else 0
+@dataclass
+class DecodedInstr:
+    opcode: int = Opcode.NOP
+    arg_count: int = 0
+    modes: list[AddrMode] = field(default_factory=list)
 
-        res32 = res & 0xFFFFFFFF
 
-        z = res32 == 0
-        n = bool(res32 & 0x80000000)
-        c = res > 0xFFFFFFFF or res < 0
-        v = False
-        if op in [Opcode.ADD, Opcode.ADC]:
-            v = bool((~(a ^ b) & (a ^ res32) & 0x80000000))
-        elif op in [Opcode.SUB, Opcode.SBC, Opcode.CMP]:
-            v = bool(((a ^ b) & (a ^ res32) & 0x80000000))
+def decode_inst(word: int) -> DecodedInstr:
+    op_raw = word & 0xFF
 
-        return res32, z, n, c, v
+    if op_raw == INT_OPCODE:
+        return DecodedInstr(opcode=INT_OPCODE, arg_count=0, modes=[])
+
+    cnt = (word >> 8) & 0xF
+
+    raw_modes = [(word >> (12 + i * 4)) & 0xF for i in range(cnt)]
+    modes = [AddrMode(r & 0x7) for r in raw_modes]
+
+    return DecodedInstr(opcode=op_raw, arg_count=cnt, modes=modes)
 
 
 class ControlUnit:
-    def __init__(self, dp, schedule=None, superscalar=True):
-        self.dp = dp
-        self.fetch_pc = 0
-        self.tick = 0
-        self.ie = True
-        self.halted = False
-        self.cu_state = CUState.NORMAL
-        self.seq_step = 0
-        self.seq_data = None
-        self.schedule = schedule or []
-        self.output = []
-        self.decode_queue = []
-        self.fetch_buffer = []
-        self.retire_buffer = []
-        self.rs = []
-        self.superscalar = superscalar
+    def __init__(self, data_path: DataPath, io_controller: IOExternal):
+        self.dp = data_path
+        self.io = io_controller
 
-    def pipeline_flush(self, new_pc):
-        self.fetch_pc = new_pc
-        self.fetch_buffer.clear()
-        self.decode_queue.clear()
-        self.rs.clear()
+        self.inst_prnt: int = 0
 
-    def _read_forward(self, mode, val, current_instr):
-        idx = self.decode_queue.index(current_instr)
-        older_instrs = self.decode_queue[:idx]
+        self.instr: DecodedInstr = DecodedInstr()
+        self.operand1: int = 0
+        self.operand2: int = 0
+        self.operand3: int = 0
 
-        if mode == AddrMode.REG:
-            for prev in reversed(older_instrs):
-                if prev.modes and prev.modes[0] == AddrMode.REG and prev.args[0] == val:
-                    if prev.result is not None:
-                        return prev.result
-            return self.dp.regs[val]
-        if mode == AddrMode.IMM:
-            return val
-        if mode == AddrMode.MEM:
-            return self.dp.mem[val]
-        if mode == AddrMode.REG_INDIRECT:
-            addr = self._read_forward(AddrMode.REG, val, current_instr)
-            return self.dp.mem[addr]
-        return 0
+        self.latch_op1: bool = True
+        self.latch_op2: bool = True
+        self.latch_op3: bool = True
 
-    def _is_ready_to_dispatch(self, instr):
-        idx = self.decode_queue.index(instr)
-        older_instrs = self.decode_queue[:idx]
+        self.step_counter: int = 0
 
-        NON_WRITING_OPCODES = {
-            Opcode.CMP,
-            Opcode.PUSH,
-            Opcode.JMP,
-            Opcode.JEQ,
-            Opcode.JGT,
-            Opcode.CALL,
-            Opcode.RET,
-            Opcode.IRET,
-            Opcode.HALT,
-        }
+        self.pc: int = 0
 
-        if instr.opcode in [
-            Opcode.PUSH,
-            Opcode.POP,
-            Opcode.CALL,
-            Opcode.RET,
-            Opcode.IRET,
-        ]:
-            for prev in older_instrs:
-                if prev.opcode in [
-                    Opcode.PUSH,
-                    Opcode.POP,
-                    Opcode.CALL,
-                    Opcode.RET,
-                    Opcode.IRET,
-                ]:
-                    if prev.state != InstrState.RETIRED:
-                        return False
+        self._tick: int = 0
+        self._halted: bool = False
+        self._last_op: str = "start"
 
-        if instr.opcode in FLAG_READERS:
-            for prev in older_instrs:
-                if prev.opcode in FLAG_WRITERS:
-                    if prev.state != InstrState.RETIRED:
-                        return False
+    def signal_latch_sc(self, sel: StepCntrSel) -> None:
+        if sel == StepCntrSel.PLUS_ONE:
+            self.step_counter += 1
+        elif sel == StepCntrSel.ZERO:
+            self.step_counter = 0
 
-        for i, (m, a) in enumerate(zip(instr.modes, instr.args)):
-            if m not in (AddrMode.REG, AddrMode.REG_INDIRECT):
-                continue
-
-            is_write = (
-                i == 0 and m == AddrMode.REG and instr.opcode not in NON_WRITING_OPCODES
-            )
-            is_read = not is_write or instr.opcode != Opcode.MOV
-
-            for prev in older_instrs:
-                prev_writes = (
-                    prev.modes
-                    and prev.modes[0] == AddrMode.REG
-                    and prev.args[0] == a
-                    and prev.opcode not in NON_WRITING_OPCODES
-                )
-
-                if prev_writes and (is_read or is_write):
-                    if prev.state not in [InstrState.WRITING_BACK, InstrState.RETIRED]:
-                        return False
-
-                if is_write and prev.operands is None:
-                    for p_i, (p_m, p_a) in enumerate(zip(prev.modes, prev.args)):
-                        if p_m == AddrMode.REG_INDIRECT and p_a == a:
-                            return False
-                        if p_m == AddrMode.REG and p_a == a:
-                            p_is_w = p_i == 0 and prev.opcode not in NON_WRITING_OPCODES
-                            if not p_is_w or prev.opcode != Opcode.MOV:
-                                return False
-
-        reads_mem = instr.modes and any(
-            m in [AddrMode.MEM, AddrMode.REG_INDIRECT] for m in instr.modes[1:]
-        )
-
-        writes_mem = instr.modes and instr.modes[0] in [
-            AddrMode.MEM,
-            AddrMode.REG_INDIRECT,
-        ]
-
-        if reads_mem or writes_mem:
-            for prev in older_instrs:
-                prev_writes_mem = (
-                    prev.modes
-                    and prev.modes[0] in [AddrMode.MEM, AddrMode.REG_INDIRECT]
-                ) or (prev.opcode == Opcode.PUSH)
-                if prev_writes_mem:
-                    if prev.state != InstrState.RETIRED:
-                        return False
-        return True
-
-    def _check_hazard(self, instr):
-        NON_WRITING_OPCODES = {
-            Opcode.CMP,
-            Opcode.PUSH,
-            Opcode.JMP,
-            Opcode.JEQ,
-            Opcode.JGT,
-            Opcode.CALL,
-            Opcode.RET,
-            Opcode.IRET,
-            Opcode.HALT,
-        }
-
-        if instr.opcode in FLAG_READERS:
-            for prev in self.rs:
-                if prev == instr:
-                    break
-                if prev.opcode in FLAG_WRITERS and prev.result is None:
-                    return True
-
-        for i, (m, a) in enumerate(zip(instr.modes, instr.args)):
-            if m not in (AddrMode.REG, AddrMode.REG_INDIRECT):
-                continue
-
-            is_write = (
-                i == 0 and m == AddrMode.REG and instr.opcode not in NON_WRITING_OPCODES
-            )
-
-            for prev in self.rs:
-                if prev == instr:
-                    break
-
-                prev_writes = (
-                    prev.modes
-                    and prev.modes[0] == AddrMode.REG
-                    and prev.args[0] == a
-                    and prev.opcode not in NON_WRITING_OPCODES
-                )
-
-                if prev_writes and prev.result is None:
-                    return True
-
-                if is_write and prev.operands is None:
-                    for p_i, (p_m, p_a) in enumerate(zip(prev.modes, prev.args)):
-                        if p_m == AddrMode.REG_INDIRECT and p_a == a:
-                            return True
-                        if p_m == AddrMode.REG and p_a == a:
-                            p_is_write = (
-                                p_i == 0 and prev.opcode not in NON_WRITING_OPCODES
-                            )
-                            if not p_is_write or prev.opcode != Opcode.MOV:
-                                return True
-
-        if instr.opcode == Opcode.POP:
-            for prev in self.rs:
-                if prev == instr:
-                    break
-                if prev.opcode == Opcode.PUSH and prev.operands is None:
-                    return True
-
-        return False
-
-    def step_fetch(self):
-        limit = 8 if self.superscalar else 5
-        if len(self.fetch_buffer) < limit and not self.halted:
-            self.fetch_buffer.append((self.fetch_pc, self.dp.mem[self.fetch_pc]))
-            self.fetch_pc += 1
-
-    def step_decode(self):
-        limit = 8 if self.superscalar else 4
-        if self.fetch_buffer and len(self.decode_queue) < limit:
-            pc, h = self.fetch_buffer[0]
-            try:
-                op, cnt = Opcode(h & 0xFF), (h >> 8) & 0xF
-                if len(self.fetch_buffer) >= 1 + cnt:
-                    self.fetch_buffer.pop(0)
-                    ms = [AddrMode((h >> (12 + i * 4)) & 0xF) for i in range(cnt)]
-                    args = [self.fetch_buffer.pop(0)[1] for _ in range(cnt)]
-                    self.decode_queue.append(Instruction(op, ms, args, pc))
-            except ValueError:
-                self.fetch_buffer.pop(0)
-
-    def step_dispatch(self):
-        width = 2 if self.superscalar else 1
-        rs_limit = 4 if self.superscalar else 1
-        dispatched = 0
-
-        BARRIER_OPS = {
-            Opcode.JMP,
-            Opcode.JEQ,
-            Opcode.JGT,
-            Opcode.CALL,
-            Opcode.RET,
-            Opcode.IRET,
-            Opcode.HALT,
-        }
-
-        for instr in self.decode_queue:
-            if dispatched >= width or len(self.rs) >= rs_limit:
-                break
-
-            if instr in self.rs or instr.state in [
-                InstrState.EXECUTING,
-                InstrState.WRITING_BACK,
-                InstrState.RETIRED,
-            ]:
-                continue
-
-            idx = self.decode_queue.index(instr)
-            older_instrs = self.decode_queue[:idx]
-
-            if instr.opcode in BARRIER_OPS and older_instrs:
-                break
-
-            if any(p.opcode in BARRIER_OPS for p in older_instrs):
-                break
-
-            if self._is_ready_to_dispatch(instr):
-                self.rs.append(instr)
-                dispatched += 1
-
-    def step_execute(self):
-        exec_limit = 2 if self.superscalar else 1
-        executed_this_tick = 0
-        to_remove = []
-
-        for instr in self.rs:
-            if executed_this_tick >= exec_limit:
-                break
-
-            executed_this_tick += 1
-
-            if instr.state == InstrState.FETCHING_OPERANDS:
-                if instr.cycles_left > 0:
-                    instr.cycles_left -= 1
-                else:
-                    instr.operands = [
-                        self._read_forward(m, a, instr)
-                        for m, a in zip(instr.modes, instr.args)
-                    ]
-                    instr.state = InstrState.EXECUTING
-
-            elif instr.state == InstrState.EXECUTING:
-                op, vals = instr.opcode, instr.operands
-                if op in [Opcode.JMP, Opcode.JEQ, Opcode.JGT]:
-                    cond = (
-                        (op == Opcode.JMP)
-                        or (op == Opcode.JEQ and self.dp.z)
-                        or (
-                            op == Opcode.JGT
-                            and not self.dp.z
-                            and self.dp.n == self.dp.v
-                        )
-                    )
-                    if cond:
-                        instr.result = instr.args[0]
-                    else:
-                        instr.result = None
-                    instr.state = InstrState.WRITING_BACK
-                    to_remove.append(instr)
-                elif op in [Opcode.HALT, Opcode.CALL, Opcode.RET]:
-                    instr.state = InstrState.WRITING_BACK
-                    to_remove.append(instr)
-                elif op in [
-                    Opcode.MOV,
-                    Opcode.ADD,
-                    Opcode.SUB,
-                    Opcode.MUL,
-                    Opcode.CMP,
-                    Opcode.ADC,
-                    Opcode.SBC,
-                    Opcode.MOD,
-                ]:
-                    carry = int(self.dp.c) if op in [Opcode.ADC, Opcode.SBC] else 0
-                    if op == Opcode.MOV:
-                        instr.result, _, _, _, _ = self.dp.alu(op, vals[1])
-                    else:
-                        v1, v2 = (
-                            (vals[1], vals[2]) if len(vals) > 2 else (vals[0], vals[1])
-                        )
-                        instr.result, instr.f_z, instr.f_n, instr.f_c, instr.f_v = (
-                            self.dp.alu(op, v1, v2, carry)
-                        )
-                    instr.state = InstrState.WRITING_BACK
-                    to_remove.append(instr)
-                elif op == Opcode.PUSH:
-                    instr.result = vals[0]
-                    instr.state = InstrState.WRITING_BACK
-                    to_remove.append(instr)
-                elif op == Opcode.POP:
-                    instr.result = self._read_forward(
-                        AddrMode.MEM, self.dp.regs[Registers.SP], instr
-                    )
-                    instr.state = InstrState.WRITING_BACK
-                    to_remove.append(instr)
-                elif op == Opcode.IRET:
-                    instr.state = InstrState.WRITING_BACK
-                    to_remove.append(instr)
-
-                self.retire_buffer.append(instr)
-
-        for instr in to_remove:
-            if instr in self.rs:
-                self.rs.remove(instr)
-
-    def step_retire(self):
-        while self.decode_queue:
-            instr = self.decode_queue[0]
-
-            if instr not in self.retire_buffer:
-                break
-
-            if not hasattr(instr, "write_lat"):
-                if instr.modes and instr.modes[0] == AddrMode.MEM:
-                    instr.write_lat = 2
-                elif instr.modes and instr.modes[0] == AddrMode.REG_INDIRECT:
-                    instr.write_lat = 3
-                else:
-                    instr.write_lat = 1
-
-            if instr.write_lat > 1:
-                instr.write_lat -= 1
-                break
-
-            self.decode_queue.pop(0)
-            self.retire_buffer.remove(instr)
-
-            if instr.state == InstrState.RETIRED:
-                continue
-
-            if instr.opcode in [Opcode.JMP, Opcode.JEQ, Opcode.JGT]:
-                if instr.result is not None:
-                    self.pipeline_flush(instr.result)
-                continue
-
-            if instr.opcode in FLAG_WRITERS:
-                self.dp.z = instr.f_z
-                self.dp.n = instr.f_n
-                self.dp.c = instr.f_c
-                self.dp.v = instr.f_v
-
-            if instr.opcode == Opcode.HALT:
-                self.halted = True
-                break
-            if instr.opcode == Opcode.IRET:
-                self.cu_state = CUState.IRET_SEQ
-                self.seq_step = 0
-                return
-            if instr.opcode == Opcode.CALL:
-                self.cu_state = CUState.CALL_SEQ
-                self.seq_step = 0
-                self.seq_data = {
-                    "target": instr.args[0],
-                    "ret_pc": instr.pc + 1 + len(instr.args),
-                }
-                return
-            if instr.opcode == Opcode.RET:
-                self.cu_state = CUState.RET_SEQ
-                self.seq_step = 0
-                return
-
-            if instr.opcode == Opcode.PUSH:
-                self.dp.regs[Registers.SP] -= 1
-                self.dp.mem[self.dp.regs[Registers.SP]] = instr.result
-            elif instr.opcode == Opcode.POP:
-                self.dp.regs[Registers.SP] += 1
-                self.dp.regs[instr.args[0]] = instr.result
-            elif instr.opcode != Opcode.CMP and instr.result is not None:
-                m, a = instr.modes[0], instr.args[0]
-                val = instr.result & 0xFFFFFFFF
-                if m == AddrMode.REG:
-                    self.dp.regs[a] = val
-                else:
-                    addr = a if m == AddrMode.MEM else self.dp.regs[a]
-                    self.dp.mem[addr] = val
-                    if addr == OUT_CHAR:
-                        self.output.append(chr(val & 0xFF))
-                    elif addr == OUT_INT:
-                        self.output.append(str(val))
-            instr.state = InstrState.RETIRED
-
-    def process_call_sequence(self):
-        self.seq_step += 1
-        if self.seq_step == 1:
-            self.dp.regs[Registers.SP] -= 1
-            self.dp.mem[self.dp.regs[Registers.SP]] = self.seq_data["ret_pc"]
-            logging.info(
-                f"TICK {self.tick:4} | [CALL] Push RetPC {self.seq_data['ret_pc']}"
-            )
-        elif self.seq_step == 2:
-            self.pipeline_flush(self.seq_data["target"])
-            self.cu_state = CUState.NORMAL
-
-    def process_ret_sequence(self):
-        self.seq_step += 1
-        if self.seq_step == 1:
-            self.seq_data = self.dp.mem[self.dp.regs[Registers.SP]]
-        elif self.seq_step == 2:
-            self.dp.regs[Registers.SP] += 1
-        elif self.seq_step == 3:
-            self.pipeline_flush(self.seq_data)
-            self.cu_state = CUState.NORMAL
-
-    def process_interrupt_sequence(self):
-        self.seq_step += 1
-        s = self.seq_step
-        if s == 1:
-            self.ie = False
-            self.dp.mem[TRAP_BUFFER] = ord(self.seq_data["char"])
-            logging.info(f"TICK {self.tick:4} | [TRAP] Char saved")
-        elif s == 2:
-            self.dp.regs[Registers.SP] -= 1
-            self.dp.mem[self.dp.regs[Registers.SP]] = self.seq_data["ret_pc"]
-        elif s == 3:
-            self.dp.regs[Registers.SP] -= 1
-            self.dp.mem[self.dp.regs[Registers.SP]] = self.dp.get_flags()
-        elif s <= 7:
-            reg = s - 4
-            self.dp.regs[Registers.SP] -= 1
-            self.dp.mem[self.dp.regs[Registers.SP]] = self.dp.regs[reg]
-        elif s == 8:
-            self.pipeline_flush(VECTOR_TRAP)
-            self.cu_state = CUState.NORMAL
-            self.seq_step = 0
-
-    def process_iret_sequence(self):
-        self.seq_step += 1
-        s = self.seq_step
-        if s <= 4:
-            reg = 4 - s
-            self.dp.regs[reg] = self.dp.mem[self.dp.regs[Registers.SP]]
-            self.dp.regs[Registers.SP] += 1
-        elif s == 5:
-            self.dp.set_flags(self.dp.mem[self.dp.regs[Registers.SP]])
-            self.dp.regs[Registers.SP] += 1
-        elif s == 6:
-            ret_pc = self.dp.mem[self.dp.regs[Registers.SP]]
-            self.dp.regs[Registers.SP] += 1
-            self.ie = True
-            self.pipeline_flush(ret_pc)
-            self.cu_state = CUState.NORMAL
-            self.seq_step = 0
-
-    def tick_machine(self):
-        self.tick += 1
-        if self.cu_state != CUState.NORMAL:
-            if self.cu_state == CUState.INTERRUPT_SEQ:
-                self.process_interrupt_sequence()
-            elif self.cu_state == CUState.IRET_SEQ:
-                self.process_iret_sequence()
-            elif self.cu_state == CUState.CALL_SEQ:
-                self.process_call_sequence()
-            elif self.cu_state == CUState.RET_SEQ:
-                self.process_ret_sequence()
+    def signal_latch_pc(self, sel: PcSel) -> None:
+        if sel == PcSel.INC:
+            value = self.pc + 1
+        elif sel == PcSel.DEC:
+            value = self.pc - 1
+        elif sel == PcSel.ALU_OUT:
+            value = self.dp.alu_out
+        elif sel == PcSel.TRAP_VECTOR:
+            value = VECTOR_TRAP
         else:
-            if self.schedule and self.tick >= self.schedule[0]["tick"]:
-                event = self.schedule.pop(0)
-                if self.ie:
-                    if self.decode_queue:
-                        ret_pc = self.decode_queue[0].pc
-                    elif self.fetch_buffer:
-                        ret_pc = self.fetch_buffer[0][0]
-                    else:
-                        ret_pc = self.fetch_pc
+            value = self.pc
+        self.pc = to_word(value) % MEMORY_SIZE
 
-                    self.pipeline_flush(VECTOR_TRAP)
+    def signal_latch_instr(self, sel: IRQ) -> None:
+        if sel == IRQ.MEM:
+            self.inst_prnt = to_word(self.dp.read_instr(self.pc))
+            self.instr = decode_inst(self.inst_prnt)
+            self._last_op = "FETCH"
+        elif sel == IRQ.INT:
+            self.inst_prnt = INT_OPCODE
+            self.instr = DecodedInstr(opcode=INT_OPCODE, arg_count=0)
+            self._last_op = "FETCH"
 
-                    self.cu_state = CUState.INTERRUPT_SEQ
-                    self.seq_step = 0
-                    self.seq_data = {"char": event["char"], "ret_pc": ret_pc}
+    def current_tick(self) -> int:
+        return self._tick
 
-                    sym = event["char"].replace("\n", "\\n").replace("\0", "\\0")
+    def is_halted(self) -> bool:
+        return self._halted
 
-                    logging.info(
-                        f"TICK {self.tick:4} | [INTERRUPT] Accepted sym {sym}. RetPC set to: {ret_pc}"
-                    )
+    def process_next_tick(self) -> None:
+        if self._halted:
+            return
+        self.io.update(self._tick, self.dp)
+        self.dp.begin_tick()
+        self.latch_all_op()
+
+        if self.step_counter == 0:
+            self._fetch_inst()
+        else:
+            args_done_at = self.instr.arg_count
+            if self.step_counter <= args_done_at:
+                self._fetch_argument(self.step_counter)
+            else:
+                self._execute()
+
+        self._tick += 1
+
+    def write_op(self) -> None:
+        self.dp.signal_mem_read()
+        word = to_word(self.dp.read_instr(self.pc))
+
+        if not self.latch_op1:
+            self.operand1 = word
+        if not self.latch_op2:
+            self.operand2 = word
+        if not self.latch_op3:
+            self.operand3 = word
+
+    def _fetch_inst(self) -> None:
+        self.dp.signal_mem_read()
+
+        self.signal_latch_instr(self.io.irq)
+
+        self.signal_latch_pc(PcSel.INC)
+        self.signal_latch_sc(StepCntrSel.PLUS_ONE)
+
+    def _fetch_argument(self, step: int) -> None:
+        if step == 1:
+            self.latch_op1 = False
+        elif step == 2:
+            self.latch_op2 = False
+        elif step == 3:
+            self.latch_op3 = False
+
+        self.write_op()
+
+        _word = to_word(self.dp.read_instr(self.pc))
+
+        op_name = (
+            Opcode(self.instr.opcode).name if self.instr.opcode != INT_OPCODE else "INT"
+        )
+        self._last_op = f"{op_name} OPERAND{step} = {to_signed(_word)}"
+
+        self.signal_latch_pc(PcSel.INC)
+        self.signal_latch_sc(StepCntrSel.PLUS_ONE)
+
+    def latch_all_op(self) -> None:
+        self.latch_op1 = True
+        self.latch_op2 = True
+        self.latch_op3 = True
+
+    def _execute(self) -> None:
+        local_step = self.step_counter - (1 + self.instr.arg_count)
+        op_raw = self.instr.opcode
+
+        if op_raw == INT_OPCODE:
+            self._exec_int(self.step_counter)
+            return
+
+        op = Opcode(op_raw)
+        if op == Opcode.NOP:
+            self._last_op = "NOP"
+            self._finish()
+            return
+        if op == Opcode.HALT:
+            self._halted = True
+            self._last_op = "HALT"
+            self.signal_latch_sc(StepCntrSel.ZERO)
+            return
+        if op == Opcode.IRET:
+            self._exec_iret(self.step_counter)
+            return
+        if op == Opcode.MOV:
+            self._exec_mov(local_step)
+            return
+        if op in (
+            Opcode.ADD,
+            Opcode.SUB,
+            Opcode.MUL,
+            Opcode.MOD,
+            Opcode.ADC,
+            Opcode.SBC,
+        ):
+            self._exec_alu3(op, local_step)
+            return
+        if op == Opcode.CMP:
+            self._exec_cmp(local_step)
+            return
+        if op == Opcode.JMP:
+            self._exec_jmp(local_step, taken=True)
+            return
+        if op == Opcode.JEQ:
+            self._exec_jmp(local_step, taken=self.dp.flag_z)
+            return
+        if op == Opcode.JGT:
+            taken = (not self.dp.flag_z) and (self.dp.flag_n == self.dp.flag_v)
+            self._exec_jmp(local_step, taken=taken)
+            return
+        if op == Opcode.CALL:
+            self._exec_call(local_step)
+            return
+        if op == Opcode.RET:
+            self._exec_ret(local_step)
+            return
+        if op == Opcode.PUSH:
+            self._exec_push(local_step)
+            return
+        if op == Opcode.POP:
+            self._exec_pop(local_step)
+            return
+
+    def _finish(self) -> None:
+        self.signal_latch_sc(StepCntrSel.ZERO)
+
+    @staticmethod
+    def _reg_from_operand(value: int) -> Registers:
+        v = value & 0x7
+        if v <= 4:
+            return Registers(v)
+        return Registers.R0
+
+    @staticmethod
+    def _op_a_sel(reg: Registers) -> OperandASel:
+        return {
+            Registers.R0: OperandASel.R0,
+            Registers.R1: OperandASel.R1,
+            Registers.R2: OperandASel.R2,
+            Registers.R3: OperandASel.R3,
+            Registers.SP: OperandASel.SP,
+        }[reg]
+
+    @staticmethod
+    def _op_b_sel(reg: Registers) -> OperandBSel:
+        return {
+            Registers.R0: OperandBSel.R0,
+            Registers.R1: OperandBSel.R1,
+            Registers.R2: OperandBSel.R2,
+            Registers.R3: OperandBSel.R3,
+            Registers.SP: OperandBSel.SP,
+        }[reg]
+
+    def _stage_addr_for_operand(self, mode: AddrMode, operand: int) -> None:
+        if mode == AddrMode.MEM:
+            self.dp.signal_set_imm(imm1=operand)
+            self.dp.signal_alu(Operation.PASS_A, OpSrc1Sel.IMM1)
+            self.dp.signal_latch_addr_reg()
+        elif mode == AddrMode.REG_INDIRECT:
+            self.dp.signal_select_operand_a(
+                self._op_a_sel(self._reg_from_operand(operand))
+            )
+            self.dp.signal_alu(Operation.PASS_A, OpSrc1Sel.OPERAND_A)
+            self.dp.signal_latch_addr_reg()
+
+    def _stage_value_pass(self, mode: AddrMode, operand: int) -> None:
+        if mode == AddrMode.IMM:
+            self.dp.signal_set_imm(imm1=operand)
+            self.dp.signal_alu(Operation.PASS_A, OpSrc1Sel.IMM1)
+        elif mode == AddrMode.REG:
+            self.dp.signal_select_operand_a(
+                self._op_a_sel(self._reg_from_operand(operand))
+            )
+            self.dp.signal_alu(Operation.PASS_A, OpSrc1Sel.OPERAND_A)
+
+    def _stage_src1_to_alu_input(self, mode: AddrMode, arg: int) -> OpSrc1Sel | None:
+        if mode == AddrMode.REG:
+            self.dp.signal_select_operand_a(self._op_a_sel(self._reg_from_operand(arg)))
+            return OpSrc1Sel.OPERAND_A
+        if mode == AddrMode.IMM:
+            self.dp.signal_set_imm(imm1=arg)
+            return OpSrc1Sel.IMM1
+        return None
+
+    def _stage_src2_to_alu_input(self, mode: AddrMode, arg: int) -> OpSrc2Sel | None:
+        if mode == AddrMode.REG:
+            self.dp.signal_select_operand_b(self._op_b_sel(self._reg_from_operand(arg)))
+            return OpSrc2Sel.OPERAND_B
+        if mode == AddrMode.IMM:
+            self.dp.signal_set_imm(imm2=arg)
+            return OpSrc2Sel.IMM2
+        return None
+
+    @staticmethod
+    def _opcode_to_alu(op: Opcode) -> Operation:
+        return {
+            Opcode.ADD: Operation.ADD,
+            Opcode.SUB: Operation.SUB,
+            Opcode.MUL: Operation.MUL,
+            Opcode.MOD: Operation.MOD,
+            Opcode.ADC: Operation.ADC,
+            Opcode.SBC: Operation.SBC,
+            Opcode.CMP: Operation.SUB,
+        }[op]
+
+    def _exec_mov(self, step: int) -> None:
+        dst_mode, src_mode = self.instr.modes
+        dst_arg, src_arg = self.operand1, self.operand2
+        src_is_mem = src_mode in (AddrMode.MEM, AddrMode.REG_INDIRECT)
+        dst_is_mem = dst_mode in (AddrMode.MEM, AddrMode.REG_INDIRECT)
+
+        if not src_is_mem:
+            if dst_mode == AddrMode.REG and step == 0:
+                self._stage_value_pass(src_mode, src_arg)
+                self.dp.signal_latch_reg(self._reg_from_operand(dst_arg))
+                self._last_op = (
+                    f"MOV {self._reg_from_operand(dst_arg).name} <- {src_mode.name}"
+                )
+                self._finish()
+                return
+            if dst_is_mem:
+                if step == 0:
+                    self._stage_addr_for_operand(dst_mode, dst_arg)
+                    self._last_op = f"MOV stage dst addr ({dst_mode.name})"
+                    self.signal_latch_sc(StepCntrSel.PLUS_ONE)
+                    return
+                if step == 1:
+                    self._stage_value_pass(src_mode, src_arg)
+                    self.dp.signal_mem_write()
+                    self._last_op = "MOV -> mem"
+                    self._finish()
                     return
 
-            self.step_execute()
-            self.step_retire()
-            self.step_dispatch()
-            self.step_decode()
-            self.step_fetch()
+        if src_is_mem:
+            if step == 0:
+                self._stage_addr_for_operand(src_mode, src_arg)
+                self._last_op = f"MOV stage src addr ({src_mode.name})"
+                self.signal_latch_sc(StepCntrSel.PLUS_ONE)
+                return
+            if dst_mode == AddrMode.REG and step == 1:
+                self.dp.signal_mem_read()
+                self.dp.signal_alu(Operation.PASS_B, src2=OpSrc2Sel.DATA_OUT)
+                reg = self._reg_from_operand(dst_arg)
+                self.dp.signal_latch_reg(reg)
+                self._last_op = f"MOV {reg.name} <- mem"
+                self._finish()
+                return
+            if dst_is_mem:
+                if step == 1:
+                    self.dp.signal_mem_read()
+                    self.dp.signal_alu(Operation.PASS_B, src2=OpSrc2Sel.DATA_OUT)
+                    self.dp.signal_latch_ar()
+                    self._last_op = "MOV AR <- mem (buffer)"
+                    self.signal_latch_sc(StepCntrSel.PLUS_ONE)
+                    return
+                if step == 2:
+                    self._stage_addr_for_operand(dst_mode, dst_arg)
+                    self._last_op = f"MOV stage dst addr ({dst_mode.name})"
+                    self.signal_latch_sc(StepCntrSel.PLUS_ONE)
+                    return
+                if step == 3:
+                    self.dp.signal_select_operand_a(OperandASel.AR)
+                    self.dp.signal_alu(Operation.PASS_A, OpSrc1Sel.OPERAND_A)
+                    self.dp.signal_mem_write()
+                    self._last_op = "MOV -> mem (from AR)"
+                    self._finish()
+                    return
 
-        if self.tick < 1000 or self.tick % 500 == 0:
-            mode = "SS" if self.superscalar else "SC"
-            rs_s = ",".join([str(i) for i in self.rs])
-            logging.info(
-                f"TICK {self.tick:4} | {mode} | PC:{self.fetch_pc:3} | RS:[{rs_s:20}] | SP:{self.dp.regs[Registers.SP]} Z:{int(self.dp.z)}"
+    def _exec_alu3(self, opcode: Opcode, step: int) -> None:
+        dst_mode, m1, m2 = self.instr.modes
+        a_dst, a1, a2 = self.operand1, self.operand2, self.operand3
+        alu_op = self._opcode_to_alu(opcode)
+        latch_flags = True
+
+        s1_mem = m1 in (AddrMode.MEM, AddrMode.REG_INDIRECT)
+        s2_mem = m2 in (AddrMode.MEM, AddrMode.REG_INDIRECT)
+        dst_mem = dst_mode in (AddrMode.MEM, AddrMode.REG_INDIRECT)
+
+        if not s1_mem and not s2_mem:
+            if step == 0:
+                src1_sel = self._stage_src1_to_alu_input(m1, a1)
+                src2_sel = self._stage_src2_to_alu_input(m2, a2)
+                self.dp.signal_alu(alu_op, src1_sel, src2_sel, latch_flags=latch_flags)
+                if dst_mode == AddrMode.REG:
+                    self.dp.signal_latch_reg(self._reg_from_operand(a_dst))
+                    self._last_op = (
+                        f"{opcode.name} {self._reg_from_operand(a_dst).name} <- alu"
+                    )
+                    self._finish()
+                    return
+                if dst_mem:
+                    self.dp.signal_latch_ar()
+                    self._last_op = f"{opcode.name} AR <- alu (buffer)"
+                    self.signal_latch_sc(StepCntrSel.PLUS_ONE)
+                    return
+            if step == 1 and dst_mem:
+                self._stage_addr_for_operand(dst_mode, a_dst)
+                self._last_op = f"{opcode.name} stage dst addr"
+                self.signal_latch_sc(StepCntrSel.PLUS_ONE)
+                return
+            if step == 2 and dst_mem:
+                self.dp.signal_select_operand_a(OperandASel.AR)
+                self.dp.signal_alu(Operation.PASS_A, OpSrc1Sel.OPERAND_A)
+                self.dp.signal_mem_write()
+                self._last_op = f"{opcode.name} -> mem"
+                self._finish()
+                return
+
+        if s1_mem != s2_mem:
+            mem_mode, mem_arg = (m1, a1) if s1_mem else (m2, a2)
+            if step == 0:
+                self._stage_addr_for_operand(mem_mode, mem_arg)
+                self._last_op = f"{opcode.name} stage mem-src addr"
+                self.signal_latch_sc(StepCntrSel.PLUS_ONE)
+                return
+            if step == 1:
+                self.dp.signal_mem_read()
+                self.dp.signal_alu(Operation.PASS_B, src2=OpSrc2Sel.DATA_OUT)
+                self.dp.signal_latch_ar()
+                self._last_op = f"{opcode.name} AR <- mem"
+                self.signal_latch_sc(StepCntrSel.PLUS_ONE)
+                return
+            if step == 2:
+                if s1_mem:
+                    self.dp.signal_select_operand_a(OperandASel.AR)
+                    src1_sel = OpSrc1Sel.OPERAND_A
+                    src2_sel = self._stage_src2_to_alu_input(m2, a2)
+                else:
+                    src1_sel = self._stage_src1_to_alu_input(m1, a1)
+                    self.dp.signal_select_operand_b(OperandBSel.AR)
+                    src2_sel = OpSrc2Sel.OPERAND_B
+                self.dp.signal_alu(alu_op, src1_sel, src2_sel, latch_flags=latch_flags)
+                if dst_mode == AddrMode.REG:
+                    self.dp.signal_latch_reg(self._reg_from_operand(a_dst))
+                    self._last_op = (
+                        f"{opcode.name} {self._reg_from_operand(a_dst).name} <- alu"
+                    )
+                    self._finish()
+                    return
+                if dst_mem:
+                    self.dp.signal_latch_ar()
+                    self._last_op = f"{opcode.name} AR <- alu (buffer)"
+                    self.signal_latch_sc(StepCntrSel.PLUS_ONE)
+                    return
+            if step == 3 and dst_mem:
+                self._stage_addr_for_operand(dst_mode, a_dst)
+                self._last_op = f"{opcode.name} stage dst addr"
+                self.signal_latch_sc(StepCntrSel.PLUS_ONE)
+                return
+            if step == 4 and dst_mem:
+                self.dp.signal_select_operand_a(OperandASel.AR)
+                self.dp.signal_alu(Operation.PASS_A, OpSrc1Sel.OPERAND_A)
+                self.dp.signal_mem_write()
+                self._last_op = f"{opcode.name} -> mem"
+                self._finish()
+                return
+
+    def _exec_cmp(self, step: int) -> None:
+        m1, m2 = self.instr.modes
+        a1, a2 = self.operand1, self.operand2
+        s1_mem = m1 in (AddrMode.MEM, AddrMode.REG_INDIRECT)
+        s2_mem = m2 in (AddrMode.MEM, AddrMode.REG_INDIRECT)
+
+        if not s1_mem and not s2_mem:
+            if step == 0:
+                src1_sel = self._stage_src1_to_alu_input(m1, a1)
+                src2_sel = self._stage_src2_to_alu_input(m2, a2)
+                self.dp.signal_alu(Operation.SUB, src1_sel, src2_sel, latch_flags=True)
+                self._last_op = "CMP"
+                self._finish()
+                return
+
+        if s1_mem != s2_mem:
+            mem_mode, mem_arg = (m1, a1) if s1_mem else (m2, a2)
+            if step == 0:
+                self._stage_addr_for_operand(mem_mode, mem_arg)
+                self._last_op = "CMP stage addr"
+                self.signal_latch_sc(StepCntrSel.PLUS_ONE)
+                return
+            if step == 1:
+                self.dp.signal_mem_read()
+                self.dp.signal_alu(Operation.PASS_B, src2=OpSrc2Sel.DATA_OUT)
+                self.dp.signal_latch_ar()
+                self._last_op = "CMP AR <- mem"
+                self.signal_latch_sc(StepCntrSel.PLUS_ONE)
+                return
+            if step == 2:
+                if s1_mem:
+                    self.dp.signal_select_operand_a(OperandASel.AR)
+                    src1_sel = OpSrc1Sel.OPERAND_A
+                    src2_sel = self._stage_src2_to_alu_input(m2, a2)
+                else:
+                    src1_sel = self._stage_src1_to_alu_input(m1, a1)
+                    self.dp.signal_select_operand_b(OperandBSel.AR)
+                    src2_sel = OpSrc2Sel.OPERAND_B
+                self.dp.signal_alu(Operation.SUB, src1_sel, src2_sel, latch_flags=True)
+                self._last_op = "CMP"
+                self._finish()
+                return
+
+    def _exec_jmp(self, step: int, taken: bool) -> None:
+        mode = self.instr.modes[0]
+        arg = self.operand1
+        if step != 0:
+            return
+        if not taken:
+            self._last_op = "Jcc not taken"
+            self._finish()
+            return
+        if mode == AddrMode.IMM:
+            self.dp.signal_set_imm(imm1=arg)
+            self.dp.signal_alu(Operation.PASS_A, OpSrc1Sel.IMM1)
+        elif mode == AddrMode.REG:
+            self.dp.signal_select_operand_a(self._op_a_sel(self._reg_from_operand(arg)))
+            self.dp.signal_alu(Operation.PASS_A, OpSrc1Sel.OPERAND_A)
+        self.signal_latch_pc(PcSel.ALU_OUT)
+        self._last_op = f"JMP -> {self.pc:#06X}"
+        self._finish()
+
+    def _exec_push(self, step: int) -> None:
+        mode = self.instr.modes[0]
+        arg = self.operand1
+        if step == 0:
+            self.dp.signal_sp_save(SpSaveSel.MINUS_ONE)
+            self._last_op = "PUSH SP--"
+            self.signal_latch_sc(StepCntrSel.PLUS_ONE)
+            return
+        if step == 1:
+            self.dp.signal_select_operand_a(OperandASel.SP)
+            self.dp.signal_alu(Operation.PASS_A, OpSrc1Sel.OPERAND_A)
+            self.dp.signal_latch_addr_reg()
+            self._last_op = "PUSH ADDR_REG <- SP"
+            self.signal_latch_sc(StepCntrSel.PLUS_ONE)
+            return
+        if step == 2:
+            self._stage_value_pass(mode, arg)
+            self.dp.signal_mem_write()
+            self._last_op = "PUSH write"
+            self._finish()
+            return
+
+    def _exec_pop(self, step: int) -> None:
+        mode = self.instr.modes[0]
+        arg = self.operand1
+        if step == 0:
+            self.dp.signal_select_operand_a(OperandASel.SP)
+            self.dp.signal_alu(Operation.PASS_A, OpSrc1Sel.OPERAND_A)
+            self.dp.signal_latch_addr_reg()
+            self._last_op = "POP ADDR_REG <- SP"
+            self.signal_latch_sc(StepCntrSel.PLUS_ONE)
+            return
+        if step == 1:
+            self.dp.signal_mem_read()
+            self.dp.signal_alu(Operation.PASS_B, src2=OpSrc2Sel.DATA_OUT)
+            if mode == AddrMode.REG:
+                reg = self._reg_from_operand(arg)
+                self.dp.signal_latch_reg(reg)
+                self._last_op = f"POP -> {reg.name}"
+            self.dp.signal_sp_save(SpSaveSel.PLUS_ONE)
+            self._finish()
+            return
+
+    def _exec_call(self, step: int) -> None:
+        mode = self.instr.modes[0]
+        arg = self.operand1
+        if step == 0:
+            self.dp.signal_sp_save(SpSaveSel.MINUS_ONE)
+            self._last_op = "CALL SP--"
+            self.signal_latch_sc(StepCntrSel.PLUS_ONE)
+            return
+        if step == 1:
+            self.dp.signal_select_operand_a(OperandASel.SP)
+            self.dp.signal_alu(Operation.PASS_A, OpSrc1Sel.OPERAND_A)
+            self.dp.signal_latch_addr_reg()
+            self._last_op = "CALL ADDR_REG <- SP"
+            self.signal_latch_sc(StepCntrSel.PLUS_ONE)
+            return
+        if step == 2:
+            self.dp.signal_set_imm(imm1=self.pc)
+            self.dp.signal_alu(Operation.PASS_A, OpSrc1Sel.IMM1)
+            self.dp.signal_mem_write()
+            self._last_op = f"CALL push pc={self.pc:#06X}"
+            self.signal_latch_sc(StepCntrSel.PLUS_ONE)
+            return
+        if step == 3:
+            if mode == AddrMode.IMM:
+                self.dp.signal_set_imm(imm1=arg)
+                self.dp.signal_alu(Operation.PASS_A, OpSrc1Sel.IMM1)
+            elif mode == AddrMode.REG:
+                self.dp.signal_select_operand_a(
+                    self._op_a_sel(self._reg_from_operand(arg))
+                )
+                self.dp.signal_alu(Operation.PASS_A, OpSrc1Sel.OPERAND_A)
+            self.signal_latch_pc(PcSel.ALU_OUT)
+            self._last_op = "CALL -> target"
+            self._finish()
+            return
+
+    def _exec_ret(self, step: int) -> None:
+        if step == 0:
+            self.dp.signal_select_operand_a(OperandASel.SP)
+            self.dp.signal_alu(Operation.PASS_A, OpSrc1Sel.OPERAND_A)
+            self.dp.signal_latch_addr_reg()
+            self._last_op = "RET ADDR_REG <- SP"
+            self.signal_latch_sc(StepCntrSel.PLUS_ONE)
+            return
+        if step == 1:
+            self.dp.signal_mem_read()
+            self.dp.signal_alu(Operation.PASS_B, src2=OpSrc2Sel.DATA_OUT)
+            self.signal_latch_pc(PcSel.ALU_OUT)
+            self.dp.signal_sp_save(SpSaveSel.PLUS_ONE)
+            self._last_op = "RET pop pc"
+            self._finish()
+            return
+
+    def _exec_int(self, sc: int) -> None:
+        save_seq = [
+            ("PC", "pc"),
+            ("R0", OperandASel.R0),
+            ("R1", OperandASel.R1),
+            ("R2", OperandASel.R2),
+            ("R3", OperandASel.R3),
+        ]
+        per_value = 3
+        regs_total = per_value * len(save_seq)
+
+        if sc == 1:
+            self.io.ack_irq()
+            self.signal_latch_pc(PcSel.DEC)
+
+        if 1 <= sc <= regs_total:
+            local = sc - 1
+            idx = local // per_value
+            phase = local % per_value
+            name, marker = save_seq[idx]
+            if phase == 0:
+                self.dp.signal_sp_save(SpSaveSel.MINUS_ONE)
+                self._last_op = f"INT SP-- (for {name})"
+            elif phase == 1:
+                self.dp.signal_select_operand_a(OperandASel.SP)
+                self.dp.signal_alu(Operation.PASS_A, OpSrc1Sel.OPERAND_A)
+                self.dp.signal_latch_addr_reg()
+                self._last_op = f"INT ADDR_REG <- SP (for {name})"
+            else:
+                if marker == "pc":
+                    self.dp.signal_set_imm(imm1=self.pc)
+                    self.dp.signal_alu(Operation.PASS_A, OpSrc1Sel.IMM1)
+                else:
+                    self.dp.signal_select_operand_a(marker)
+                    self.dp.signal_alu(Operation.PASS_A, OpSrc1Sel.OPERAND_A)
+                self.dp.signal_mem_write()
+                self._last_op = f"INT push {name}"
+            self.signal_latch_sc(StepCntrSel.PLUS_ONE)
+            return
+
+        flags_base = regs_total
+        if sc == flags_base + 1:
+            self.dp.signal_sp_save(SpSaveSel.MINUS_ONE)
+            self._last_op = "INT SP-- (for FLAGS)"
+            self.signal_latch_sc(StepCntrSel.PLUS_ONE)
+            return
+        if sc == flags_base + 2:
+            self.dp.signal_select_operand_a(OperandASel.SP)
+            self.dp.signal_alu(Operation.PASS_A, OpSrc1Sel.OPERAND_A)
+            self.dp.signal_latch_addr_reg()
+            self._last_op = "INT ADDR_REG <- SP (for FLAGS)"
+            self.signal_latch_sc(StepCntrSel.PLUS_ONE)
+            return
+        if sc == flags_base + 3:
+            self.dp.signal_mem_write(MemWrSel.FLAGS)
+            self._last_op = "INT push FLAGS"
+            self.signal_latch_sc(StepCntrSel.PLUS_ONE)
+            return
+
+        if sc == flags_base + 4:
+            self.signal_latch_pc(PcSel.TRAP_VECTOR)
+            self._last_op = f"INT vector -> {VECTOR_TRAP:#06X}"
+            self.signal_latch_sc(StepCntrSel.ZERO)
+            return
+
+    def _exec_iret(self, sc: int) -> None:
+        if sc == 1:
+            self.dp.signal_select_operand_a(OperandASel.SP)
+            self.dp.signal_alu(Operation.PASS_A, OpSrc1Sel.OPERAND_A)
+            self.dp.signal_latch_addr_reg()
+            self._last_op = "IRET ADDR_REG <- SP (for FLAGS)"
+            self.signal_latch_sc(StepCntrSel.PLUS_ONE)
+            return
+        if sc == 2:
+            self.dp.signal_mem_read()
+            self.dp.signal_restore_flags()
+            self.dp.signal_sp_save(SpSaveSel.PLUS_ONE)
+            self._last_op = "IRET pop FLAGS"
+            self.signal_latch_sc(StepCntrSel.PLUS_ONE)
+            return
+
+        restore_seq = [
+            ("R3", Registers.R3),
+            ("R2", Registers.R2),
+            ("R1", Registers.R1),
+            ("R0", Registers.R0),
+            ("PC", None),
+        ]
+        per_value = 2
+        regs_base = 2
+        regs_total = per_value * len(restore_seq)
+
+        if regs_base + 1 <= sc <= regs_base + regs_total:
+            local = sc - regs_base - 1
+            idx = local // per_value
+            phase = local % per_value
+            name, target = restore_seq[idx]
+            if phase == 0:
+                self.dp.signal_select_operand_a(OperandASel.SP)
+                self.dp.signal_alu(Operation.PASS_A, OpSrc1Sel.OPERAND_A)
+                self.dp.signal_latch_addr_reg()
+                self._last_op = f"IRET ADDR_REG <- SP (for {name})"
+            else:
+                self.dp.signal_mem_read()
+                self.dp.signal_alu(Operation.PASS_B, src2=OpSrc2Sel.DATA_OUT)
+                if target is None:
+                    self.signal_latch_pc(PcSel.ALU_OUT)
+                else:
+                    self.dp.signal_latch_reg(target)
+                self.dp.signal_sp_save(SpSaveSel.PLUS_ONE)
+                self._last_op = f"IRET pop {name}"
+            self.signal_latch_sc(StepCntrSel.PLUS_ONE)
+            return
+
+        if sc == regs_base + regs_total + 1:
+            self.io.reset_ie()
+            self._last_op = "IRET (IE=0)"
+            self.signal_latch_sc(StepCntrSel.ZERO)
+            return
+
+    def __repr__(self) -> str:
+        irq = 1 if self.io.irq == IRQ.INT else 0
+
+        flags = (
+            ("N" if self.dp.flag_n else "-")
+            + ("Z" if self.dp.flag_z else "-")
+            + ("C" if self.dp.flag_c else "-")
+            + ("V" if self.dp.flag_v else "-")
+        )
+        regs = " ".join(
+            f"{r.name}={to_signed(self.dp.registers[r])}"
+            for r in (
+                Registers.R0,
+                Registers.R1,
+                Registers.R2,
+                Registers.R3,
+                Registers.SP,
             )
+        )
+        return (
+            f"TICK: {self._tick:4d} SC: {self.step_counter} "
+            f"PC={self.pc:04X} OP1={self.operand1:08X} OP2={self.operand2:08X} OP3={self.operand3:08X} "
+            f"IE={int(self.io.ie)} IRQ={irq} FLAGS={flags} {regs} | OP={self._last_op}"
+        )
 
 
-def main(target, sched_file=None, superscalar_str="True"):
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(message)s",
-    )
-    with open(target, "rb") as f:
-        mem = from_bytes(f.read())
-    sch = []
-    if sched_file and sched_file.lower() != "none":
-        try:
-            with open(sched_file, "r") as f:
-                sch = [{"tick": t, "char": c} for t, c in ast.literal_eval(f.read())]
-        except (FileNotFoundError, ValueError, SyntaxError):
-            pass
+def simulation(
+    code: list[int],
+    input_schedule: list[InputEvent],
+    limit: int = DEFAULT_TICK_LIMIT,
+) -> tuple[str, int]:
+    dp = DataPath(code)
+    io = IOExternal(input_schedule)
+    cu = ControlUnit(dp, io)
 
-    is_ss = superscalar_str.lower() not in ["false", "0", "off"]
-    cu = ControlUnit(DataPath(mem), sch, superscalar=is_ss)
-    try:
-        while cu.tick < 10_000 and not cu.halted:
-            cu.tick_machine()
-    except StopIteration:
-        pass
-    logging.info(f"\nTicks: {cu.tick}\nOutput: {''.join(cu.output)}")
+    while cu.current_tick() < limit and not cu.is_halted():
+        cu.process_next_tick()
+
+        if cu.current_tick() <= 500:
+            logging.info(cu)
+
+    output = "".join(dp.output_buffer)
+    ticks = cu.current_tick()
+
+    logging.info("\n--- OUTPUT ---")
+    logging.info(output)
+    logging.info(f"--- ticks: {ticks} ---")
+
+
+def parse_input_schedule(path: str | None) -> list[InputEvent]:
+    if path is None or path == "none":
+        return []
+    with open(path, "r", encoding="utf-8") as f:
+        text = f.read()
+    if not text.strip():
+        return []
+    raw = ast.literal_eval(text)
+    events: list[InputEvent] = []
+    for item in raw:
+        tick, ch = item
+        value = ord(ch) if isinstance(ch, str) else int(ch)
+        events.append(InputEvent(tick=int(tick), char=value))
+    return events
+
+
+def main(
+    code_file: str, input_file: str | None = None, limit: int = DEFAULT_TICK_LIMIT
+) -> None:
+    with open(code_file, "rb") as f:
+        code = from_bytes(f.read())
+    schedule = parse_input_schedule(input_file)
+    simulation(code, schedule, limit=limit)
 
 
 if __name__ == "__main__":
-    args = sys.argv[1:]
-
-    if len(args) == 1:
-        main(args[0])
-
-    elif len(args) == 2:
-        if args[1].lower() in ["true", "false", "0", "off", "on"]:
-            main(args[0], sched_file=None, superscalar_str=args[1])
-        else:
-            main(args[0], args[1])
-
-    elif len(args) >= 3:
-        main(args[0], args[1], args[2])
+    logging.basicConfig(
+        level=logging.INFO, format="%(message)s", filemode="w", filename="machine.log"
+    )
+    if len(sys.argv) not in (2, 3):
+        print("Usage: python machine.py <code.bin> [<input_schedule.txt>]")
+        sys.exit(1)
+    code_path = sys.argv[1]
+    input_path = sys.argv[2] if len(sys.argv) == 3 else None
+    main(code_path, input_path)

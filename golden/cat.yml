@@ -14,563 +14,514 @@ in_source: |-
 in_schedule: |-
   [(10, 'f'), (150, 'o'), (250, 'o'), (350, '\0')]
 out_log: |-
-  TICK    1 | SS | PC:  1 | RS:[                    ] | SP:9000 Z:0
-  TICK    2 | SS | PC:  2 | RS:[                    ] | SP:9000 Z:0
-  TICK    3 | SS | PC:  3 | RS:[                    ] | SP:9000 Z:0
-  TICK    4 | SS | PC:  4 | RS:[JMP:F@0             ] | SP:9000 Z:0
-  TICK    5 | SS | PC:  5 | RS:[JMP:F@0             ] | SP:9000 Z:0
-  TICK    6 | SS | PC:  6 | RS:[JMP:E@0             ] | SP:9000 Z:0
-  TICK    7 | SS | PC: 55 | RS:[                    ] | SP:9000 Z:0
-  TICK    8 | SS | PC: 56 | RS:[                    ] | SP:9000 Z:0
-  TICK    9 | SS | PC: 57 | RS:[                    ] | SP:9000 Z:0
-  TICK   10 | [INTERRUPT] Accepted sym f. RetPC set to: 54
-  TICK   11 | [TRAP] Char saved
-  TICK   11 | SS | PC:  2 | RS:[                    ] | SP:9000 Z:0
-  TICK   12 | SS | PC:  2 | RS:[                    ] | SP:8999 Z:0
-  TICK   13 | SS | PC:  2 | RS:[                    ] | SP:8998 Z:0
-  TICK   14 | SS | PC:  2 | RS:[                    ] | SP:8997 Z:0
-  TICK   15 | SS | PC:  2 | RS:[                    ] | SP:8996 Z:0
-  TICK   16 | SS | PC:  2 | RS:[                    ] | SP:8995 Z:0
-  TICK   17 | SS | PC:  2 | RS:[                    ] | SP:8994 Z:0
-  TICK   18 | SS | PC:  2 | RS:[                    ] | SP:8994 Z:0
-  TICK   19 | SS | PC:  3 | RS:[                    ] | SP:8994 Z:0
-  TICK   20 | SS | PC:  4 | RS:[                    ] | SP:8994 Z:0
-  TICK   21 | SS | PC:  5 | RS:[                    ] | SP:8994 Z:0
-  TICK   22 | SS | PC:  6 | RS:[JMP:F@2             ] | SP:8994 Z:0
-  TICK   23 | SS | PC:  7 | RS:[JMP:F@2             ] | SP:8994 Z:0
-  TICK   24 | SS | PC:  8 | RS:[JMP:E@2             ] | SP:8994 Z:0
-  TICK   25 | SS | PC: 12 | RS:[                    ] | SP:8994 Z:0
-  TICK   26 | SS | PC: 13 | RS:[                    ] | SP:8994 Z:0
-  TICK   27 | SS | PC: 14 | RS:[                    ] | SP:8994 Z:0
-  TICK   28 | SS | PC: 15 | RS:[                    ] | SP:8994 Z:0
-  TICK   29 | SS | PC: 16 | RS:[MOV:F@11            ] | SP:8994 Z:0
-  TICK   30 | SS | PC: 17 | RS:[MOV:F@11            ] | SP:8994 Z:0
-  TICK   31 | SS | PC: 18 | RS:[MOV:F@11            ] | SP:8994 Z:0
-  TICK   32 | SS | PC: 19 | RS:[MOV:E@11            ] | SP:8994 Z:0
-  TICK   33 | SS | PC: 20 | RS:[MOV:F@14            ] | SP:8994 Z:0
-  TICK   34 | SS | PC: 21 | RS:[MOV:F@14            ] | SP:8994 Z:0
-  TICK   35 | SS | PC: 22 | RS:[MOV:F@14            ] | SP:8994 Z:0
-  TICK   36 | SS | PC: 23 | RS:[MOV:E@14            ] | SP:8994 Z:0
-  TICK   37 | SS | PC: 24 | RS:[                    ] | SP:8994 Z:0
-  TICK   38 | SS | PC: 25 | RS:[MOV:F@17,MOV:F@20   ] | SP:8994 Z:0
-  TICK   39 | SS | PC: 26 | RS:[MOV:F@17,MOV:F@20   ] | SP:8994 Z:0
-  TICK   40 | SS | PC: 27 | RS:[MOV:F@17,MOV:E@20   ] | SP:8994 Z:0
-  TICK   41 | SS | PC: 28 | RS:[MOV:E@17            ] | SP:8994 Z:0
-  TICK   42 | SS | PC: 29 | RS:[CMP:F@23            ] | SP:8994 Z:0
-  TICK   43 | SS | PC: 30 | RS:[CMP:F@23            ] | SP:8994 Z:0
-  TICK   44 | SS | PC: 31 | RS:[CMP:E@23,MOV:F@26   ] | SP:8994 Z:0
-  TICK   45 | SS | PC: 32 | RS:[MOV:F@26            ] | SP:8994 Z:0
-  TICK   46 | SS | PC: 33 | RS:[MOV:E@26            ] | SP:8994 Z:0
-  TICK   47 | SS | PC: 34 | RS:[JEQ:F@29            ] | SP:8994 Z:0
-  TICK   48 | SS | PC: 35 | RS:[JEQ:F@29            ] | SP:8994 Z:0
-  TICK   49 | SS | PC: 36 | RS:[JEQ:E@29            ] | SP:8994 Z:0
-  TICK   50 | SS | PC: 37 | RS:[MOV:F@31            ] | SP:8994 Z:0
-  TICK   51 | SS | PC: 38 | RS:[MOV:F@31            ] | SP:8994 Z:0
-  TICK   52 | SS | PC: 39 | RS:[MOV:E@31            ] | SP:8994 Z:0
-  TICK   53 | SS | PC: 40 | RS:[CMP:F@34            ] | SP:8994 Z:0
-  TICK   54 | SS | PC: 41 | RS:[CMP:F@34            ] | SP:8994 Z:0
-  TICK   55 | SS | PC: 42 | RS:[CMP:E@34            ] | SP:8994 Z:0
-  TICK   56 | SS | PC: 43 | RS:[JEQ:F@37            ] | SP:8994 Z:1
-  TICK   57 | SS | PC: 44 | RS:[JEQ:F@37            ] | SP:8994 Z:1
-  TICK   58 | SS | PC: 45 | RS:[JEQ:E@37            ] | SP:8994 Z:1
-  TICK   59 | SS | PC: 48 | RS:[                    ] | SP:8994 Z:1
-  TICK   60 | SS | PC: 49 | RS:[                    ] | SP:8994 Z:1
-  TICK   61 | SS | PC: 50 | RS:[                    ] | SP:8994 Z:1
-  TICK   62 | SS | PC: 51 | RS:[                    ] | SP:8994 Z:1
-  TICK   63 | SS | PC: 52 | RS:[MOV:F@47            ] | SP:8994 Z:1
-  TICK   64 | SS | PC: 53 | RS:[MOV:F@47            ] | SP:8994 Z:1
-  TICK   65 | SS | PC: 54 | RS:[MOV:F@47            ] | SP:8994 Z:1
-  TICK   66 | SS | PC: 55 | RS:[MOV:E@47            ] | SP:8994 Z:1
-  TICK   67 | SS | PC: 56 | RS:[MOV:F@50            ] | SP:8994 Z:1
-  TICK   68 | SS | PC: 57 | RS:[MOV:F@50            ] | SP:8994 Z:1
-  TICK   69 | SS | PC: 58 | RS:[MOV:F@50            ] | SP:8994 Z:1
-  TICK   70 | SS | PC: 59 | RS:[MOV:E@50            ] | SP:8994 Z:1
-  TICK   71 | SS | PC: 60 | RS:[                    ] | SP:8994 Z:1
-  TICK   72 | SS | PC: 61 | RS:[IRET:F@53           ] | SP:8994 Z:1
-  TICK   73 | SS | PC: 62 | RS:[IRET:F@53           ] | SP:8994 Z:1
-  TICK   74 | SS | PC: 63 | RS:[IRET:E@53           ] | SP:8994 Z:1
-  TICK   75 | SS | PC: 64 | RS:[MOV:F@54            ] | SP:8994 Z:1
-  TICK   76 | SS | PC: 64 | RS:[MOV:F@54            ] | SP:8995 Z:1
-  TICK   77 | SS | PC: 64 | RS:[MOV:F@54            ] | SP:8996 Z:1
-  TICK   78 | SS | PC: 64 | RS:[MOV:F@54            ] | SP:8997 Z:1
-  TICK   79 | SS | PC: 64 | RS:[MOV:F@54            ] | SP:8998 Z:1
-  TICK   80 | SS | PC: 64 | RS:[MOV:F@54            ] | SP:8999 Z:0
-  TICK   81 | SS | PC: 54 | RS:[                    ] | SP:9000 Z:0
-  TICK   82 | SS | PC: 55 | RS:[                    ] | SP:9000 Z:0
-  TICK   83 | SS | PC: 56 | RS:[                    ] | SP:9000 Z:0
-  TICK   84 | SS | PC: 57 | RS:[                    ] | SP:9000 Z:0
-  TICK   85 | SS | PC: 58 | RS:[                    ] | SP:9000 Z:0
-  TICK   86 | SS | PC: 59 | RS:[MOV:F@54            ] | SP:9000 Z:0
-  TICK   87 | SS | PC: 60 | RS:[MOV:F@54            ] | SP:9000 Z:0
-  TICK   88 | SS | PC: 61 | RS:[MOV:E@54            ] | SP:9000 Z:0
-  TICK   89 | SS | PC: 62 | RS:[MOV:F@57            ] | SP:9000 Z:0
-  TICK   90 | SS | PC: 63 | RS:[MOV:F@57            ] | SP:9000 Z:0
-  TICK   91 | SS | PC: 64 | RS:[MOV:F@57            ] | SP:9000 Z:0
-  TICK   92 | SS | PC: 65 | RS:[MOV:E@57,MOV:F@60   ] | SP:9000 Z:0
-  TICK   93 | SS | PC: 66 | RS:[MOV:F@60            ] | SP:9000 Z:0
-  TICK   94 | SS | PC: 67 | RS:[MOV:E@60            ] | SP:9000 Z:0
-  TICK   95 | SS | PC: 68 | RS:[MOV:F@63            ] | SP:9000 Z:0
-  TICK   96 | SS | PC: 69 | RS:[MOV:F@63            ] | SP:9000 Z:0
-  TICK   97 | SS | PC: 70 | RS:[MOV:F@63            ] | SP:9000 Z:0
-  TICK   98 | SS | PC: 71 | RS:[MOV:E@63            ] | SP:9000 Z:0
-  TICK   99 | SS | PC: 72 | RS:[CMP:F@66            ] | SP:9000 Z:0
-  TICK  100 | SS | PC: 73 | RS:[CMP:F@66            ] | SP:9000 Z:0
-  TICK  101 | SS | PC: 74 | RS:[CMP:E@66            ] | SP:9000 Z:0
-  TICK  102 | SS | PC: 75 | RS:[JGT:F@69            ] | SP:9000 Z:0
-  TICK  103 | SS | PC: 76 | RS:[JGT:F@69            ] | SP:9000 Z:0
-  TICK  104 | SS | PC: 77 | RS:[JGT:E@69            ] | SP:9000 Z:0
-  TICK  105 | SS | PC: 78 | RS:[MOV:F@71            ] | SP:9000 Z:0
-  TICK  106 | SS | PC: 79 | RS:[MOV:F@71,MOV:F@74   ] | SP:9000 Z:0
-  TICK  107 | SS | PC: 80 | RS:[MOV:F@71,MOV:F@74   ] | SP:9000 Z:0
-  TICK  108 | SS | PC: 81 | RS:[MOV:E@71,MOV:E@74   ] | SP:9000 Z:0
-  TICK  109 | SS | PC: 82 | RS:[CMP:F@77            ] | SP:9000 Z:0
-  TICK  110 | SS | PC: 83 | RS:[CMP:F@77            ] | SP:9000 Z:0
-  TICK  111 | SS | PC: 84 | RS:[CMP:E@77            ] | SP:9000 Z:0
-  TICK  112 | SS | PC: 85 | RS:[MOV:F@80            ] | SP:9000 Z:0
-  TICK  113 | SS | PC: 86 | RS:[MOV:F@80            ] | SP:9000 Z:0
-  TICK  114 | SS | PC: 87 | RS:[MOV:E@80            ] | SP:9000 Z:0
-  TICK  115 | SS | PC: 88 | RS:[JEQ:F@83            ] | SP:9000 Z:0
-  TICK  116 | SS | PC: 89 | RS:[JEQ:F@83            ] | SP:9000 Z:0
-  TICK  117 | SS | PC: 90 | RS:[JEQ:E@83            ] | SP:9000 Z:0
-  TICK  118 | SS | PC: 91 | RS:[MOV:F@85            ] | SP:9000 Z:0
-  TICK  119 | SS | PC: 92 | RS:[MOV:F@85            ] | SP:9000 Z:0
-  TICK  120 | SS | PC: 93 | RS:[MOV:E@85            ] | SP:9000 Z:0
-  TICK  121 | SS | PC: 94 | RS:[CMP:F@88            ] | SP:9000 Z:0
-  TICK  122 | SS | PC: 95 | RS:[CMP:F@88            ] | SP:9000 Z:0
-  TICK  123 | SS | PC: 96 | RS:[CMP:E@88            ] | SP:9000 Z:0
-  TICK  124 | SS | PC: 97 | RS:[JEQ:F@91            ] | SP:9000 Z:1
-  TICK  125 | SS | PC: 98 | RS:[JEQ:F@91            ] | SP:9000 Z:1
-  TICK  126 | SS | PC: 99 | RS:[JEQ:E@91            ] | SP:9000 Z:1
-  TICK  127 | SS | PC:102 | RS:[                    ] | SP:9000 Z:1
-  TICK  128 | SS | PC:103 | RS:[                    ] | SP:9000 Z:1
-  TICK  129 | SS | PC:104 | RS:[                    ] | SP:9000 Z:1
-  TICK  130 | SS | PC:105 | RS:[                    ] | SP:9000 Z:1
-  TICK  131 | SS | PC:106 | RS:[MOV:F@101           ] | SP:9000 Z:1
-  TICK  132 | SS | PC:107 | RS:[MOV:F@101           ] | SP:9000 Z:1
-  TICK  133 | SS | PC:108 | RS:[MOV:F@101           ] | SP:9000 Z:1
-  TICK  134 | SS | PC:109 | RS:[MOV:E@101           ] | SP:9000 Z:1
-  TICK  135 | SS | PC:110 | RS:[                    ] | SP:9000 Z:1
-  TICK  136 | SS | PC:111 | RS:[MOV:F@104           ] | SP:9000 Z:1
-  TICK  137 | SS | PC:112 | RS:[MOV:F@104           ] | SP:9000 Z:1
-  TICK  138 | SS | PC:113 | RS:[MOV:F@104           ] | SP:9000 Z:1
-  TICK  139 | SS | PC:114 | RS:[MOV:E@104           ] | SP:9000 Z:1
-  TICK  140 | SS | PC:115 | RS:[ADD:F@107           ] | SP:9000 Z:1
-  TICK  141 | SS | PC:116 | RS:[ADD:F@107           ] | SP:9000 Z:1
-  TICK  142 | SS | PC:117 | RS:[ADD:E@107           ] | SP:9000 Z:1
-  TICK  143 | SS | PC:118 | RS:[MOV:F@111           ] | SP:9000 Z:0
-  TICK  144 | SS | PC:119 | RS:[MOV:F@111           ] | SP:9000 Z:0
-  TICK  145 | SS | PC:120 | RS:[MOV:F@111           ] | SP:9000 Z:0
-  TICK  146 | SS | PC:121 | RS:[MOV:E@111           ] | SP:9000 Z:0
-  TICK  147 | SS | PC:122 | RS:[                    ] | SP:9000 Z:0
-  TICK  148 | SS | PC:123 | RS:[JMP:F@114           ] | SP:9000 Z:0
-  TICK  149 | SS | PC:124 | RS:[JMP:F@114           ] | SP:9000 Z:0
-  TICK  150 | [INTERRUPT] Accepted sym o. RetPC set to: 114
-  TICK  151 | [TRAP] Char saved
-  TICK  151 | SS | PC:  2 | RS:[                    ] | SP:9000 Z:0
-  TICK  152 | SS | PC:  2 | RS:[                    ] | SP:8999 Z:0
-  TICK  153 | SS | PC:  2 | RS:[                    ] | SP:8998 Z:0
-  TICK  154 | SS | PC:  2 | RS:[                    ] | SP:8997 Z:0
-  TICK  155 | SS | PC:  2 | RS:[                    ] | SP:8996 Z:0
-  TICK  156 | SS | PC:  2 | RS:[                    ] | SP:8995 Z:0
-  TICK  157 | SS | PC:  2 | RS:[                    ] | SP:8994 Z:0
-  TICK  158 | SS | PC:  2 | RS:[                    ] | SP:8994 Z:0
-  TICK  159 | SS | PC:  3 | RS:[                    ] | SP:8994 Z:0
-  TICK  160 | SS | PC:  4 | RS:[                    ] | SP:8994 Z:0
-  TICK  161 | SS | PC:  5 | RS:[                    ] | SP:8994 Z:0
-  TICK  162 | SS | PC:  6 | RS:[JMP:F@2             ] | SP:8994 Z:0
-  TICK  163 | SS | PC:  7 | RS:[JMP:F@2             ] | SP:8994 Z:0
-  TICK  164 | SS | PC:  8 | RS:[JMP:E@2             ] | SP:8994 Z:0
-  TICK  165 | SS | PC: 12 | RS:[                    ] | SP:8994 Z:0
-  TICK  166 | SS | PC: 13 | RS:[                    ] | SP:8994 Z:0
-  TICK  167 | SS | PC: 14 | RS:[                    ] | SP:8994 Z:0
-  TICK  168 | SS | PC: 15 | RS:[                    ] | SP:8994 Z:0
-  TICK  169 | SS | PC: 16 | RS:[MOV:F@11            ] | SP:8994 Z:0
-  TICK  170 | SS | PC: 17 | RS:[MOV:F@11            ] | SP:8994 Z:0
-  TICK  171 | SS | PC: 18 | RS:[MOV:F@11            ] | SP:8994 Z:0
-  TICK  172 | SS | PC: 19 | RS:[MOV:E@11            ] | SP:8994 Z:0
-  TICK  173 | SS | PC: 20 | RS:[MOV:F@14            ] | SP:8994 Z:0
-  TICK  174 | SS | PC: 21 | RS:[MOV:F@14            ] | SP:8994 Z:0
-  TICK  175 | SS | PC: 22 | RS:[MOV:F@14            ] | SP:8994 Z:0
-  TICK  176 | SS | PC: 23 | RS:[MOV:E@14            ] | SP:8994 Z:0
-  TICK  177 | SS | PC: 24 | RS:[                    ] | SP:8994 Z:0
-  TICK  178 | SS | PC: 25 | RS:[MOV:F@17,MOV:F@20   ] | SP:8994 Z:0
-  TICK  179 | SS | PC: 26 | RS:[MOV:F@17,MOV:F@20   ] | SP:8994 Z:0
-  TICK  180 | SS | PC: 27 | RS:[MOV:F@17,MOV:E@20   ] | SP:8994 Z:0
-  TICK  181 | SS | PC: 28 | RS:[MOV:E@17            ] | SP:8994 Z:0
-  TICK  182 | SS | PC: 29 | RS:[CMP:F@23            ] | SP:8994 Z:0
-  TICK  183 | SS | PC: 30 | RS:[CMP:F@23            ] | SP:8994 Z:0
-  TICK  184 | SS | PC: 31 | RS:[CMP:E@23,MOV:F@26   ] | SP:8994 Z:0
-  TICK  185 | SS | PC: 32 | RS:[MOV:F@26            ] | SP:8994 Z:0
-  TICK  186 | SS | PC: 33 | RS:[MOV:E@26            ] | SP:8994 Z:0
-  TICK  187 | SS | PC: 34 | RS:[JEQ:F@29            ] | SP:8994 Z:0
-  TICK  188 | SS | PC: 35 | RS:[JEQ:F@29            ] | SP:8994 Z:0
-  TICK  189 | SS | PC: 36 | RS:[JEQ:E@29            ] | SP:8994 Z:0
-  TICK  190 | SS | PC: 37 | RS:[MOV:F@31            ] | SP:8994 Z:0
-  TICK  191 | SS | PC: 38 | RS:[MOV:F@31            ] | SP:8994 Z:0
-  TICK  192 | SS | PC: 39 | RS:[MOV:E@31            ] | SP:8994 Z:0
-  TICK  193 | SS | PC: 40 | RS:[CMP:F@34            ] | SP:8994 Z:0
-  TICK  194 | SS | PC: 41 | RS:[CMP:F@34            ] | SP:8994 Z:0
-  TICK  195 | SS | PC: 42 | RS:[CMP:E@34            ] | SP:8994 Z:0
-  TICK  196 | SS | PC: 43 | RS:[JEQ:F@37            ] | SP:8994 Z:1
-  TICK  197 | SS | PC: 44 | RS:[JEQ:F@37            ] | SP:8994 Z:1
-  TICK  198 | SS | PC: 45 | RS:[JEQ:E@37            ] | SP:8994 Z:1
-  TICK  199 | SS | PC: 48 | RS:[                    ] | SP:8994 Z:1
-  TICK  200 | SS | PC: 49 | RS:[                    ] | SP:8994 Z:1
-  TICK  201 | SS | PC: 50 | RS:[                    ] | SP:8994 Z:1
-  TICK  202 | SS | PC: 51 | RS:[                    ] | SP:8994 Z:1
-  TICK  203 | SS | PC: 52 | RS:[MOV:F@47            ] | SP:8994 Z:1
-  TICK  204 | SS | PC: 53 | RS:[MOV:F@47            ] | SP:8994 Z:1
-  TICK  205 | SS | PC: 54 | RS:[MOV:F@47            ] | SP:8994 Z:1
-  TICK  206 | SS | PC: 55 | RS:[MOV:E@47            ] | SP:8994 Z:1
-  TICK  207 | SS | PC: 56 | RS:[MOV:F@50            ] | SP:8994 Z:1
-  TICK  208 | SS | PC: 57 | RS:[MOV:F@50            ] | SP:8994 Z:1
-  TICK  209 | SS | PC: 58 | RS:[MOV:F@50            ] | SP:8994 Z:1
-  TICK  210 | SS | PC: 59 | RS:[MOV:E@50            ] | SP:8994 Z:1
-  TICK  211 | SS | PC: 60 | RS:[                    ] | SP:8994 Z:1
-  TICK  212 | SS | PC: 61 | RS:[IRET:F@53           ] | SP:8994 Z:1
-  TICK  213 | SS | PC: 62 | RS:[IRET:F@53           ] | SP:8994 Z:1
-  TICK  214 | SS | PC: 63 | RS:[IRET:E@53           ] | SP:8994 Z:1
-  TICK  215 | SS | PC: 64 | RS:[MOV:F@54            ] | SP:8994 Z:1
-  TICK  216 | SS | PC: 64 | RS:[MOV:F@54            ] | SP:8995 Z:1
-  TICK  217 | SS | PC: 64 | RS:[MOV:F@54            ] | SP:8996 Z:1
-  TICK  218 | SS | PC: 64 | RS:[MOV:F@54            ] | SP:8997 Z:1
-  TICK  219 | SS | PC: 64 | RS:[MOV:F@54            ] | SP:8998 Z:1
-  TICK  220 | SS | PC: 64 | RS:[MOV:F@54            ] | SP:8999 Z:0
-  TICK  221 | SS | PC:114 | RS:[                    ] | SP:9000 Z:0
-  TICK  222 | SS | PC:115 | RS:[                    ] | SP:9000 Z:0
-  TICK  223 | SS | PC:116 | RS:[                    ] | SP:9000 Z:0
-  TICK  224 | SS | PC:117 | RS:[                    ] | SP:9000 Z:0
-  TICK  225 | SS | PC:118 | RS:[JMP:F@114           ] | SP:9000 Z:0
-  TICK  226 | SS | PC:119 | RS:[JMP:F@114           ] | SP:9000 Z:0
-  TICK  227 | SS | PC:120 | RS:[JMP:E@114           ] | SP:9000 Z:0
-  TICK  228 | SS | PC: 61 | RS:[                    ] | SP:9000 Z:0
-  TICK  229 | SS | PC: 62 | RS:[                    ] | SP:9000 Z:0
-  TICK  230 | SS | PC: 63 | RS:[                    ] | SP:9000 Z:0
-  TICK  231 | SS | PC: 64 | RS:[                    ] | SP:9000 Z:0
-  TICK  232 | SS | PC: 65 | RS:[MOV:F@60            ] | SP:9000 Z:0
-  TICK  233 | SS | PC: 66 | RS:[MOV:F@60            ] | SP:9000 Z:0
-  TICK  234 | SS | PC: 67 | RS:[MOV:E@60            ] | SP:9000 Z:0
-  TICK  235 | SS | PC: 68 | RS:[MOV:F@63            ] | SP:9000 Z:0
-  TICK  236 | SS | PC: 69 | RS:[MOV:F@63            ] | SP:9000 Z:0
-  TICK  237 | SS | PC: 70 | RS:[MOV:F@63            ] | SP:9000 Z:0
-  TICK  238 | SS | PC: 71 | RS:[MOV:E@63            ] | SP:9000 Z:0
-  TICK  239 | SS | PC: 72 | RS:[CMP:F@66            ] | SP:9000 Z:0
-  TICK  240 | SS | PC: 73 | RS:[CMP:F@66            ] | SP:9000 Z:0
-  TICK  241 | SS | PC: 74 | RS:[CMP:E@66            ] | SP:9000 Z:0
-  TICK  242 | SS | PC: 75 | RS:[JGT:F@69            ] | SP:9000 Z:0
-  TICK  243 | SS | PC: 76 | RS:[JGT:F@69            ] | SP:9000 Z:0
-  TICK  244 | SS | PC: 77 | RS:[JGT:E@69            ] | SP:9000 Z:0
-  TICK  245 | SS | PC: 78 | RS:[MOV:F@71            ] | SP:9000 Z:0
-  TICK  246 | SS | PC: 79 | RS:[MOV:F@71,MOV:F@74   ] | SP:9000 Z:0
-  TICK  247 | SS | PC: 80 | RS:[MOV:F@71,MOV:F@74   ] | SP:9000 Z:0
-  TICK  248 | SS | PC: 81 | RS:[MOV:E@71,MOV:E@74   ] | SP:9000 Z:0
-  TICK  249 | SS | PC: 82 | RS:[CMP:F@77            ] | SP:9000 Z:0
-  TICK  250 | [INTERRUPT] Accepted sym o. RetPC set to: 77
-  TICK  251 | [TRAP] Char saved
-  TICK  251 | SS | PC:  2 | RS:[                    ] | SP:9000 Z:0
-  TICK  252 | SS | PC:  2 | RS:[                    ] | SP:8999 Z:0
-  TICK  253 | SS | PC:  2 | RS:[                    ] | SP:8998 Z:0
-  TICK  254 | SS | PC:  2 | RS:[                    ] | SP:8997 Z:0
-  TICK  255 | SS | PC:  2 | RS:[                    ] | SP:8996 Z:0
-  TICK  256 | SS | PC:  2 | RS:[                    ] | SP:8995 Z:0
-  TICK  257 | SS | PC:  2 | RS:[                    ] | SP:8994 Z:0
-  TICK  258 | SS | PC:  2 | RS:[                    ] | SP:8994 Z:0
-  TICK  259 | SS | PC:  3 | RS:[                    ] | SP:8994 Z:0
-  TICK  260 | SS | PC:  4 | RS:[                    ] | SP:8994 Z:0
-  TICK  261 | SS | PC:  5 | RS:[                    ] | SP:8994 Z:0
-  TICK  262 | SS | PC:  6 | RS:[JMP:F@2             ] | SP:8994 Z:0
-  TICK  263 | SS | PC:  7 | RS:[JMP:F@2             ] | SP:8994 Z:0
-  TICK  264 | SS | PC:  8 | RS:[JMP:E@2             ] | SP:8994 Z:0
-  TICK  265 | SS | PC: 12 | RS:[                    ] | SP:8994 Z:0
-  TICK  266 | SS | PC: 13 | RS:[                    ] | SP:8994 Z:0
-  TICK  267 | SS | PC: 14 | RS:[                    ] | SP:8994 Z:0
-  TICK  268 | SS | PC: 15 | RS:[                    ] | SP:8994 Z:0
-  TICK  269 | SS | PC: 16 | RS:[MOV:F@11            ] | SP:8994 Z:0
-  TICK  270 | SS | PC: 17 | RS:[MOV:F@11            ] | SP:8994 Z:0
-  TICK  271 | SS | PC: 18 | RS:[MOV:F@11            ] | SP:8994 Z:0
-  TICK  272 | SS | PC: 19 | RS:[MOV:E@11            ] | SP:8994 Z:0
-  TICK  273 | SS | PC: 20 | RS:[MOV:F@14            ] | SP:8994 Z:0
-  TICK  274 | SS | PC: 21 | RS:[MOV:F@14            ] | SP:8994 Z:0
-  TICK  275 | SS | PC: 22 | RS:[MOV:F@14            ] | SP:8994 Z:0
-  TICK  276 | SS | PC: 23 | RS:[MOV:E@14            ] | SP:8994 Z:0
-  TICK  277 | SS | PC: 24 | RS:[                    ] | SP:8994 Z:0
-  TICK  278 | SS | PC: 25 | RS:[MOV:F@17,MOV:F@20   ] | SP:8994 Z:0
-  TICK  279 | SS | PC: 26 | RS:[MOV:F@17,MOV:F@20   ] | SP:8994 Z:0
-  TICK  280 | SS | PC: 27 | RS:[MOV:F@17,MOV:E@20   ] | SP:8994 Z:0
-  TICK  281 | SS | PC: 28 | RS:[MOV:E@17            ] | SP:8994 Z:0
-  TICK  282 | SS | PC: 29 | RS:[CMP:F@23            ] | SP:8994 Z:0
-  TICK  283 | SS | PC: 30 | RS:[CMP:F@23            ] | SP:8994 Z:0
-  TICK  284 | SS | PC: 31 | RS:[CMP:E@23,MOV:F@26   ] | SP:8994 Z:0
-  TICK  285 | SS | PC: 32 | RS:[MOV:F@26            ] | SP:8994 Z:0
-  TICK  286 | SS | PC: 33 | RS:[MOV:E@26            ] | SP:8994 Z:0
-  TICK  287 | SS | PC: 34 | RS:[JEQ:F@29            ] | SP:8994 Z:0
-  TICK  288 | SS | PC: 35 | RS:[JEQ:F@29            ] | SP:8994 Z:0
-  TICK  289 | SS | PC: 36 | RS:[JEQ:E@29            ] | SP:8994 Z:0
-  TICK  290 | SS | PC: 37 | RS:[MOV:F@31            ] | SP:8994 Z:0
-  TICK  291 | SS | PC: 38 | RS:[MOV:F@31            ] | SP:8994 Z:0
-  TICK  292 | SS | PC: 39 | RS:[MOV:E@31            ] | SP:8994 Z:0
-  TICK  293 | SS | PC: 40 | RS:[CMP:F@34            ] | SP:8994 Z:0
-  TICK  294 | SS | PC: 41 | RS:[CMP:F@34            ] | SP:8994 Z:0
-  TICK  295 | SS | PC: 42 | RS:[CMP:E@34            ] | SP:8994 Z:0
-  TICK  296 | SS | PC: 43 | RS:[JEQ:F@37            ] | SP:8994 Z:1
-  TICK  297 | SS | PC: 44 | RS:[JEQ:F@37            ] | SP:8994 Z:1
-  TICK  298 | SS | PC: 45 | RS:[JEQ:E@37            ] | SP:8994 Z:1
-  TICK  299 | SS | PC: 48 | RS:[                    ] | SP:8994 Z:1
-  TICK  300 | SS | PC: 49 | RS:[                    ] | SP:8994 Z:1
-  TICK  301 | SS | PC: 50 | RS:[                    ] | SP:8994 Z:1
-  TICK  302 | SS | PC: 51 | RS:[                    ] | SP:8994 Z:1
-  TICK  303 | SS | PC: 52 | RS:[MOV:F@47            ] | SP:8994 Z:1
-  TICK  304 | SS | PC: 53 | RS:[MOV:F@47            ] | SP:8994 Z:1
-  TICK  305 | SS | PC: 54 | RS:[MOV:F@47            ] | SP:8994 Z:1
-  TICK  306 | SS | PC: 55 | RS:[MOV:E@47            ] | SP:8994 Z:1
-  TICK  307 | SS | PC: 56 | RS:[MOV:F@50            ] | SP:8994 Z:1
-  TICK  308 | SS | PC: 57 | RS:[MOV:F@50            ] | SP:8994 Z:1
-  TICK  309 | SS | PC: 58 | RS:[MOV:F@50            ] | SP:8994 Z:1
-  TICK  310 | SS | PC: 59 | RS:[MOV:E@50            ] | SP:8994 Z:1
-  TICK  311 | SS | PC: 60 | RS:[                    ] | SP:8994 Z:1
-  TICK  312 | SS | PC: 61 | RS:[IRET:F@53           ] | SP:8994 Z:1
-  TICK  313 | SS | PC: 62 | RS:[IRET:F@53           ] | SP:8994 Z:1
-  TICK  314 | SS | PC: 63 | RS:[IRET:E@53           ] | SP:8994 Z:1
-  TICK  315 | SS | PC: 64 | RS:[MOV:F@54            ] | SP:8994 Z:1
-  TICK  316 | SS | PC: 64 | RS:[MOV:F@54            ] | SP:8995 Z:1
-  TICK  317 | SS | PC: 64 | RS:[MOV:F@54            ] | SP:8996 Z:1
-  TICK  318 | SS | PC: 64 | RS:[MOV:F@54            ] | SP:8997 Z:1
-  TICK  319 | SS | PC: 64 | RS:[MOV:F@54            ] | SP:8998 Z:1
-  TICK  320 | SS | PC: 64 | RS:[MOV:F@54            ] | SP:8999 Z:0
-  TICK  321 | SS | PC: 77 | RS:[                    ] | SP:9000 Z:0
-  TICK  322 | SS | PC: 78 | RS:[                    ] | SP:9000 Z:0
-  TICK  323 | SS | PC: 79 | RS:[                    ] | SP:9000 Z:0
-  TICK  324 | SS | PC: 80 | RS:[                    ] | SP:9000 Z:0
-  TICK  325 | SS | PC: 81 | RS:[                    ] | SP:9000 Z:0
-  TICK  326 | SS | PC: 82 | RS:[CMP:F@77            ] | SP:9000 Z:0
-  TICK  327 | SS | PC: 83 | RS:[CMP:F@77            ] | SP:9000 Z:0
-  TICK  328 | SS | PC: 84 | RS:[CMP:E@77            ] | SP:9000 Z:0
-  TICK  329 | SS | PC: 85 | RS:[MOV:F@80            ] | SP:9000 Z:0
-  TICK  330 | SS | PC: 86 | RS:[MOV:F@80            ] | SP:9000 Z:0
-  TICK  331 | SS | PC: 87 | RS:[MOV:E@80            ] | SP:9000 Z:0
-  TICK  332 | SS | PC: 88 | RS:[JEQ:F@83            ] | SP:9000 Z:0
-  TICK  333 | SS | PC: 89 | RS:[JEQ:F@83            ] | SP:9000 Z:0
-  TICK  334 | SS | PC: 90 | RS:[JEQ:E@83            ] | SP:9000 Z:0
-  TICK  335 | SS | PC: 91 | RS:[MOV:F@85            ] | SP:9000 Z:0
-  TICK  336 | SS | PC: 92 | RS:[MOV:F@85            ] | SP:9000 Z:0
-  TICK  337 | SS | PC: 93 | RS:[MOV:E@85            ] | SP:9000 Z:0
-  TICK  338 | SS | PC: 94 | RS:[CMP:F@88            ] | SP:9000 Z:0
-  TICK  339 | SS | PC: 95 | RS:[CMP:F@88            ] | SP:9000 Z:0
-  TICK  340 | SS | PC: 96 | RS:[CMP:E@88            ] | SP:9000 Z:0
-  TICK  341 | SS | PC: 97 | RS:[JEQ:F@91            ] | SP:9000 Z:1
-  TICK  342 | SS | PC: 98 | RS:[JEQ:F@91            ] | SP:9000 Z:1
-  TICK  343 | SS | PC: 99 | RS:[JEQ:E@91            ] | SP:9000 Z:1
-  TICK  344 | SS | PC:102 | RS:[                    ] | SP:9000 Z:1
-  TICK  345 | SS | PC:103 | RS:[                    ] | SP:9000 Z:1
-  TICK  346 | SS | PC:104 | RS:[                    ] | SP:9000 Z:1
-  TICK  347 | SS | PC:105 | RS:[                    ] | SP:9000 Z:1
-  TICK  348 | SS | PC:106 | RS:[MOV:F@101           ] | SP:9000 Z:1
-  TICK  349 | SS | PC:107 | RS:[MOV:F@101           ] | SP:9000 Z:1
-  TICK  350 | [INTERRUPT] Accepted sym \0. RetPC set to: 101
-  TICK  351 | [TRAP] Char saved
-  TICK  351 | SS | PC:  2 | RS:[                    ] | SP:9000 Z:1
-  TICK  352 | SS | PC:  2 | RS:[                    ] | SP:8999 Z:1
-  TICK  353 | SS | PC:  2 | RS:[                    ] | SP:8998 Z:1
-  TICK  354 | SS | PC:  2 | RS:[                    ] | SP:8997 Z:1
-  TICK  355 | SS | PC:  2 | RS:[                    ] | SP:8996 Z:1
-  TICK  356 | SS | PC:  2 | RS:[                    ] | SP:8995 Z:1
-  TICK  357 | SS | PC:  2 | RS:[                    ] | SP:8994 Z:1
-  TICK  358 | SS | PC:  2 | RS:[                    ] | SP:8994 Z:1
-  TICK  359 | SS | PC:  3 | RS:[                    ] | SP:8994 Z:1
-  TICK  360 | SS | PC:  4 | RS:[                    ] | SP:8994 Z:1
-  TICK  361 | SS | PC:  5 | RS:[                    ] | SP:8994 Z:1
-  TICK  362 | SS | PC:  6 | RS:[JMP:F@2             ] | SP:8994 Z:1
-  TICK  363 | SS | PC:  7 | RS:[JMP:F@2             ] | SP:8994 Z:1
-  TICK  364 | SS | PC:  8 | RS:[JMP:E@2             ] | SP:8994 Z:1
-  TICK  365 | SS | PC: 12 | RS:[                    ] | SP:8994 Z:1
-  TICK  366 | SS | PC: 13 | RS:[                    ] | SP:8994 Z:1
-  TICK  367 | SS | PC: 14 | RS:[                    ] | SP:8994 Z:1
-  TICK  368 | SS | PC: 15 | RS:[                    ] | SP:8994 Z:1
-  TICK  369 | SS | PC: 16 | RS:[MOV:F@11            ] | SP:8994 Z:1
-  TICK  370 | SS | PC: 17 | RS:[MOV:F@11            ] | SP:8994 Z:1
-  TICK  371 | SS | PC: 18 | RS:[MOV:F@11            ] | SP:8994 Z:1
-  TICK  372 | SS | PC: 19 | RS:[MOV:E@11            ] | SP:8994 Z:1
-  TICK  373 | SS | PC: 20 | RS:[MOV:F@14            ] | SP:8994 Z:1
-  TICK  374 | SS | PC: 21 | RS:[MOV:F@14            ] | SP:8994 Z:1
-  TICK  375 | SS | PC: 22 | RS:[MOV:F@14            ] | SP:8994 Z:1
-  TICK  376 | SS | PC: 23 | RS:[MOV:E@14            ] | SP:8994 Z:1
-  TICK  377 | SS | PC: 24 | RS:[                    ] | SP:8994 Z:1
-  TICK  378 | SS | PC: 25 | RS:[MOV:F@17,MOV:F@20   ] | SP:8994 Z:1
-  TICK  379 | SS | PC: 26 | RS:[MOV:F@17,MOV:F@20   ] | SP:8994 Z:1
-  TICK  380 | SS | PC: 27 | RS:[MOV:F@17,MOV:E@20   ] | SP:8994 Z:1
-  TICK  381 | SS | PC: 28 | RS:[MOV:E@17            ] | SP:8994 Z:1
-  TICK  382 | SS | PC: 29 | RS:[CMP:F@23            ] | SP:8994 Z:1
-  TICK  383 | SS | PC: 30 | RS:[CMP:F@23            ] | SP:8994 Z:1
-  TICK  384 | SS | PC: 31 | RS:[CMP:E@23,MOV:F@26   ] | SP:8994 Z:1
-  TICK  385 | SS | PC: 32 | RS:[MOV:F@26            ] | SP:8994 Z:1
-  TICK  386 | SS | PC: 33 | RS:[MOV:E@26            ] | SP:8994 Z:1
-  TICK  387 | SS | PC: 34 | RS:[JEQ:F@29            ] | SP:8994 Z:1
-  TICK  388 | SS | PC: 35 | RS:[JEQ:F@29            ] | SP:8994 Z:1
-  TICK  389 | SS | PC: 36 | RS:[JEQ:E@29            ] | SP:8994 Z:1
-  TICK  390 | SS | PC: 35 | RS:[                    ] | SP:8994 Z:1
-  TICK  391 | SS | PC: 36 | RS:[                    ] | SP:8994 Z:1
-  TICK  392 | SS | PC: 37 | RS:[                    ] | SP:8994 Z:1
-  TICK  393 | SS | PC: 38 | RS:[                    ] | SP:8994 Z:1
-  TICK  394 | SS | PC: 39 | RS:[CMP:F@34            ] | SP:8994 Z:1
-  TICK  395 | SS | PC: 40 | RS:[CMP:F@34            ] | SP:8994 Z:1
-  TICK  396 | SS | PC: 41 | RS:[CMP:E@34            ] | SP:8994 Z:1
-  TICK  397 | SS | PC: 42 | RS:[JEQ:F@37            ] | SP:8994 Z:0
-  TICK  398 | SS | PC: 43 | RS:[JEQ:F@37            ] | SP:8994 Z:0
-  TICK  399 | SS | PC: 44 | RS:[JEQ:E@37            ] | SP:8994 Z:0
-  TICK  400 | SS | PC: 45 | RS:[MOV:F@39            ] | SP:8994 Z:0
-  TICK  401 | SS | PC: 46 | RS:[MOV:F@39            ] | SP:8994 Z:0
-  TICK  402 | SS | PC: 47 | RS:[MOV:E@39            ] | SP:8994 Z:0
-  TICK  403 | SS | PC: 48 | RS:[MOV:F@42            ] | SP:8994 Z:0
-  TICK  404 | SS | PC: 49 | RS:[MOV:F@42            ] | SP:8994 Z:0
-  TICK  405 | SS | PC: 50 | RS:[MOV:F@42            ] | SP:8994 Z:0
-  TICK  406 | SS | PC: 51 | RS:[MOV:E@42            ] | SP:8994 Z:0
-  TICK  407 | SS | PC: 52 | RS:[                    ] | SP:8994 Z:0
-  TICK  408 | SS | PC: 53 | RS:[JMP:F@45            ] | SP:8994 Z:0
-  TICK  409 | SS | PC: 54 | RS:[JMP:F@45            ] | SP:8994 Z:0
-  TICK  410 | SS | PC: 55 | RS:[JMP:E@45            ] | SP:8994 Z:0
-  TICK  411 | SS | PC: 54 | RS:[                    ] | SP:8994 Z:0
-  TICK  412 | SS | PC: 55 | RS:[                    ] | SP:8994 Z:0
-  TICK  413 | SS | PC: 56 | RS:[IRET:F@53           ] | SP:8994 Z:0
-  TICK  414 | SS | PC: 57 | RS:[IRET:F@53           ] | SP:8994 Z:0
-  TICK  415 | SS | PC: 58 | RS:[IRET:E@53           ] | SP:8994 Z:0
-  TICK  416 | SS | PC: 59 | RS:[MOV:F@54            ] | SP:8994 Z:0
-  TICK  417 | SS | PC: 59 | RS:[MOV:F@54            ] | SP:8995 Z:0
-  TICK  418 | SS | PC: 59 | RS:[MOV:F@54            ] | SP:8996 Z:0
-  TICK  419 | SS | PC: 59 | RS:[MOV:F@54            ] | SP:8997 Z:0
-  TICK  420 | SS | PC: 59 | RS:[MOV:F@54            ] | SP:8998 Z:0
-  TICK  421 | SS | PC: 59 | RS:[MOV:F@54            ] | SP:8999 Z:1
-  TICK  422 | SS | PC:101 | RS:[                    ] | SP:9000 Z:1
-  TICK  423 | SS | PC:102 | RS:[                    ] | SP:9000 Z:1
-  TICK  424 | SS | PC:103 | RS:[                    ] | SP:9000 Z:1
-  TICK  425 | SS | PC:104 | RS:[                    ] | SP:9000 Z:1
-  TICK  426 | SS | PC:105 | RS:[                    ] | SP:9000 Z:1
-  TICK  427 | SS | PC:106 | RS:[MOV:F@101           ] | SP:9000 Z:1
-  TICK  428 | SS | PC:107 | RS:[MOV:F@101           ] | SP:9000 Z:1
-  TICK  429 | SS | PC:108 | RS:[MOV:F@101           ] | SP:9000 Z:1
-  TICK  430 | SS | PC:109 | RS:[MOV:E@101           ] | SP:9000 Z:1
-  TICK  431 | SS | PC:110 | RS:[                    ] | SP:9000 Z:1
-  TICK  432 | SS | PC:111 | RS:[MOV:F@104           ] | SP:9000 Z:1
-  TICK  433 | SS | PC:112 | RS:[MOV:F@104           ] | SP:9000 Z:1
-  TICK  434 | SS | PC:113 | RS:[MOV:F@104           ] | SP:9000 Z:1
-  TICK  435 | SS | PC:114 | RS:[MOV:E@104           ] | SP:9000 Z:1
-  TICK  436 | SS | PC:115 | RS:[ADD:F@107           ] | SP:9000 Z:1
-  TICK  437 | SS | PC:116 | RS:[ADD:F@107           ] | SP:9000 Z:1
-  TICK  438 | SS | PC:117 | RS:[ADD:E@107           ] | SP:9000 Z:1
-  TICK  439 | SS | PC:118 | RS:[MOV:F@111           ] | SP:9000 Z:0
-  TICK  440 | SS | PC:119 | RS:[MOV:F@111           ] | SP:9000 Z:0
-  TICK  441 | SS | PC:120 | RS:[MOV:F@111           ] | SP:9000 Z:0
-  TICK  442 | SS | PC:121 | RS:[MOV:E@111           ] | SP:9000 Z:0
-  TICK  443 | SS | PC:122 | RS:[                    ] | SP:9000 Z:0
-  TICK  444 | SS | PC:123 | RS:[JMP:F@114           ] | SP:9000 Z:0
-  TICK  445 | SS | PC:124 | RS:[JMP:F@114           ] | SP:9000 Z:0
-  TICK  446 | SS | PC:125 | RS:[JMP:E@114           ] | SP:9000 Z:0
-  TICK  447 | SS | PC: 61 | RS:[                    ] | SP:9000 Z:0
-  TICK  448 | SS | PC: 62 | RS:[                    ] | SP:9000 Z:0
-  TICK  449 | SS | PC: 63 | RS:[                    ] | SP:9000 Z:0
-  TICK  450 | SS | PC: 64 | RS:[                    ] | SP:9000 Z:0
-  TICK  451 | SS | PC: 65 | RS:[MOV:F@60            ] | SP:9000 Z:0
-  TICK  452 | SS | PC: 66 | RS:[MOV:F@60            ] | SP:9000 Z:0
-  TICK  453 | SS | PC: 67 | RS:[MOV:E@60            ] | SP:9000 Z:0
-  TICK  454 | SS | PC: 68 | RS:[MOV:F@63            ] | SP:9000 Z:0
-  TICK  455 | SS | PC: 69 | RS:[MOV:F@63            ] | SP:9000 Z:0
-  TICK  456 | SS | PC: 70 | RS:[MOV:F@63            ] | SP:9000 Z:0
-  TICK  457 | SS | PC: 71 | RS:[MOV:E@63            ] | SP:9000 Z:0
-  TICK  458 | SS | PC: 72 | RS:[CMP:F@66            ] | SP:9000 Z:0
-  TICK  459 | SS | PC: 73 | RS:[CMP:F@66            ] | SP:9000 Z:0
-  TICK  460 | SS | PC: 74 | RS:[CMP:E@66            ] | SP:9000 Z:0
-  TICK  461 | SS | PC: 75 | RS:[JGT:F@69            ] | SP:9000 Z:0
-  TICK  462 | SS | PC: 76 | RS:[JGT:F@69            ] | SP:9000 Z:0
-  TICK  463 | SS | PC: 77 | RS:[JGT:E@69            ] | SP:9000 Z:0
-  TICK  464 | SS | PC: 78 | RS:[MOV:F@71            ] | SP:9000 Z:0
-  TICK  465 | SS | PC: 79 | RS:[MOV:F@71,MOV:F@74   ] | SP:9000 Z:0
-  TICK  466 | SS | PC: 80 | RS:[MOV:F@71,MOV:F@74   ] | SP:9000 Z:0
-  TICK  467 | SS | PC: 81 | RS:[MOV:E@71,MOV:E@74   ] | SP:9000 Z:0
-  TICK  468 | SS | PC: 82 | RS:[CMP:F@77            ] | SP:9000 Z:0
-  TICK  469 | SS | PC: 83 | RS:[CMP:F@77            ] | SP:9000 Z:0
-  TICK  470 | SS | PC: 84 | RS:[CMP:E@77            ] | SP:9000 Z:0
-  TICK  471 | SS | PC: 85 | RS:[MOV:F@80            ] | SP:9000 Z:1
-  TICK  472 | SS | PC: 86 | RS:[MOV:F@80            ] | SP:9000 Z:1
-  TICK  473 | SS | PC: 87 | RS:[MOV:E@80            ] | SP:9000 Z:1
-  TICK  474 | SS | PC: 88 | RS:[JEQ:F@83            ] | SP:9000 Z:1
-  TICK  475 | SS | PC: 89 | RS:[JEQ:F@83            ] | SP:9000 Z:1
-  TICK  476 | SS | PC: 90 | RS:[JEQ:E@83            ] | SP:9000 Z:1
-  TICK  477 | SS | PC: 89 | RS:[                    ] | SP:9000 Z:1
-  TICK  478 | SS | PC: 90 | RS:[                    ] | SP:9000 Z:1
-  TICK  479 | SS | PC: 91 | RS:[                    ] | SP:9000 Z:1
-  TICK  480 | SS | PC: 92 | RS:[                    ] | SP:9000 Z:1
-  TICK  481 | SS | PC: 93 | RS:[CMP:F@88            ] | SP:9000 Z:1
-  TICK  482 | SS | PC: 94 | RS:[CMP:F@88            ] | SP:9000 Z:1
-  TICK  483 | SS | PC: 95 | RS:[CMP:E@88            ] | SP:9000 Z:1
-  TICK  484 | SS | PC: 96 | RS:[JEQ:F@91            ] | SP:9000 Z:0
-  TICK  485 | SS | PC: 97 | RS:[JEQ:F@91            ] | SP:9000 Z:0
-  TICK  486 | SS | PC: 98 | RS:[JEQ:E@91            ] | SP:9000 Z:0
-  TICK  487 | SS | PC: 99 | RS:[MOV:F@93            ] | SP:9000 Z:0
-  TICK  488 | SS | PC:100 | RS:[MOV:F@93            ] | SP:9000 Z:0
-  TICK  489 | SS | PC:101 | RS:[MOV:E@93            ] | SP:9000 Z:0
-  TICK  490 | SS | PC:102 | RS:[MOV:F@96            ] | SP:9000 Z:0
-  TICK  491 | SS | PC:103 | RS:[MOV:F@96            ] | SP:9000 Z:0
-  TICK  492 | SS | PC:104 | RS:[MOV:F@96            ] | SP:9000 Z:0
-  TICK  493 | SS | PC:105 | RS:[MOV:E@96            ] | SP:9000 Z:0
-  TICK  494 | SS | PC:106 | RS:[                    ] | SP:9000 Z:0
-  TICK  495 | SS | PC:107 | RS:[JMP:F@99            ] | SP:9000 Z:0
-  TICK  496 | SS | PC:108 | RS:[JMP:F@99            ] | SP:9000 Z:0
-  TICK  497 | SS | PC:109 | RS:[JMP:E@99            ] | SP:9000 Z:0
-  TICK  498 | SS | PC:102 | RS:[                    ] | SP:9000 Z:0
-  TICK  499 | SS | PC:103 | RS:[                    ] | SP:9000 Z:0
-  TICK  500 | SS | PC:104 | RS:[                    ] | SP:9000 Z:0
-  TICK  501 | SS | PC:105 | RS:[                    ] | SP:9000 Z:0
-  TICK  502 | SS | PC:106 | RS:[MOV:F@101           ] | SP:9000 Z:0
-  TICK  503 | SS | PC:107 | RS:[MOV:F@101           ] | SP:9000 Z:0
-  TICK  504 | SS | PC:108 | RS:[MOV:F@101           ] | SP:9000 Z:0
-  TICK  505 | SS | PC:109 | RS:[MOV:E@101           ] | SP:9000 Z:0
-  TICK  506 | SS | PC:110 | RS:[                    ] | SP:9000 Z:0
-  TICK  507 | SS | PC:111 | RS:[MOV:F@104           ] | SP:9000 Z:0
-  TICK  508 | SS | PC:112 | RS:[MOV:F@104           ] | SP:9000 Z:0
-  TICK  509 | SS | PC:113 | RS:[MOV:F@104           ] | SP:9000 Z:0
-  TICK  510 | SS | PC:114 | RS:[MOV:E@104           ] | SP:9000 Z:0
-  TICK  511 | SS | PC:115 | RS:[ADD:F@107           ] | SP:9000 Z:0
-  TICK  512 | SS | PC:116 | RS:[ADD:F@107           ] | SP:9000 Z:0
-  TICK  513 | SS | PC:117 | RS:[ADD:E@107           ] | SP:9000 Z:0
-  TICK  514 | SS | PC:118 | RS:[MOV:F@111           ] | SP:9000 Z:0
-  TICK  515 | SS | PC:119 | RS:[MOV:F@111           ] | SP:9000 Z:0
-  TICK  516 | SS | PC:120 | RS:[MOV:F@111           ] | SP:9000 Z:0
-  TICK  517 | SS | PC:121 | RS:[MOV:E@111           ] | SP:9000 Z:0
-  TICK  518 | SS | PC:122 | RS:[                    ] | SP:9000 Z:0
-  TICK  519 | SS | PC:123 | RS:[JMP:F@114           ] | SP:9000 Z:0
-  TICK  520 | SS | PC:124 | RS:[JMP:F@114           ] | SP:9000 Z:0
-  TICK  521 | SS | PC:125 | RS:[JMP:E@114           ] | SP:9000 Z:0
-  TICK  522 | SS | PC: 61 | RS:[                    ] | SP:9000 Z:0
-  TICK  523 | SS | PC: 62 | RS:[                    ] | SP:9000 Z:0
-  TICK  524 | SS | PC: 63 | RS:[                    ] | SP:9000 Z:0
-  TICK  525 | SS | PC: 64 | RS:[                    ] | SP:9000 Z:0
-  TICK  526 | SS | PC: 65 | RS:[MOV:F@60            ] | SP:9000 Z:0
-  TICK  527 | SS | PC: 66 | RS:[MOV:F@60            ] | SP:9000 Z:0
-  TICK  528 | SS | PC: 67 | RS:[MOV:E@60            ] | SP:9000 Z:0
-  TICK  529 | SS | PC: 68 | RS:[MOV:F@63            ] | SP:9000 Z:0
-  TICK  530 | SS | PC: 69 | RS:[MOV:F@63            ] | SP:9000 Z:0
-  TICK  531 | SS | PC: 70 | RS:[MOV:F@63            ] | SP:9000 Z:0
-  TICK  532 | SS | PC: 71 | RS:[MOV:E@63            ] | SP:9000 Z:0
-  TICK  533 | SS | PC: 72 | RS:[CMP:F@66            ] | SP:9000 Z:0
-  TICK  534 | SS | PC: 73 | RS:[CMP:F@66            ] | SP:9000 Z:0
-  TICK  535 | SS | PC: 74 | RS:[CMP:E@66            ] | SP:9000 Z:0
-  TICK  536 | SS | PC: 75 | RS:[JGT:F@69            ] | SP:9000 Z:0
-  TICK  537 | SS | PC: 76 | RS:[JGT:F@69            ] | SP:9000 Z:0
-  TICK  538 | SS | PC: 77 | RS:[JGT:E@69            ] | SP:9000 Z:0
-  TICK  539 | SS | PC:117 | RS:[                    ] | SP:9000 Z:0
-  TICK  540 | SS | PC:118 | RS:[                    ] | SP:9000 Z:0
-  TICK  541 | SS | PC:119 | RS:[                    ] | SP:9000 Z:0
-  TICK  542 | SS | PC:120 | RS:[                    ] | SP:9000 Z:0
-  TICK  543 | SS | PC:121 | RS:[MOV:F@116           ] | SP:9000 Z:0
-  TICK  544 | SS | PC:122 | RS:[MOV:F@116           ] | SP:9000 Z:0
-  TICK  545 | SS | PC:123 | RS:[MOV:F@116           ] | SP:9000 Z:0
-  TICK  546 | SS | PC:124 | RS:[MOV:E@116           ] | SP:9000 Z:0
-  TICK  547 | SS | PC:125 | RS:[HALT:F@119          ] | SP:9000 Z:0
-  TICK  548 | SS | PC:126 | RS:[HALT:F@119          ] | SP:9000 Z:0
-  TICK  549 | SS | PC:127 | RS:[HALT:E@119          ] | SP:9000 Z:0
-  TICK  550 | SS | PC:127 | RS:[NOP:F@120,NOP:F@121 ] | SP:9000 Z:0
+  TICK:    1 SC: 1 PC=0001 OP1=00000000 OP2=00000000 OP3=00000000 IE=0 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:    2 SC: 2 PC=0002 OP1=00000036 OP2=00000000 OP3=00000000 IE=0 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1023 | OP=JMP OPERAND1 = 54
+  TICK:    3 SC: 0 PC=0036 OP1=00000036 OP2=00000000 OP3=00000000 IE=0 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1023 | OP=JMP -> 0X0036
+  TICK:    4 SC: 1 PC=0037 OP1=00000036 OP2=00000000 OP3=00000000 IE=0 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:    5 SC: 2 PC=0038 OP1=00000000 OP2=00000000 OP3=00000000 IE=0 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1023 | OP=MOV OPERAND1 = 0
+  TICK:    6 SC: 3 PC=0039 OP1=00000000 OP2=00000000 OP3=00000000 IE=0 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1023 | OP=MOV OPERAND2 = 0
+  TICK:    7 SC: 0 PC=0039 OP1=00000000 OP2=00000000 OP3=00000000 IE=0 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1023 | OP=MOV R0 <- IMM
+  TICK:    8 SC: 1 PC=003A OP1=00000000 OP2=00000000 OP3=00000000 IE=0 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:    9 SC: 2 PC=003B OP1=00000009 OP2=00000000 OP3=00000000 IE=0 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1023 | OP=MOV OPERAND1 = 9
+  TICK:   10 SC: 3 PC=003C OP1=00000009 OP2=00000000 OP3=00000000 IE=0 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1023 | OP=MOV OPERAND2 = 0
+  TICK:   10 char='f' IRQ=1 IE=1
+  TICK:   11 SC: 4 PC=003C OP1=00000009 OP2=00000000 OP3=00000000 IE=1 IRQ=1 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1023 | OP=MOV stage dst addr (MEM)
+  TICK:   12 SC: 0 PC=003C OP1=00000009 OP2=00000000 OP3=00000000 IE=1 IRQ=1 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1023 | OP=MOV -> mem
+  TICK:   13 SC: 1 PC=003D OP1=00000009 OP2=00000000 OP3=00000000 IE=1 IRQ=1 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:   14 SC: 2 PC=003C OP1=00000009 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1022 | OP=INT SP-- (for PC)
+  TICK:   15 SC: 3 PC=003C OP1=00000009 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1022 | OP=INT ADDR_REG <- SP (for PC)
+  TICK:   16 SC: 4 PC=003C OP1=00000009 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1022 | OP=INT push PC
+  TICK:   17 SC: 5 PC=003C OP1=00000009 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1021 | OP=INT SP-- (for R0)
+  TICK:   18 SC: 6 PC=003C OP1=00000009 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1021 | OP=INT ADDR_REG <- SP (for R0)
+  TICK:   19 SC: 7 PC=003C OP1=00000009 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1021 | OP=INT push R0
+  TICK:   20 SC: 8 PC=003C OP1=00000009 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1020 | OP=INT SP-- (for R1)
+  TICK:   21 SC: 9 PC=003C OP1=00000009 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1020 | OP=INT ADDR_REG <- SP (for R1)
+  TICK:   22 SC: 10 PC=003C OP1=00000009 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1020 | OP=INT push R1
+  TICK:   23 SC: 11 PC=003C OP1=00000009 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1019 | OP=INT SP-- (for R2)
+  TICK:   24 SC: 12 PC=003C OP1=00000009 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1019 | OP=INT ADDR_REG <- SP (for R2)
+  TICK:   25 SC: 13 PC=003C OP1=00000009 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1019 | OP=INT push R2
+  TICK:   26 SC: 14 PC=003C OP1=00000009 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1018 | OP=INT SP-- (for R3)
+  TICK:   27 SC: 15 PC=003C OP1=00000009 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1018 | OP=INT ADDR_REG <- SP (for R3)
+  TICK:   28 SC: 16 PC=003C OP1=00000009 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1018 | OP=INT push R3
+  TICK:   29 SC: 17 PC=003C OP1=00000009 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1017 | OP=INT SP-- (for FLAGS)
+  TICK:   30 SC: 18 PC=003C OP1=00000009 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1017 | OP=INT ADDR_REG <- SP (for FLAGS)
+  TICK:   31 SC: 19 PC=003C OP1=00000009 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1017 | OP=INT push FLAGS
+  TICK:   32 SC: 0 PC=0002 OP1=00000009 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1017 | OP=INT vector -> 0X0002
+  TICK:   33 SC: 1 PC=0003 OP1=00000009 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:   34 SC: 2 PC=0004 OP1=0000000B OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1017 | OP=JMP OPERAND1 = 11
+  TICK:   35 SC: 0 PC=000B OP1=0000000B OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1017 | OP=JMP -> 0X000B
+  TICK:   36 SC: 1 PC=000C OP1=0000000B OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:   37 SC: 2 PC=000D OP1=00000000 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1017 | OP=MOV OPERAND1 = 0
+  TICK:   38 SC: 3 PC=000E OP1=00000000 OP2=00000004 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1017 | OP=MOV OPERAND2 = 4
+  TICK:   39 SC: 4 PC=000E OP1=00000000 OP2=00000004 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1017 | OP=MOV stage src addr (MEM)
+  TICK:   40 SC: 0 PC=000E OP1=00000000 OP2=00000004 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=102 R1=0 R2=0 R3=0 SP=1017 | OP=MOV R0 <- mem
+  TICK:   41 SC: 1 PC=000F OP1=00000000 OP2=00000004 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=102 R1=0 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:   42 SC: 2 PC=0010 OP1=00000008 OP2=00000004 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=102 R1=0 R2=0 R3=0 SP=1017 | OP=MOV OPERAND1 = 8
+  TICK:   43 SC: 3 PC=0011 OP1=00000008 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=102 R1=0 R2=0 R3=0 SP=1017 | OP=MOV OPERAND2 = 0
+  TICK:   44 SC: 4 PC=0011 OP1=00000008 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=102 R1=0 R2=0 R3=0 SP=1017 | OP=MOV stage dst addr (MEM)
+  TICK:   45 SC: 0 PC=0011 OP1=00000008 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=102 R1=0 R2=0 R3=0 SP=1017 | OP=MOV -> mem
+  TICK:   46 SC: 1 PC=0012 OP1=00000008 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=102 R1=0 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:   47 SC: 2 PC=0013 OP1=00000001 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=102 R1=0 R2=0 R3=0 SP=1017 | OP=MOV OPERAND1 = 1
+  TICK:   48 SC: 3 PC=0014 OP1=00000001 OP2=00000008 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=102 R1=0 R2=0 R3=0 SP=1017 | OP=MOV OPERAND2 = 8
+  TICK:   49 SC: 4 PC=0014 OP1=00000001 OP2=00000008 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=102 R1=0 R2=0 R3=0 SP=1017 | OP=MOV stage src addr (MEM)
+  TICK:   50 SC: 0 PC=0014 OP1=00000001 OP2=00000008 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=102 R1=102 R2=0 R3=0 SP=1017 | OP=MOV R1 <- mem
+  TICK:   51 SC: 1 PC=0015 OP1=00000001 OP2=00000008 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=102 R1=102 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:   52 SC: 2 PC=0016 OP1=00000002 OP2=00000008 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=102 R1=102 R2=0 R3=0 SP=1017 | OP=MOV OPERAND1 = 2
+  TICK:   53 SC: 3 PC=0017 OP1=00000002 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=102 R1=102 R2=0 R3=0 SP=1017 | OP=MOV OPERAND2 = 0
+  TICK:   54 SC: 0 PC=0017 OP1=00000002 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=102 R1=102 R2=0 R3=0 SP=1017 | OP=MOV R2 <- IMM
+  TICK:   55 SC: 1 PC=0018 OP1=00000002 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=102 R1=102 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:   56 SC: 2 PC=0019 OP1=00000001 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=102 R1=102 R2=0 R3=0 SP=1017 | OP=CMP OPERAND1 = 1
+  TICK:   57 SC: 3 PC=001A OP1=00000001 OP2=00000002 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=102 R1=102 R2=0 R3=0 SP=1017 | OP=CMP OPERAND2 = 2
+  TICK:   58 SC: 0 PC=001A OP1=00000001 OP2=00000002 OP3=00000000 IE=1 IRQ=0 FLAGS=--C- R0=102 R1=102 R2=0 R3=0 SP=1017 | OP=CMP
+  TICK:   59 SC: 1 PC=001B OP1=00000001 OP2=00000002 OP3=00000000 IE=1 IRQ=0 FLAGS=--C- R0=102 R1=102 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:   60 SC: 2 PC=001C OP1=00000000 OP2=00000002 OP3=00000000 IE=1 IRQ=0 FLAGS=--C- R0=102 R1=102 R2=0 R3=0 SP=1017 | OP=MOV OPERAND1 = 0
+  TICK:   61 SC: 3 PC=001D OP1=00000000 OP2=00000001 OP3=00000000 IE=1 IRQ=0 FLAGS=--C- R0=102 R1=102 R2=0 R3=0 SP=1017 | OP=MOV OPERAND2 = 1
+  TICK:   62 SC: 0 PC=001D OP1=00000000 OP2=00000001 OP3=00000000 IE=1 IRQ=0 FLAGS=--C- R0=1 R1=102 R2=0 R3=0 SP=1017 | OP=MOV R0 <- IMM
+  TICK:   63 SC: 1 PC=001E OP1=00000000 OP2=00000001 OP3=00000000 IE=1 IRQ=0 FLAGS=--C- R0=1 R1=102 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:   64 SC: 2 PC=001F OP1=00000022 OP2=00000001 OP3=00000000 IE=1 IRQ=0 FLAGS=--C- R0=1 R1=102 R2=0 R3=0 SP=1017 | OP=JEQ OPERAND1 = 34
+  TICK:   65 SC: 0 PC=001F OP1=00000022 OP2=00000001 OP3=00000000 IE=1 IRQ=0 FLAGS=--C- R0=1 R1=102 R2=0 R3=0 SP=1017 | OP=Jcc not taken
+  TICK:   66 SC: 1 PC=0020 OP1=00000022 OP2=00000001 OP3=00000000 IE=1 IRQ=0 FLAGS=--C- R0=1 R1=102 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:   67 SC: 2 PC=0021 OP1=00000000 OP2=00000001 OP3=00000000 IE=1 IRQ=0 FLAGS=--C- R0=1 R1=102 R2=0 R3=0 SP=1017 | OP=MOV OPERAND1 = 0
+  TICK:   68 SC: 3 PC=0022 OP1=00000000 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=--C- R0=1 R1=102 R2=0 R3=0 SP=1017 | OP=MOV OPERAND2 = 0
+  TICK:   69 SC: 0 PC=0022 OP1=00000000 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=--C- R0=0 R1=102 R2=0 R3=0 SP=1017 | OP=MOV R0 <- IMM
+  TICK:   70 SC: 1 PC=0023 OP1=00000000 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=--C- R0=0 R1=102 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:   71 SC: 2 PC=0024 OP1=00000000 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=--C- R0=0 R1=102 R2=0 R3=0 SP=1017 | OP=CMP OPERAND1 = 0
+  TICK:   72 SC: 3 PC=0025 OP1=00000000 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=--C- R0=0 R1=102 R2=0 R3=0 SP=1017 | OP=CMP OPERAND2 = 0
+  TICK:   73 SC: 0 PC=0025 OP1=00000000 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=102 R2=0 R3=0 SP=1017 | OP=CMP
+  TICK:   74 SC: 1 PC=0026 OP1=00000000 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=102 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:   75 SC: 2 PC=0027 OP1=0000002F OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=102 R2=0 R3=0 SP=1017 | OP=JEQ OPERAND1 = 47
+  TICK:   76 SC: 0 PC=002F OP1=0000002F OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=102 R2=0 R3=0 SP=1017 | OP=JMP -> 0X002F
+  TICK:   77 SC: 1 PC=0030 OP1=0000002F OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=102 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:   78 SC: 2 PC=0031 OP1=00000000 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=102 R2=0 R3=0 SP=1017 | OP=MOV OPERAND1 = 0
+  TICK:   79 SC: 3 PC=0032 OP1=00000000 OP2=00000008 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=102 R2=0 R3=0 SP=1017 | OP=MOV OPERAND2 = 8
+  TICK:   80 SC: 4 PC=0032 OP1=00000000 OP2=00000008 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=102 R2=0 R3=0 SP=1017 | OP=MOV stage src addr (MEM)
+  TICK:   81 SC: 0 PC=0032 OP1=00000000 OP2=00000008 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=102 R1=102 R2=0 R3=0 SP=1017 | OP=MOV R0 <- mem
+  TICK:   82 SC: 1 PC=0033 OP1=00000000 OP2=00000008 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=102 R1=102 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:   83 SC: 2 PC=0034 OP1=00000006 OP2=00000008 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=102 R1=102 R2=0 R3=0 SP=1017 | OP=MOV OPERAND1 = 6
+  TICK:   84 SC: 3 PC=0035 OP1=00000006 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=102 R1=102 R2=0 R3=0 SP=1017 | OP=MOV OPERAND2 = 0
+  TICK:   85 SC: 4 PC=0035 OP1=00000006 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=102 R1=102 R2=0 R3=0 SP=1017 | OP=MOV stage dst addr (MEM)
+  TICK:   86 SC: 0 PC=0035 OP1=00000006 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=102 R1=102 R2=0 R3=0 SP=1017 | OP=MOV -> mem
+  TICK:   87 SC: 1 PC=0036 OP1=00000006 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=102 R1=102 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:   88 SC: 2 PC=0036 OP1=00000006 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=102 R1=102 R2=0 R3=0 SP=1017 | OP=IRET ADDR_REG <- SP (for FLAGS)
+  TICK:   89 SC: 3 PC=0036 OP1=00000006 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=102 R1=102 R2=0 R3=0 SP=1018 | OP=IRET pop FLAGS
+  TICK:   90 SC: 4 PC=0036 OP1=00000006 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=102 R1=102 R2=0 R3=0 SP=1018 | OP=IRET ADDR_REG <- SP (for R3)
+  TICK:   91 SC: 5 PC=0036 OP1=00000006 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=102 R1=102 R2=0 R3=0 SP=1019 | OP=IRET pop R3
+  TICK:   92 SC: 6 PC=0036 OP1=00000006 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=102 R1=102 R2=0 R3=0 SP=1019 | OP=IRET ADDR_REG <- SP (for R2)
+  TICK:   93 SC: 7 PC=0036 OP1=00000006 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=102 R1=102 R2=0 R3=0 SP=1020 | OP=IRET pop R2
+  TICK:   94 SC: 8 PC=0036 OP1=00000006 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=102 R1=102 R2=0 R3=0 SP=1020 | OP=IRET ADDR_REG <- SP (for R1)
+  TICK:   95 SC: 9 PC=0036 OP1=00000006 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=102 R1=0 R2=0 R3=0 SP=1021 | OP=IRET pop R1
+  TICK:   96 SC: 10 PC=0036 OP1=00000006 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=102 R1=0 R2=0 R3=0 SP=1021 | OP=IRET ADDR_REG <- SP (for R0)
+  TICK:   97 SC: 11 PC=0036 OP1=00000006 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1022 | OP=IRET pop R0
+  TICK:   98 SC: 12 PC=0036 OP1=00000006 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1022 | OP=IRET ADDR_REG <- SP (for PC)
+  TICK:   99 SC: 13 PC=003C OP1=00000006 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1023 | OP=IRET pop PC
+  TICK:  100 SC: 0 PC=003C OP1=00000006 OP2=00000000 OP3=00000000 IE=0 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1023 | OP=IRET (IE=0)
+  TICK:  101 SC: 1 PC=003D OP1=00000006 OP2=00000000 OP3=00000000 IE=0 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:  102 SC: 2 PC=003E OP1=00000001 OP2=00000000 OP3=00000000 IE=0 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1023 | OP=MOV OPERAND1 = 1
+  TICK:  103 SC: 3 PC=003F OP1=00000001 OP2=000003E8 OP3=00000000 IE=0 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1023 | OP=MOV OPERAND2 = 1000
+  TICK:  104 SC: 0 PC=003F OP1=00000001 OP2=000003E8 OP3=00000000 IE=0 IRQ=0 FLAGS=---- R0=0 R1=1000 R2=0 R3=0 SP=1023 | OP=MOV R1 <- IMM
+  TICK:  105 SC: 1 PC=0040 OP1=00000001 OP2=000003E8 OP3=00000000 IE=0 IRQ=0 FLAGS=---- R0=0 R1=1000 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:  106 SC: 2 PC=0041 OP1=00000000 OP2=000003E8 OP3=00000000 IE=0 IRQ=0 FLAGS=---- R0=0 R1=1000 R2=0 R3=0 SP=1023 | OP=MOV OPERAND1 = 0
+  TICK:  107 SC: 3 PC=0042 OP1=00000000 OP2=00000009 OP3=00000000 IE=0 IRQ=0 FLAGS=---- R0=0 R1=1000 R2=0 R3=0 SP=1023 | OP=MOV OPERAND2 = 9
+  TICK:  108 SC: 4 PC=0042 OP1=00000000 OP2=00000009 OP3=00000000 IE=0 IRQ=0 FLAGS=---- R0=0 R1=1000 R2=0 R3=0 SP=1023 | OP=MOV stage src addr (MEM)
+  TICK:  109 SC: 0 PC=0042 OP1=00000000 OP2=00000009 OP3=00000000 IE=0 IRQ=0 FLAGS=---- R0=0 R1=1000 R2=0 R3=0 SP=1023 | OP=MOV R0 <- mem
+  TICK:  110 SC: 1 PC=0043 OP1=00000000 OP2=00000009 OP3=00000000 IE=0 IRQ=0 FLAGS=---- R0=0 R1=1000 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:  111 SC: 2 PC=0044 OP1=00000000 OP2=00000009 OP3=00000000 IE=0 IRQ=0 FLAGS=---- R0=0 R1=1000 R2=0 R3=0 SP=1023 | OP=CMP OPERAND1 = 0
+  TICK:  112 SC: 3 PC=0045 OP1=00000000 OP2=00000001 OP3=00000000 IE=0 IRQ=0 FLAGS=---- R0=0 R1=1000 R2=0 R3=0 SP=1023 | OP=CMP OPERAND2 = 1
+  TICK:  113 SC: 0 PC=0045 OP1=00000000 OP2=00000001 OP3=00000000 IE=0 IRQ=0 FLAGS=N--- R0=0 R1=1000 R2=0 R3=0 SP=1023 | OP=CMP
+  TICK:  114 SC: 1 PC=0046 OP1=00000000 OP2=00000001 OP3=00000000 IE=0 IRQ=0 FLAGS=N--- R0=0 R1=1000 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:  115 SC: 2 PC=0047 OP1=00000074 OP2=00000001 OP3=00000000 IE=0 IRQ=0 FLAGS=N--- R0=0 R1=1000 R2=0 R3=0 SP=1023 | OP=JGT OPERAND1 = 116
+  TICK:  116 SC: 0 PC=0047 OP1=00000074 OP2=00000001 OP3=00000000 IE=0 IRQ=0 FLAGS=N--- R0=0 R1=1000 R2=0 R3=0 SP=1023 | OP=Jcc not taken
+  TICK:  117 SC: 1 PC=0048 OP1=00000074 OP2=00000001 OP3=00000000 IE=0 IRQ=0 FLAGS=N--- R0=0 R1=1000 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:  118 SC: 2 PC=0049 OP1=00000001 OP2=00000001 OP3=00000000 IE=0 IRQ=0 FLAGS=N--- R0=0 R1=1000 R2=0 R3=0 SP=1023 | OP=MOV OPERAND1 = 1
+  TICK:  119 SC: 3 PC=004A OP1=00000001 OP2=00000007 OP3=00000000 IE=0 IRQ=0 FLAGS=N--- R0=0 R1=1000 R2=0 R3=0 SP=1023 | OP=MOV OPERAND2 = 7
+  TICK:  120 SC: 4 PC=004A OP1=00000001 OP2=00000007 OP3=00000000 IE=0 IRQ=0 FLAGS=N--- R0=0 R1=1000 R2=0 R3=0 SP=1023 | OP=MOV stage src addr (MEM)
+  TICK:  121 SC: 0 PC=004A OP1=00000001 OP2=00000007 OP3=00000000 IE=0 IRQ=0 FLAGS=N--- R0=0 R1=1 R2=0 R3=0 SP=1023 | OP=MOV R1 <- mem
+  TICK:  122 SC: 1 PC=004B OP1=00000001 OP2=00000007 OP3=00000000 IE=0 IRQ=0 FLAGS=N--- R0=0 R1=1 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:  123 SC: 2 PC=004C OP1=00000002 OP2=00000007 OP3=00000000 IE=0 IRQ=0 FLAGS=N--- R0=0 R1=1 R2=0 R3=0 SP=1023 | OP=MOV OPERAND1 = 2
+  TICK:  124 SC: 3 PC=004D OP1=00000002 OP2=00000000 OP3=00000000 IE=0 IRQ=0 FLAGS=N--- R0=0 R1=1 R2=0 R3=0 SP=1023 | OP=MOV OPERAND2 = 0
+  TICK:  125 SC: 0 PC=004D OP1=00000002 OP2=00000000 OP3=00000000 IE=0 IRQ=0 FLAGS=N--- R0=0 R1=1 R2=0 R3=0 SP=1023 | OP=MOV R2 <- IMM
+  TICK:  126 SC: 1 PC=004E OP1=00000002 OP2=00000000 OP3=00000000 IE=0 IRQ=0 FLAGS=N--- R0=0 R1=1 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:  127 SC: 2 PC=004F OP1=00000001 OP2=00000000 OP3=00000000 IE=0 IRQ=0 FLAGS=N--- R0=0 R1=1 R2=0 R3=0 SP=1023 | OP=CMP OPERAND1 = 1
+  TICK:  128 SC: 3 PC=0050 OP1=00000001 OP2=00000002 OP3=00000000 IE=0 IRQ=0 FLAGS=N--- R0=0 R1=1 R2=0 R3=0 SP=1023 | OP=CMP OPERAND2 = 2
+  TICK:  129 SC: 0 PC=0050 OP1=00000001 OP2=00000002 OP3=00000000 IE=0 IRQ=0 FLAGS=--C- R0=0 R1=1 R2=0 R3=0 SP=1023 | OP=CMP
+  TICK:  130 SC: 1 PC=0051 OP1=00000001 OP2=00000002 OP3=00000000 IE=0 IRQ=0 FLAGS=--C- R0=0 R1=1 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:  131 SC: 2 PC=0052 OP1=00000000 OP2=00000002 OP3=00000000 IE=0 IRQ=0 FLAGS=--C- R0=0 R1=1 R2=0 R3=0 SP=1023 | OP=MOV OPERAND1 = 0
+  TICK:  132 SC: 3 PC=0053 OP1=00000000 OP2=00000001 OP3=00000000 IE=0 IRQ=0 FLAGS=--C- R0=0 R1=1 R2=0 R3=0 SP=1023 | OP=MOV OPERAND2 = 1
+  TICK:  133 SC: 0 PC=0053 OP1=00000000 OP2=00000001 OP3=00000000 IE=0 IRQ=0 FLAGS=--C- R0=1 R1=1 R2=0 R3=0 SP=1023 | OP=MOV R0 <- IMM
+  TICK:  134 SC: 1 PC=0054 OP1=00000000 OP2=00000001 OP3=00000000 IE=0 IRQ=0 FLAGS=--C- R0=1 R1=1 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:  135 SC: 2 PC=0055 OP1=00000058 OP2=00000001 OP3=00000000 IE=0 IRQ=0 FLAGS=--C- R0=1 R1=1 R2=0 R3=0 SP=1023 | OP=JEQ OPERAND1 = 88
+  TICK:  136 SC: 0 PC=0055 OP1=00000058 OP2=00000001 OP3=00000000 IE=0 IRQ=0 FLAGS=--C- R0=1 R1=1 R2=0 R3=0 SP=1023 | OP=Jcc not taken
+  TICK:  137 SC: 1 PC=0056 OP1=00000058 OP2=00000001 OP3=00000000 IE=0 IRQ=0 FLAGS=--C- R0=1 R1=1 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:  138 SC: 2 PC=0057 OP1=00000000 OP2=00000001 OP3=00000000 IE=0 IRQ=0 FLAGS=--C- R0=1 R1=1 R2=0 R3=0 SP=1023 | OP=MOV OPERAND1 = 0
+  TICK:  139 SC: 3 PC=0058 OP1=00000000 OP2=00000000 OP3=00000000 IE=0 IRQ=0 FLAGS=--C- R0=1 R1=1 R2=0 R3=0 SP=1023 | OP=MOV OPERAND2 = 0
+  TICK:  140 SC: 0 PC=0058 OP1=00000000 OP2=00000000 OP3=00000000 IE=0 IRQ=0 FLAGS=--C- R0=0 R1=1 R2=0 R3=0 SP=1023 | OP=MOV R0 <- IMM
+  TICK:  141 SC: 1 PC=0059 OP1=00000000 OP2=00000000 OP3=00000000 IE=0 IRQ=0 FLAGS=--C- R0=0 R1=1 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:  142 SC: 2 PC=005A OP1=00000000 OP2=00000000 OP3=00000000 IE=0 IRQ=0 FLAGS=--C- R0=0 R1=1 R2=0 R3=0 SP=1023 | OP=CMP OPERAND1 = 0
+  TICK:  143 SC: 3 PC=005B OP1=00000000 OP2=00000000 OP3=00000000 IE=0 IRQ=0 FLAGS=--C- R0=0 R1=1 R2=0 R3=0 SP=1023 | OP=CMP OPERAND2 = 0
+  TICK:  144 SC: 0 PC=005B OP1=00000000 OP2=00000000 OP3=00000000 IE=0 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1023 | OP=CMP
+  TICK:  145 SC: 1 PC=005C OP1=00000000 OP2=00000000 OP3=00000000 IE=0 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:  146 SC: 2 PC=005D OP1=00000065 OP2=00000000 OP3=00000000 IE=0 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1023 | OP=JEQ OPERAND1 = 101
+  TICK:  147 SC: 0 PC=0065 OP1=00000065 OP2=00000000 OP3=00000000 IE=0 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1023 | OP=JMP -> 0X0065
+  TICK:  148 SC: 1 PC=0066 OP1=00000065 OP2=00000000 OP3=00000000 IE=0 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:  149 SC: 2 PC=0067 OP1=0000000A OP2=00000000 OP3=00000000 IE=0 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1023 | OP=MOV OPERAND1 = 10
+  TICK:  150 SC: 3 PC=0068 OP1=0000000A OP2=00000000 OP3=00000000 IE=0 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1023 | OP=MOV OPERAND2 = 0
+  TICK:   150 char='o' IRQ=1 IE=1
+  TICK:  151 SC: 4 PC=0068 OP1=0000000A OP2=00000000 OP3=00000000 IE=1 IRQ=1 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1023 | OP=MOV stage dst addr (MEM)
+  TICK:  152 SC: 0 PC=0068 OP1=0000000A OP2=00000000 OP3=00000000 IE=1 IRQ=1 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1023 | OP=MOV -> mem
+  TICK:  153 SC: 1 PC=0069 OP1=0000000A OP2=00000000 OP3=00000000 IE=1 IRQ=1 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:  154 SC: 2 PC=0068 OP1=0000000A OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1022 | OP=INT SP-- (for PC)
+  TICK:  155 SC: 3 PC=0068 OP1=0000000A OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1022 | OP=INT ADDR_REG <- SP (for PC)
+  TICK:  156 SC: 4 PC=0068 OP1=0000000A OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1022 | OP=INT push PC
+  TICK:  157 SC: 5 PC=0068 OP1=0000000A OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1021 | OP=INT SP-- (for R0)
+  TICK:  158 SC: 6 PC=0068 OP1=0000000A OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1021 | OP=INT ADDR_REG <- SP (for R0)
+  TICK:  159 SC: 7 PC=0068 OP1=0000000A OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1021 | OP=INT push R0
+  TICK:  160 SC: 8 PC=0068 OP1=0000000A OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1020 | OP=INT SP-- (for R1)
+  TICK:  161 SC: 9 PC=0068 OP1=0000000A OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1020 | OP=INT ADDR_REG <- SP (for R1)
+  TICK:  162 SC: 10 PC=0068 OP1=0000000A OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1020 | OP=INT push R1
+  TICK:  163 SC: 11 PC=0068 OP1=0000000A OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1019 | OP=INT SP-- (for R2)
+  TICK:  164 SC: 12 PC=0068 OP1=0000000A OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1019 | OP=INT ADDR_REG <- SP (for R2)
+  TICK:  165 SC: 13 PC=0068 OP1=0000000A OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1019 | OP=INT push R2
+  TICK:  166 SC: 14 PC=0068 OP1=0000000A OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1018 | OP=INT SP-- (for R3)
+  TICK:  167 SC: 15 PC=0068 OP1=0000000A OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1018 | OP=INT ADDR_REG <- SP (for R3)
+  TICK:  168 SC: 16 PC=0068 OP1=0000000A OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1018 | OP=INT push R3
+  TICK:  169 SC: 17 PC=0068 OP1=0000000A OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1017 | OP=INT SP-- (for FLAGS)
+  TICK:  170 SC: 18 PC=0068 OP1=0000000A OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1017 | OP=INT ADDR_REG <- SP (for FLAGS)
+  TICK:  171 SC: 19 PC=0068 OP1=0000000A OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1017 | OP=INT push FLAGS
+  TICK:  172 SC: 0 PC=0002 OP1=0000000A OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1017 | OP=INT vector -> 0X0002
+  TICK:  173 SC: 1 PC=0003 OP1=0000000A OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  174 SC: 2 PC=0004 OP1=0000000B OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1017 | OP=JMP OPERAND1 = 11
+  TICK:  175 SC: 0 PC=000B OP1=0000000B OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1017 | OP=JMP -> 0X000B
+  TICK:  176 SC: 1 PC=000C OP1=0000000B OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  177 SC: 2 PC=000D OP1=00000000 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1017 | OP=MOV OPERAND1 = 0
+  TICK:  178 SC: 3 PC=000E OP1=00000000 OP2=00000004 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1017 | OP=MOV OPERAND2 = 4
+  TICK:  179 SC: 4 PC=000E OP1=00000000 OP2=00000004 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1017 | OP=MOV stage src addr (MEM)
+  TICK:  180 SC: 0 PC=000E OP1=00000000 OP2=00000004 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=1 R2=0 R3=0 SP=1017 | OP=MOV R0 <- mem
+  TICK:  181 SC: 1 PC=000F OP1=00000000 OP2=00000004 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=1 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  182 SC: 2 PC=0010 OP1=00000008 OP2=00000004 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=1 R2=0 R3=0 SP=1017 | OP=MOV OPERAND1 = 8
+  TICK:  183 SC: 3 PC=0011 OP1=00000008 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=1 R2=0 R3=0 SP=1017 | OP=MOV OPERAND2 = 0
+  TICK:  184 SC: 4 PC=0011 OP1=00000008 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=1 R2=0 R3=0 SP=1017 | OP=MOV stage dst addr (MEM)
+  TICK:  185 SC: 0 PC=0011 OP1=00000008 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=1 R2=0 R3=0 SP=1017 | OP=MOV -> mem
+  TICK:  186 SC: 1 PC=0012 OP1=00000008 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=1 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  187 SC: 2 PC=0013 OP1=00000001 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=1 R2=0 R3=0 SP=1017 | OP=MOV OPERAND1 = 1
+  TICK:  188 SC: 3 PC=0014 OP1=00000001 OP2=00000008 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=1 R2=0 R3=0 SP=1017 | OP=MOV OPERAND2 = 8
+  TICK:  189 SC: 4 PC=0014 OP1=00000001 OP2=00000008 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=1 R2=0 R3=0 SP=1017 | OP=MOV stage src addr (MEM)
+  TICK:  190 SC: 0 PC=0014 OP1=00000001 OP2=00000008 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=MOV R1 <- mem
+  TICK:  191 SC: 1 PC=0015 OP1=00000001 OP2=00000008 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  192 SC: 2 PC=0016 OP1=00000002 OP2=00000008 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=MOV OPERAND1 = 2
+  TICK:  193 SC: 3 PC=0017 OP1=00000002 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=MOV OPERAND2 = 0
+  TICK:  194 SC: 0 PC=0017 OP1=00000002 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=MOV R2 <- IMM
+  TICK:  195 SC: 1 PC=0018 OP1=00000002 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  196 SC: 2 PC=0019 OP1=00000001 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=CMP OPERAND1 = 1
+  TICK:  197 SC: 3 PC=001A OP1=00000001 OP2=00000002 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=CMP OPERAND2 = 2
+  TICK:  198 SC: 0 PC=001A OP1=00000001 OP2=00000002 OP3=00000000 IE=1 IRQ=0 FLAGS=--C- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=CMP
+  TICK:  199 SC: 1 PC=001B OP1=00000001 OP2=00000002 OP3=00000000 IE=1 IRQ=0 FLAGS=--C- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  200 SC: 2 PC=001C OP1=00000000 OP2=00000002 OP3=00000000 IE=1 IRQ=0 FLAGS=--C- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=MOV OPERAND1 = 0
+  TICK:  201 SC: 3 PC=001D OP1=00000000 OP2=00000001 OP3=00000000 IE=1 IRQ=0 FLAGS=--C- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=MOV OPERAND2 = 1
+  TICK:  202 SC: 0 PC=001D OP1=00000000 OP2=00000001 OP3=00000000 IE=1 IRQ=0 FLAGS=--C- R0=1 R1=111 R2=0 R3=0 SP=1017 | OP=MOV R0 <- IMM
+  TICK:  203 SC: 1 PC=001E OP1=00000000 OP2=00000001 OP3=00000000 IE=1 IRQ=0 FLAGS=--C- R0=1 R1=111 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  204 SC: 2 PC=001F OP1=00000022 OP2=00000001 OP3=00000000 IE=1 IRQ=0 FLAGS=--C- R0=1 R1=111 R2=0 R3=0 SP=1017 | OP=JEQ OPERAND1 = 34
+  TICK:  205 SC: 0 PC=001F OP1=00000022 OP2=00000001 OP3=00000000 IE=1 IRQ=0 FLAGS=--C- R0=1 R1=111 R2=0 R3=0 SP=1017 | OP=Jcc not taken
+  TICK:  206 SC: 1 PC=0020 OP1=00000022 OP2=00000001 OP3=00000000 IE=1 IRQ=0 FLAGS=--C- R0=1 R1=111 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  207 SC: 2 PC=0021 OP1=00000000 OP2=00000001 OP3=00000000 IE=1 IRQ=0 FLAGS=--C- R0=1 R1=111 R2=0 R3=0 SP=1017 | OP=MOV OPERAND1 = 0
+  TICK:  208 SC: 3 PC=0022 OP1=00000000 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=--C- R0=1 R1=111 R2=0 R3=0 SP=1017 | OP=MOV OPERAND2 = 0
+  TICK:  209 SC: 0 PC=0022 OP1=00000000 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=--C- R0=0 R1=111 R2=0 R3=0 SP=1017 | OP=MOV R0 <- IMM
+  TICK:  210 SC: 1 PC=0023 OP1=00000000 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=--C- R0=0 R1=111 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  211 SC: 2 PC=0024 OP1=00000000 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=--C- R0=0 R1=111 R2=0 R3=0 SP=1017 | OP=CMP OPERAND1 = 0
+  TICK:  212 SC: 3 PC=0025 OP1=00000000 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=--C- R0=0 R1=111 R2=0 R3=0 SP=1017 | OP=CMP OPERAND2 = 0
+  TICK:  213 SC: 0 PC=0025 OP1=00000000 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=111 R2=0 R3=0 SP=1017 | OP=CMP
+  TICK:  214 SC: 1 PC=0026 OP1=00000000 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=111 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  215 SC: 2 PC=0027 OP1=0000002F OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=111 R2=0 R3=0 SP=1017 | OP=JEQ OPERAND1 = 47
+  TICK:  216 SC: 0 PC=002F OP1=0000002F OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=111 R2=0 R3=0 SP=1017 | OP=JMP -> 0X002F
+  TICK:  217 SC: 1 PC=0030 OP1=0000002F OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=111 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  218 SC: 2 PC=0031 OP1=00000000 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=111 R2=0 R3=0 SP=1017 | OP=MOV OPERAND1 = 0
+  TICK:  219 SC: 3 PC=0032 OP1=00000000 OP2=00000008 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=111 R2=0 R3=0 SP=1017 | OP=MOV OPERAND2 = 8
+  TICK:  220 SC: 4 PC=0032 OP1=00000000 OP2=00000008 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=111 R2=0 R3=0 SP=1017 | OP=MOV stage src addr (MEM)
+  TICK:  221 SC: 0 PC=0032 OP1=00000000 OP2=00000008 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=MOV R0 <- mem
+  TICK:  222 SC: 1 PC=0033 OP1=00000000 OP2=00000008 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  223 SC: 2 PC=0034 OP1=00000006 OP2=00000008 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=MOV OPERAND1 = 6
+  TICK:  224 SC: 3 PC=0035 OP1=00000006 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=MOV OPERAND2 = 0
+  TICK:  225 SC: 4 PC=0035 OP1=00000006 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=MOV stage dst addr (MEM)
+  TICK:  226 SC: 0 PC=0035 OP1=00000006 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=MOV -> mem
+  TICK:  227 SC: 1 PC=0036 OP1=00000006 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  228 SC: 2 PC=0036 OP1=00000006 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=IRET ADDR_REG <- SP (for FLAGS)
+  TICK:  229 SC: 3 PC=0036 OP1=00000006 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=111 R2=0 R3=0 SP=1018 | OP=IRET pop FLAGS
+  TICK:  230 SC: 4 PC=0036 OP1=00000006 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=111 R2=0 R3=0 SP=1018 | OP=IRET ADDR_REG <- SP (for R3)
+  TICK:  231 SC: 5 PC=0036 OP1=00000006 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=111 R2=0 R3=0 SP=1019 | OP=IRET pop R3
+  TICK:  232 SC: 6 PC=0036 OP1=00000006 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=111 R2=0 R3=0 SP=1019 | OP=IRET ADDR_REG <- SP (for R2)
+  TICK:  233 SC: 7 PC=0036 OP1=00000006 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=111 R2=0 R3=0 SP=1020 | OP=IRET pop R2
+  TICK:  234 SC: 8 PC=0036 OP1=00000006 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=111 R2=0 R3=0 SP=1020 | OP=IRET ADDR_REG <- SP (for R1)
+  TICK:  235 SC: 9 PC=0036 OP1=00000006 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=1 R2=0 R3=0 SP=1021 | OP=IRET pop R1
+  TICK:  236 SC: 10 PC=0036 OP1=00000006 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=1 R2=0 R3=0 SP=1021 | OP=IRET ADDR_REG <- SP (for R0)
+  TICK:  237 SC: 11 PC=0036 OP1=00000006 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1022 | OP=IRET pop R0
+  TICK:  238 SC: 12 PC=0036 OP1=00000006 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1022 | OP=IRET ADDR_REG <- SP (for PC)
+  TICK:  239 SC: 13 PC=0068 OP1=00000006 OP2=00000000 OP3=00000000 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1023 | OP=IRET pop PC
+  TICK:  240 SC: 0 PC=0068 OP1=00000006 OP2=00000000 OP3=00000000 IE=0 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1023 | OP=IRET (IE=0)
+  TICK:  241 SC: 1 PC=0069 OP1=00000006 OP2=00000000 OP3=00000000 IE=0 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:  242 SC: 2 PC=006A OP1=00000000 OP2=00000000 OP3=00000000 IE=0 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1023 | OP=MOV OPERAND1 = 0
+  TICK:  243 SC: 3 PC=006B OP1=00000000 OP2=00000009 OP3=00000000 IE=0 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1023 | OP=MOV OPERAND2 = 9
+  TICK:  244 SC: 4 PC=006B OP1=00000000 OP2=00000009 OP3=00000000 IE=0 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1023 | OP=MOV stage src addr (MEM)
+  TICK:  245 SC: 0 PC=006B OP1=00000000 OP2=00000009 OP3=00000000 IE=0 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1023 | OP=MOV R0 <- mem
+  TICK:  246 SC: 1 PC=006C OP1=00000000 OP2=00000009 OP3=00000000 IE=0 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:  247 SC: 2 PC=006D OP1=00000000 OP2=00000009 OP3=00000000 IE=0 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1023 | OP=ADD OPERAND1 = 0
+  TICK:  248 SC: 3 PC=006E OP1=00000000 OP2=00000000 OP3=00000000 IE=0 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1023 | OP=ADD OPERAND2 = 0
+  TICK:  249 SC: 4 PC=006F OP1=00000000 OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=-ZC- R0=0 R1=1 R2=0 R3=0 SP=1023 | OP=ADD OPERAND3 = 1
+  TICK:  250 SC: 0 PC=006F OP1=00000000 OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1023 | OP=ADD R0 <- alu
+  TICK:   250 char='o' IRQ=1 IE=1
+  TICK:  251 SC: 1 PC=0070 OP1=00000000 OP2=00000000 OP3=00000001 IE=1 IRQ=1 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:  252 SC: 2 PC=006F OP1=00000000 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1022 | OP=INT SP-- (for PC)
+  TICK:  253 SC: 3 PC=006F OP1=00000000 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1022 | OP=INT ADDR_REG <- SP (for PC)
+  TICK:  254 SC: 4 PC=006F OP1=00000000 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1022 | OP=INT push PC
+  TICK:  255 SC: 5 PC=006F OP1=00000000 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1021 | OP=INT SP-- (for R0)
+  TICK:  256 SC: 6 PC=006F OP1=00000000 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1021 | OP=INT ADDR_REG <- SP (for R0)
+  TICK:  257 SC: 7 PC=006F OP1=00000000 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1021 | OP=INT push R0
+  TICK:  258 SC: 8 PC=006F OP1=00000000 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1020 | OP=INT SP-- (for R1)
+  TICK:  259 SC: 9 PC=006F OP1=00000000 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1020 | OP=INT ADDR_REG <- SP (for R1)
+  TICK:  260 SC: 10 PC=006F OP1=00000000 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1020 | OP=INT push R1
+  TICK:  261 SC: 11 PC=006F OP1=00000000 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1019 | OP=INT SP-- (for R2)
+  TICK:  262 SC: 12 PC=006F OP1=00000000 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1019 | OP=INT ADDR_REG <- SP (for R2)
+  TICK:  263 SC: 13 PC=006F OP1=00000000 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1019 | OP=INT push R2
+  TICK:  264 SC: 14 PC=006F OP1=00000000 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1018 | OP=INT SP-- (for R3)
+  TICK:  265 SC: 15 PC=006F OP1=00000000 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1018 | OP=INT ADDR_REG <- SP (for R3)
+  TICK:  266 SC: 16 PC=006F OP1=00000000 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1018 | OP=INT push R3
+  TICK:  267 SC: 17 PC=006F OP1=00000000 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1017 | OP=INT SP-- (for FLAGS)
+  TICK:  268 SC: 18 PC=006F OP1=00000000 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1017 | OP=INT ADDR_REG <- SP (for FLAGS)
+  TICK:  269 SC: 19 PC=006F OP1=00000000 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1017 | OP=INT push FLAGS
+  TICK:  270 SC: 0 PC=0002 OP1=00000000 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1017 | OP=INT vector -> 0X0002
+  TICK:  271 SC: 1 PC=0003 OP1=00000000 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  272 SC: 2 PC=0004 OP1=0000000B OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1017 | OP=JMP OPERAND1 = 11
+  TICK:  273 SC: 0 PC=000B OP1=0000000B OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1017 | OP=JMP -> 0X000B
+  TICK:  274 SC: 1 PC=000C OP1=0000000B OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  275 SC: 2 PC=000D OP1=00000000 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1017 | OP=MOV OPERAND1 = 0
+  TICK:  276 SC: 3 PC=000E OP1=00000000 OP2=00000004 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1017 | OP=MOV OPERAND2 = 4
+  TICK:  277 SC: 4 PC=000E OP1=00000000 OP2=00000004 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1017 | OP=MOV stage src addr (MEM)
+  TICK:  278 SC: 0 PC=000E OP1=00000000 OP2=00000004 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=111 R1=1 R2=0 R3=0 SP=1017 | OP=MOV R0 <- mem
+  TICK:  279 SC: 1 PC=000F OP1=00000000 OP2=00000004 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=111 R1=1 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  280 SC: 2 PC=0010 OP1=00000008 OP2=00000004 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=111 R1=1 R2=0 R3=0 SP=1017 | OP=MOV OPERAND1 = 8
+  TICK:  281 SC: 3 PC=0011 OP1=00000008 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=111 R1=1 R2=0 R3=0 SP=1017 | OP=MOV OPERAND2 = 0
+  TICK:  282 SC: 4 PC=0011 OP1=00000008 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=111 R1=1 R2=0 R3=0 SP=1017 | OP=MOV stage dst addr (MEM)
+  TICK:  283 SC: 0 PC=0011 OP1=00000008 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=111 R1=1 R2=0 R3=0 SP=1017 | OP=MOV -> mem
+  TICK:  284 SC: 1 PC=0012 OP1=00000008 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=111 R1=1 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  285 SC: 2 PC=0013 OP1=00000001 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=111 R1=1 R2=0 R3=0 SP=1017 | OP=MOV OPERAND1 = 1
+  TICK:  286 SC: 3 PC=0014 OP1=00000001 OP2=00000008 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=111 R1=1 R2=0 R3=0 SP=1017 | OP=MOV OPERAND2 = 8
+  TICK:  287 SC: 4 PC=0014 OP1=00000001 OP2=00000008 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=111 R1=1 R2=0 R3=0 SP=1017 | OP=MOV stage src addr (MEM)
+  TICK:  288 SC: 0 PC=0014 OP1=00000001 OP2=00000008 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=MOV R1 <- mem
+  TICK:  289 SC: 1 PC=0015 OP1=00000001 OP2=00000008 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  290 SC: 2 PC=0016 OP1=00000002 OP2=00000008 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=MOV OPERAND1 = 2
+  TICK:  291 SC: 3 PC=0017 OP1=00000002 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=MOV OPERAND2 = 0
+  TICK:  292 SC: 0 PC=0017 OP1=00000002 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=MOV R2 <- IMM
+  TICK:  293 SC: 1 PC=0018 OP1=00000002 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  294 SC: 2 PC=0019 OP1=00000001 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=CMP OPERAND1 = 1
+  TICK:  295 SC: 3 PC=001A OP1=00000001 OP2=00000002 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=CMP OPERAND2 = 2
+  TICK:  296 SC: 0 PC=001A OP1=00000001 OP2=00000002 OP3=00000001 IE=1 IRQ=0 FLAGS=--C- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=CMP
+  TICK:  297 SC: 1 PC=001B OP1=00000001 OP2=00000002 OP3=00000001 IE=1 IRQ=0 FLAGS=--C- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  298 SC: 2 PC=001C OP1=00000000 OP2=00000002 OP3=00000001 IE=1 IRQ=0 FLAGS=--C- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=MOV OPERAND1 = 0
+  TICK:  299 SC: 3 PC=001D OP1=00000000 OP2=00000001 OP3=00000001 IE=1 IRQ=0 FLAGS=--C- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=MOV OPERAND2 = 1
+  TICK:  300 SC: 0 PC=001D OP1=00000000 OP2=00000001 OP3=00000001 IE=1 IRQ=0 FLAGS=--C- R0=1 R1=111 R2=0 R3=0 SP=1017 | OP=MOV R0 <- IMM
+  TICK:  301 SC: 1 PC=001E OP1=00000000 OP2=00000001 OP3=00000001 IE=1 IRQ=0 FLAGS=--C- R0=1 R1=111 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  302 SC: 2 PC=001F OP1=00000022 OP2=00000001 OP3=00000001 IE=1 IRQ=0 FLAGS=--C- R0=1 R1=111 R2=0 R3=0 SP=1017 | OP=JEQ OPERAND1 = 34
+  TICK:  303 SC: 0 PC=001F OP1=00000022 OP2=00000001 OP3=00000001 IE=1 IRQ=0 FLAGS=--C- R0=1 R1=111 R2=0 R3=0 SP=1017 | OP=Jcc not taken
+  TICK:  304 SC: 1 PC=0020 OP1=00000022 OP2=00000001 OP3=00000001 IE=1 IRQ=0 FLAGS=--C- R0=1 R1=111 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  305 SC: 2 PC=0021 OP1=00000000 OP2=00000001 OP3=00000001 IE=1 IRQ=0 FLAGS=--C- R0=1 R1=111 R2=0 R3=0 SP=1017 | OP=MOV OPERAND1 = 0
+  TICK:  306 SC: 3 PC=0022 OP1=00000000 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=--C- R0=1 R1=111 R2=0 R3=0 SP=1017 | OP=MOV OPERAND2 = 0
+  TICK:  307 SC: 0 PC=0022 OP1=00000000 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=--C- R0=0 R1=111 R2=0 R3=0 SP=1017 | OP=MOV R0 <- IMM
+  TICK:  308 SC: 1 PC=0023 OP1=00000000 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=--C- R0=0 R1=111 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  309 SC: 2 PC=0024 OP1=00000000 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=--C- R0=0 R1=111 R2=0 R3=0 SP=1017 | OP=CMP OPERAND1 = 0
+  TICK:  310 SC: 3 PC=0025 OP1=00000000 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=--C- R0=0 R1=111 R2=0 R3=0 SP=1017 | OP=CMP OPERAND2 = 0
+  TICK:  311 SC: 0 PC=0025 OP1=00000000 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=111 R2=0 R3=0 SP=1017 | OP=CMP
+  TICK:  312 SC: 1 PC=0026 OP1=00000000 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=111 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  313 SC: 2 PC=0027 OP1=0000002F OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=111 R2=0 R3=0 SP=1017 | OP=JEQ OPERAND1 = 47
+  TICK:  314 SC: 0 PC=002F OP1=0000002F OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=111 R2=0 R3=0 SP=1017 | OP=JMP -> 0X002F
+  TICK:  315 SC: 1 PC=0030 OP1=0000002F OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=111 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  316 SC: 2 PC=0031 OP1=00000000 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=111 R2=0 R3=0 SP=1017 | OP=MOV OPERAND1 = 0
+  TICK:  317 SC: 3 PC=0032 OP1=00000000 OP2=00000008 OP3=00000001 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=111 R2=0 R3=0 SP=1017 | OP=MOV OPERAND2 = 8
+  TICK:  318 SC: 4 PC=0032 OP1=00000000 OP2=00000008 OP3=00000001 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=111 R2=0 R3=0 SP=1017 | OP=MOV stage src addr (MEM)
+  TICK:  319 SC: 0 PC=0032 OP1=00000000 OP2=00000008 OP3=00000001 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=MOV R0 <- mem
+  TICK:  320 SC: 1 PC=0033 OP1=00000000 OP2=00000008 OP3=00000001 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  321 SC: 2 PC=0034 OP1=00000006 OP2=00000008 OP3=00000001 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=MOV OPERAND1 = 6
+  TICK:  322 SC: 3 PC=0035 OP1=00000006 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=MOV OPERAND2 = 0
+  TICK:  323 SC: 4 PC=0035 OP1=00000006 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=MOV stage dst addr (MEM)
+  TICK:  324 SC: 0 PC=0035 OP1=00000006 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=MOV -> mem
+  TICK:  325 SC: 1 PC=0036 OP1=00000006 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  326 SC: 2 PC=0036 OP1=00000006 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=-ZC- R0=111 R1=111 R2=0 R3=0 SP=1017 | OP=IRET ADDR_REG <- SP (for FLAGS)
+  TICK:  327 SC: 3 PC=0036 OP1=00000006 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=111 R1=111 R2=0 R3=0 SP=1018 | OP=IRET pop FLAGS
+  TICK:  328 SC: 4 PC=0036 OP1=00000006 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=111 R1=111 R2=0 R3=0 SP=1018 | OP=IRET ADDR_REG <- SP (for R3)
+  TICK:  329 SC: 5 PC=0036 OP1=00000006 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=111 R1=111 R2=0 R3=0 SP=1019 | OP=IRET pop R3
+  TICK:  330 SC: 6 PC=0036 OP1=00000006 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=111 R1=111 R2=0 R3=0 SP=1019 | OP=IRET ADDR_REG <- SP (for R2)
+  TICK:  331 SC: 7 PC=0036 OP1=00000006 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=111 R1=111 R2=0 R3=0 SP=1020 | OP=IRET pop R2
+  TICK:  332 SC: 8 PC=0036 OP1=00000006 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=111 R1=111 R2=0 R3=0 SP=1020 | OP=IRET ADDR_REG <- SP (for R1)
+  TICK:  333 SC: 9 PC=0036 OP1=00000006 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=111 R1=1 R2=0 R3=0 SP=1021 | OP=IRET pop R1
+  TICK:  334 SC: 10 PC=0036 OP1=00000006 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=111 R1=1 R2=0 R3=0 SP=1021 | OP=IRET ADDR_REG <- SP (for R0)
+  TICK:  335 SC: 11 PC=0036 OP1=00000006 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1022 | OP=IRET pop R0
+  TICK:  336 SC: 12 PC=0036 OP1=00000006 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1022 | OP=IRET ADDR_REG <- SP (for PC)
+  TICK:  337 SC: 13 PC=006F OP1=00000006 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1023 | OP=IRET pop PC
+  TICK:  338 SC: 0 PC=006F OP1=00000006 OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1023 | OP=IRET (IE=0)
+  TICK:  339 SC: 1 PC=0070 OP1=00000006 OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:  340 SC: 2 PC=0071 OP1=00000009 OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1023 | OP=MOV OPERAND1 = 9
+  TICK:  341 SC: 3 PC=0072 OP1=00000009 OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1023 | OP=MOV OPERAND2 = 0
+  TICK:  342 SC: 4 PC=0072 OP1=00000009 OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1023 | OP=MOV stage dst addr (MEM)
+  TICK:  343 SC: 0 PC=0072 OP1=00000009 OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1023 | OP=MOV -> mem
+  TICK:  344 SC: 1 PC=0073 OP1=00000009 OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:  345 SC: 2 PC=0074 OP1=0000003C OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1023 | OP=JMP OPERAND1 = 60
+  TICK:  346 SC: 0 PC=003C OP1=0000003C OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1023 | OP=JMP -> 0X003C
+  TICK:  347 SC: 1 PC=003D OP1=0000003C OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:  348 SC: 2 PC=003E OP1=00000001 OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1023 | OP=MOV OPERAND1 = 1
+  TICK:  349 SC: 3 PC=003F OP1=00000001 OP2=000003E8 OP3=00000001 IE=0 IRQ=0 FLAGS=---- R0=1 R1=1 R2=0 R3=0 SP=1023 | OP=MOV OPERAND2 = 1000
+  TICK:  350 SC: 0 PC=003F OP1=00000001 OP2=000003E8 OP3=00000001 IE=0 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1023 | OP=MOV R1 <- IMM
+  TICK:   350 char='\x00' IRQ=1 IE=1
+  TICK:  351 SC: 1 PC=0040 OP1=00000001 OP2=000003E8 OP3=00000001 IE=1 IRQ=1 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:  352 SC: 2 PC=003F OP1=00000001 OP2=000003E8 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1022 | OP=INT SP-- (for PC)
+  TICK:  353 SC: 3 PC=003F OP1=00000001 OP2=000003E8 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1022 | OP=INT ADDR_REG <- SP (for PC)
+  TICK:  354 SC: 4 PC=003F OP1=00000001 OP2=000003E8 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1022 | OP=INT push PC
+  TICK:  355 SC: 5 PC=003F OP1=00000001 OP2=000003E8 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1021 | OP=INT SP-- (for R0)
+  TICK:  356 SC: 6 PC=003F OP1=00000001 OP2=000003E8 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1021 | OP=INT ADDR_REG <- SP (for R0)
+  TICK:  357 SC: 7 PC=003F OP1=00000001 OP2=000003E8 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1021 | OP=INT push R0
+  TICK:  358 SC: 8 PC=003F OP1=00000001 OP2=000003E8 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1020 | OP=INT SP-- (for R1)
+  TICK:  359 SC: 9 PC=003F OP1=00000001 OP2=000003E8 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1020 | OP=INT ADDR_REG <- SP (for R1)
+  TICK:  360 SC: 10 PC=003F OP1=00000001 OP2=000003E8 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1020 | OP=INT push R1
+  TICK:  361 SC: 11 PC=003F OP1=00000001 OP2=000003E8 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1019 | OP=INT SP-- (for R2)
+  TICK:  362 SC: 12 PC=003F OP1=00000001 OP2=000003E8 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1019 | OP=INT ADDR_REG <- SP (for R2)
+  TICK:  363 SC: 13 PC=003F OP1=00000001 OP2=000003E8 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1019 | OP=INT push R2
+  TICK:  364 SC: 14 PC=003F OP1=00000001 OP2=000003E8 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1018 | OP=INT SP-- (for R3)
+  TICK:  365 SC: 15 PC=003F OP1=00000001 OP2=000003E8 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1018 | OP=INT ADDR_REG <- SP (for R3)
+  TICK:  366 SC: 16 PC=003F OP1=00000001 OP2=000003E8 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1018 | OP=INT push R3
+  TICK:  367 SC: 17 PC=003F OP1=00000001 OP2=000003E8 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1017 | OP=INT SP-- (for FLAGS)
+  TICK:  368 SC: 18 PC=003F OP1=00000001 OP2=000003E8 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1017 | OP=INT ADDR_REG <- SP (for FLAGS)
+  TICK:  369 SC: 19 PC=003F OP1=00000001 OP2=000003E8 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1017 | OP=INT push FLAGS
+  TICK:  370 SC: 0 PC=0002 OP1=00000001 OP2=000003E8 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1017 | OP=INT vector -> 0X0002
+  TICK:  371 SC: 1 PC=0003 OP1=00000001 OP2=000003E8 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  372 SC: 2 PC=0004 OP1=0000000B OP2=000003E8 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1017 | OP=JMP OPERAND1 = 11
+  TICK:  373 SC: 0 PC=000B OP1=0000000B OP2=000003E8 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1017 | OP=JMP -> 0X000B
+  TICK:  374 SC: 1 PC=000C OP1=0000000B OP2=000003E8 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  375 SC: 2 PC=000D OP1=00000000 OP2=000003E8 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1017 | OP=MOV OPERAND1 = 0
+  TICK:  376 SC: 3 PC=000E OP1=00000000 OP2=00000004 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1017 | OP=MOV OPERAND2 = 4
+  TICK:  377 SC: 4 PC=000E OP1=00000000 OP2=00000004 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1017 | OP=MOV stage src addr (MEM)
+  TICK:  378 SC: 0 PC=000E OP1=00000000 OP2=00000004 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=0 R1=1000 R2=0 R3=0 SP=1017 | OP=MOV R0 <- mem
+  TICK:  379 SC: 1 PC=000F OP1=00000000 OP2=00000004 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=0 R1=1000 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  380 SC: 2 PC=0010 OP1=00000008 OP2=00000004 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=0 R1=1000 R2=0 R3=0 SP=1017 | OP=MOV OPERAND1 = 8
+  TICK:  381 SC: 3 PC=0011 OP1=00000008 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=0 R1=1000 R2=0 R3=0 SP=1017 | OP=MOV OPERAND2 = 0
+  TICK:  382 SC: 4 PC=0011 OP1=00000008 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=0 R1=1000 R2=0 R3=0 SP=1017 | OP=MOV stage dst addr (MEM)
+  TICK:  383 SC: 0 PC=0011 OP1=00000008 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=0 R1=1000 R2=0 R3=0 SP=1017 | OP=MOV -> mem
+  TICK:  384 SC: 1 PC=0012 OP1=00000008 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=0 R1=1000 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  385 SC: 2 PC=0013 OP1=00000001 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=0 R1=1000 R2=0 R3=0 SP=1017 | OP=MOV OPERAND1 = 1
+  TICK:  386 SC: 3 PC=0014 OP1=00000001 OP2=00000008 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=0 R1=1000 R2=0 R3=0 SP=1017 | OP=MOV OPERAND2 = 8
+  TICK:  387 SC: 4 PC=0014 OP1=00000001 OP2=00000008 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=0 R1=1000 R2=0 R3=0 SP=1017 | OP=MOV stage src addr (MEM)
+  TICK:  388 SC: 0 PC=0014 OP1=00000001 OP2=00000008 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1017 | OP=MOV R1 <- mem
+  TICK:  389 SC: 1 PC=0015 OP1=00000001 OP2=00000008 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  390 SC: 2 PC=0016 OP1=00000002 OP2=00000008 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1017 | OP=MOV OPERAND1 = 2
+  TICK:  391 SC: 3 PC=0017 OP1=00000002 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1017 | OP=MOV OPERAND2 = 0
+  TICK:  392 SC: 0 PC=0017 OP1=00000002 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1017 | OP=MOV R2 <- IMM
+  TICK:  393 SC: 1 PC=0018 OP1=00000002 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  394 SC: 2 PC=0019 OP1=00000001 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1017 | OP=CMP OPERAND1 = 1
+  TICK:  395 SC: 3 PC=001A OP1=00000001 OP2=00000002 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1017 | OP=CMP OPERAND2 = 2
+  TICK:  396 SC: 0 PC=001A OP1=00000001 OP2=00000002 OP3=00000001 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=0 R2=0 R3=0 SP=1017 | OP=CMP
+  TICK:  397 SC: 1 PC=001B OP1=00000001 OP2=00000002 OP3=00000001 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=0 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  398 SC: 2 PC=001C OP1=00000000 OP2=00000002 OP3=00000001 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=0 R2=0 R3=0 SP=1017 | OP=MOV OPERAND1 = 0
+  TICK:  399 SC: 3 PC=001D OP1=00000000 OP2=00000001 OP3=00000001 IE=1 IRQ=0 FLAGS=-ZC- R0=0 R1=0 R2=0 R3=0 SP=1017 | OP=MOV OPERAND2 = 1
+  TICK:  400 SC: 0 PC=001D OP1=00000000 OP2=00000001 OP3=00000001 IE=1 IRQ=0 FLAGS=-ZC- R0=1 R1=0 R2=0 R3=0 SP=1017 | OP=MOV R0 <- IMM
+  TICK:  401 SC: 1 PC=001E OP1=00000000 OP2=00000001 OP3=00000001 IE=1 IRQ=0 FLAGS=-ZC- R0=1 R1=0 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  402 SC: 2 PC=001F OP1=00000022 OP2=00000001 OP3=00000001 IE=1 IRQ=0 FLAGS=-ZC- R0=1 R1=0 R2=0 R3=0 SP=1017 | OP=JEQ OPERAND1 = 34
+  TICK:  403 SC: 0 PC=0022 OP1=00000022 OP2=00000001 OP3=00000001 IE=1 IRQ=0 FLAGS=-ZC- R0=1 R1=0 R2=0 R3=0 SP=1017 | OP=JMP -> 0X0022
+  TICK:  404 SC: 1 PC=0023 OP1=00000022 OP2=00000001 OP3=00000001 IE=1 IRQ=0 FLAGS=-ZC- R0=1 R1=0 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  405 SC: 2 PC=0024 OP1=00000000 OP2=00000001 OP3=00000001 IE=1 IRQ=0 FLAGS=-ZC- R0=1 R1=0 R2=0 R3=0 SP=1017 | OP=CMP OPERAND1 = 0
+  TICK:  406 SC: 3 PC=0025 OP1=00000000 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=-ZC- R0=1 R1=0 R2=0 R3=0 SP=1017 | OP=CMP OPERAND2 = 0
+  TICK:  407 SC: 0 PC=0025 OP1=00000000 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=--C- R0=1 R1=0 R2=0 R3=0 SP=1017 | OP=CMP
+  TICK:  408 SC: 1 PC=0026 OP1=00000000 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=--C- R0=1 R1=0 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  409 SC: 2 PC=0027 OP1=0000002F OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=--C- R0=1 R1=0 R2=0 R3=0 SP=1017 | OP=JEQ OPERAND1 = 47
+  TICK:  410 SC: 0 PC=0027 OP1=0000002F OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=--C- R0=1 R1=0 R2=0 R3=0 SP=1017 | OP=Jcc not taken
+  TICK:  411 SC: 1 PC=0028 OP1=0000002F OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=--C- R0=1 R1=0 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  412 SC: 2 PC=0029 OP1=00000000 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=--C- R0=1 R1=0 R2=0 R3=0 SP=1017 | OP=MOV OPERAND1 = 0
+  TICK:  413 SC: 3 PC=002A OP1=00000000 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=--C- R0=1 R1=0 R2=0 R3=0 SP=1017 | OP=MOV OPERAND2 = 0
+  TICK:  414 SC: 0 PC=002A OP1=00000000 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=--C- R0=0 R1=0 R2=0 R3=0 SP=1017 | OP=MOV R0 <- IMM
+  TICK:  415 SC: 1 PC=002B OP1=00000000 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=--C- R0=0 R1=0 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  416 SC: 2 PC=002C OP1=00000007 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=--C- R0=0 R1=0 R2=0 R3=0 SP=1017 | OP=MOV OPERAND1 = 7
+  TICK:  417 SC: 3 PC=002D OP1=00000007 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=--C- R0=0 R1=0 R2=0 R3=0 SP=1017 | OP=MOV OPERAND2 = 0
+  TICK:  418 SC: 4 PC=002D OP1=00000007 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=--C- R0=0 R1=0 R2=0 R3=0 SP=1017 | OP=MOV stage dst addr (MEM)
+  TICK:  419 SC: 0 PC=002D OP1=00000007 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=--C- R0=0 R1=0 R2=0 R3=0 SP=1017 | OP=MOV -> mem
+  TICK:  420 SC: 1 PC=002E OP1=00000007 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=--C- R0=0 R1=0 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  421 SC: 2 PC=002F OP1=00000035 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=--C- R0=0 R1=0 R2=0 R3=0 SP=1017 | OP=JMP OPERAND1 = 53
+  TICK:  422 SC: 0 PC=0035 OP1=00000035 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=--C- R0=0 R1=0 R2=0 R3=0 SP=1017 | OP=JMP -> 0X0035
+  TICK:  423 SC: 1 PC=0036 OP1=00000035 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=--C- R0=0 R1=0 R2=0 R3=0 SP=1017 | OP=FETCH
+  TICK:  424 SC: 2 PC=0036 OP1=00000035 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=--C- R0=0 R1=0 R2=0 R3=0 SP=1017 | OP=IRET ADDR_REG <- SP (for FLAGS)
+  TICK:  425 SC: 3 PC=0036 OP1=00000035 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1018 | OP=IRET pop FLAGS
+  TICK:  426 SC: 4 PC=0036 OP1=00000035 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1018 | OP=IRET ADDR_REG <- SP (for R3)
+  TICK:  427 SC: 5 PC=0036 OP1=00000035 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1019 | OP=IRET pop R3
+  TICK:  428 SC: 6 PC=0036 OP1=00000035 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1019 | OP=IRET ADDR_REG <- SP (for R2)
+  TICK:  429 SC: 7 PC=0036 OP1=00000035 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1020 | OP=IRET pop R2
+  TICK:  430 SC: 8 PC=0036 OP1=00000035 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=0 R1=0 R2=0 R3=0 SP=1020 | OP=IRET ADDR_REG <- SP (for R1)
+  TICK:  431 SC: 9 PC=0036 OP1=00000035 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=0 R1=1000 R2=0 R3=0 SP=1021 | OP=IRET pop R1
+  TICK:  432 SC: 10 PC=0036 OP1=00000035 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=0 R1=1000 R2=0 R3=0 SP=1021 | OP=IRET ADDR_REG <- SP (for R0)
+  TICK:  433 SC: 11 PC=0036 OP1=00000035 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1022 | OP=IRET pop R0
+  TICK:  434 SC: 12 PC=0036 OP1=00000035 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1022 | OP=IRET ADDR_REG <- SP (for PC)
+  TICK:  435 SC: 13 PC=003F OP1=00000035 OP2=00000000 OP3=00000001 IE=1 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1023 | OP=IRET pop PC
+  TICK:  436 SC: 0 PC=003F OP1=00000035 OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1023 | OP=IRET (IE=0)
+  TICK:  437 SC: 1 PC=0040 OP1=00000035 OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:  438 SC: 2 PC=0041 OP1=00000000 OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1023 | OP=MOV OPERAND1 = 0
+  TICK:  439 SC: 3 PC=0042 OP1=00000000 OP2=00000009 OP3=00000001 IE=0 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1023 | OP=MOV OPERAND2 = 9
+  TICK:  440 SC: 4 PC=0042 OP1=00000000 OP2=00000009 OP3=00000001 IE=0 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1023 | OP=MOV stage src addr (MEM)
+  TICK:  441 SC: 0 PC=0042 OP1=00000000 OP2=00000009 OP3=00000001 IE=0 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1023 | OP=MOV R0 <- mem
+  TICK:  442 SC: 1 PC=0043 OP1=00000000 OP2=00000009 OP3=00000001 IE=0 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:  443 SC: 2 PC=0044 OP1=00000000 OP2=00000009 OP3=00000001 IE=0 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1023 | OP=CMP OPERAND1 = 0
+  TICK:  444 SC: 3 PC=0045 OP1=00000000 OP2=00000001 OP3=00000001 IE=0 IRQ=0 FLAGS=---- R0=1 R1=1000 R2=0 R3=0 SP=1023 | OP=CMP OPERAND2 = 1
+  TICK:  445 SC: 0 PC=0045 OP1=00000000 OP2=00000001 OP3=00000001 IE=0 IRQ=0 FLAGS=N--- R0=1 R1=1000 R2=0 R3=0 SP=1023 | OP=CMP
+  TICK:  446 SC: 1 PC=0046 OP1=00000000 OP2=00000001 OP3=00000001 IE=0 IRQ=0 FLAGS=N--- R0=1 R1=1000 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:  447 SC: 2 PC=0047 OP1=00000074 OP2=00000001 OP3=00000001 IE=0 IRQ=0 FLAGS=N--- R0=1 R1=1000 R2=0 R3=0 SP=1023 | OP=JGT OPERAND1 = 116
+  TICK:  448 SC: 0 PC=0047 OP1=00000074 OP2=00000001 OP3=00000001 IE=0 IRQ=0 FLAGS=N--- R0=1 R1=1000 R2=0 R3=0 SP=1023 | OP=Jcc not taken
+  TICK:  449 SC: 1 PC=0048 OP1=00000074 OP2=00000001 OP3=00000001 IE=0 IRQ=0 FLAGS=N--- R0=1 R1=1000 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:  450 SC: 2 PC=0049 OP1=00000001 OP2=00000001 OP3=00000001 IE=0 IRQ=0 FLAGS=N--- R0=1 R1=1000 R2=0 R3=0 SP=1023 | OP=MOV OPERAND1 = 1
+  TICK:  451 SC: 3 PC=004A OP1=00000001 OP2=00000007 OP3=00000001 IE=0 IRQ=0 FLAGS=N--- R0=1 R1=1000 R2=0 R3=0 SP=1023 | OP=MOV OPERAND2 = 7
+  TICK:  452 SC: 4 PC=004A OP1=00000001 OP2=00000007 OP3=00000001 IE=0 IRQ=0 FLAGS=N--- R0=1 R1=1000 R2=0 R3=0 SP=1023 | OP=MOV stage src addr (MEM)
+  TICK:  453 SC: 0 PC=004A OP1=00000001 OP2=00000007 OP3=00000001 IE=0 IRQ=0 FLAGS=N--- R0=1 R1=0 R2=0 R3=0 SP=1023 | OP=MOV R1 <- mem
+  TICK:  454 SC: 1 PC=004B OP1=00000001 OP2=00000007 OP3=00000001 IE=0 IRQ=0 FLAGS=N--- R0=1 R1=0 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:  455 SC: 2 PC=004C OP1=00000002 OP2=00000007 OP3=00000001 IE=0 IRQ=0 FLAGS=N--- R0=1 R1=0 R2=0 R3=0 SP=1023 | OP=MOV OPERAND1 = 2
+  TICK:  456 SC: 3 PC=004D OP1=00000002 OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=N--- R0=1 R1=0 R2=0 R3=0 SP=1023 | OP=MOV OPERAND2 = 0
+  TICK:  457 SC: 0 PC=004D OP1=00000002 OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=N--- R0=1 R1=0 R2=0 R3=0 SP=1023 | OP=MOV R2 <- IMM
+  TICK:  458 SC: 1 PC=004E OP1=00000002 OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=N--- R0=1 R1=0 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:  459 SC: 2 PC=004F OP1=00000001 OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=N--- R0=1 R1=0 R2=0 R3=0 SP=1023 | OP=CMP OPERAND1 = 1
+  TICK:  460 SC: 3 PC=0050 OP1=00000001 OP2=00000002 OP3=00000001 IE=0 IRQ=0 FLAGS=N--- R0=1 R1=0 R2=0 R3=0 SP=1023 | OP=CMP OPERAND2 = 2
+  TICK:  461 SC: 0 PC=0050 OP1=00000001 OP2=00000002 OP3=00000001 IE=0 IRQ=0 FLAGS=-ZC- R0=1 R1=0 R2=0 R3=0 SP=1023 | OP=CMP
+  TICK:  462 SC: 1 PC=0051 OP1=00000001 OP2=00000002 OP3=00000001 IE=0 IRQ=0 FLAGS=-ZC- R0=1 R1=0 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:  463 SC: 2 PC=0052 OP1=00000000 OP2=00000002 OP3=00000001 IE=0 IRQ=0 FLAGS=-ZC- R0=1 R1=0 R2=0 R3=0 SP=1023 | OP=MOV OPERAND1 = 0
+  TICK:  464 SC: 3 PC=0053 OP1=00000000 OP2=00000001 OP3=00000001 IE=0 IRQ=0 FLAGS=-ZC- R0=1 R1=0 R2=0 R3=0 SP=1023 | OP=MOV OPERAND2 = 1
+  TICK:  465 SC: 0 PC=0053 OP1=00000000 OP2=00000001 OP3=00000001 IE=0 IRQ=0 FLAGS=-ZC- R0=1 R1=0 R2=0 R3=0 SP=1023 | OP=MOV R0 <- IMM
+  TICK:  466 SC: 1 PC=0054 OP1=00000000 OP2=00000001 OP3=00000001 IE=0 IRQ=0 FLAGS=-ZC- R0=1 R1=0 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:  467 SC: 2 PC=0055 OP1=00000058 OP2=00000001 OP3=00000001 IE=0 IRQ=0 FLAGS=-ZC- R0=1 R1=0 R2=0 R3=0 SP=1023 | OP=JEQ OPERAND1 = 88
+  TICK:  468 SC: 0 PC=0058 OP1=00000058 OP2=00000001 OP3=00000001 IE=0 IRQ=0 FLAGS=-ZC- R0=1 R1=0 R2=0 R3=0 SP=1023 | OP=JMP -> 0X0058
+  TICK:  469 SC: 1 PC=0059 OP1=00000058 OP2=00000001 OP3=00000001 IE=0 IRQ=0 FLAGS=-ZC- R0=1 R1=0 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:  470 SC: 2 PC=005A OP1=00000000 OP2=00000001 OP3=00000001 IE=0 IRQ=0 FLAGS=-ZC- R0=1 R1=0 R2=0 R3=0 SP=1023 | OP=CMP OPERAND1 = 0
+  TICK:  471 SC: 3 PC=005B OP1=00000000 OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=-ZC- R0=1 R1=0 R2=0 R3=0 SP=1023 | OP=CMP OPERAND2 = 0
+  TICK:  472 SC: 0 PC=005B OP1=00000000 OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=--C- R0=1 R1=0 R2=0 R3=0 SP=1023 | OP=CMP
+  TICK:  473 SC: 1 PC=005C OP1=00000000 OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=--C- R0=1 R1=0 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:  474 SC: 2 PC=005D OP1=00000065 OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=--C- R0=1 R1=0 R2=0 R3=0 SP=1023 | OP=JEQ OPERAND1 = 101
+  TICK:  475 SC: 0 PC=005D OP1=00000065 OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=--C- R0=1 R1=0 R2=0 R3=0 SP=1023 | OP=Jcc not taken
+  TICK:  476 SC: 1 PC=005E OP1=00000065 OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=--C- R0=1 R1=0 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:  477 SC: 2 PC=005F OP1=00000000 OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=--C- R0=1 R1=0 R2=0 R3=0 SP=1023 | OP=MOV OPERAND1 = 0
+  TICK:  478 SC: 3 PC=0060 OP1=00000000 OP2=000003E8 OP3=00000001 IE=0 IRQ=0 FLAGS=--C- R0=1 R1=0 R2=0 R3=0 SP=1023 | OP=MOV OPERAND2 = 1000
+  TICK:  479 SC: 0 PC=0060 OP1=00000000 OP2=000003E8 OP3=00000001 IE=0 IRQ=0 FLAGS=--C- R0=1000 R1=0 R2=0 R3=0 SP=1023 | OP=MOV R0 <- IMM
+  TICK:  480 SC: 1 PC=0061 OP1=00000000 OP2=000003E8 OP3=00000001 IE=0 IRQ=0 FLAGS=--C- R0=1000 R1=0 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:  481 SC: 2 PC=0062 OP1=00000009 OP2=000003E8 OP3=00000001 IE=0 IRQ=0 FLAGS=--C- R0=1000 R1=0 R2=0 R3=0 SP=1023 | OP=MOV OPERAND1 = 9
+  TICK:  482 SC: 3 PC=0063 OP1=00000009 OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=--C- R0=1000 R1=0 R2=0 R3=0 SP=1023 | OP=MOV OPERAND2 = 0
+  TICK:  483 SC: 4 PC=0063 OP1=00000009 OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=--C- R0=1000 R1=0 R2=0 R3=0 SP=1023 | OP=MOV stage dst addr (MEM)
+  TICK:  484 SC: 0 PC=0063 OP1=00000009 OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=--C- R0=1000 R1=0 R2=0 R3=0 SP=1023 | OP=MOV -> mem
+  TICK:  485 SC: 1 PC=0064 OP1=00000009 OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=--C- R0=1000 R1=0 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:  486 SC: 2 PC=0065 OP1=00000065 OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=--C- R0=1000 R1=0 R2=0 R3=0 SP=1023 | OP=JMP OPERAND1 = 101
+  TICK:  487 SC: 0 PC=0065 OP1=00000065 OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=--C- R0=1000 R1=0 R2=0 R3=0 SP=1023 | OP=JMP -> 0X0065
+  TICK:  488 SC: 1 PC=0066 OP1=00000065 OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=--C- R0=1000 R1=0 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:  489 SC: 2 PC=0067 OP1=0000000A OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=--C- R0=1000 R1=0 R2=0 R3=0 SP=1023 | OP=MOV OPERAND1 = 10
+  TICK:  490 SC: 3 PC=0068 OP1=0000000A OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=--C- R0=1000 R1=0 R2=0 R3=0 SP=1023 | OP=MOV OPERAND2 = 0
+  TICK:  491 SC: 4 PC=0068 OP1=0000000A OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=--C- R0=1000 R1=0 R2=0 R3=0 SP=1023 | OP=MOV stage dst addr (MEM)
+  TICK:  492 SC: 0 PC=0068 OP1=0000000A OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=--C- R0=1000 R1=0 R2=0 R3=0 SP=1023 | OP=MOV -> mem
+  TICK:  493 SC: 1 PC=0069 OP1=0000000A OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=--C- R0=1000 R1=0 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:  494 SC: 2 PC=006A OP1=00000000 OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=--C- R0=1000 R1=0 R2=0 R3=0 SP=1023 | OP=MOV OPERAND1 = 0
+  TICK:  495 SC: 3 PC=006B OP1=00000000 OP2=00000009 OP3=00000001 IE=0 IRQ=0 FLAGS=--C- R0=1000 R1=0 R2=0 R3=0 SP=1023 | OP=MOV OPERAND2 = 9
+  TICK:  496 SC: 4 PC=006B OP1=00000000 OP2=00000009 OP3=00000001 IE=0 IRQ=0 FLAGS=--C- R0=1000 R1=0 R2=0 R3=0 SP=1023 | OP=MOV stage src addr (MEM)
+  TICK:  497 SC: 0 PC=006B OP1=00000000 OP2=00000009 OP3=00000001 IE=0 IRQ=0 FLAGS=--C- R0=1000 R1=0 R2=0 R3=0 SP=1023 | OP=MOV R0 <- mem
+  TICK:  498 SC: 1 PC=006C OP1=00000000 OP2=00000009 OP3=00000001 IE=0 IRQ=0 FLAGS=--C- R0=1000 R1=0 R2=0 R3=0 SP=1023 | OP=FETCH
+  TICK:  499 SC: 2 PC=006D OP1=00000000 OP2=00000009 OP3=00000001 IE=0 IRQ=0 FLAGS=--C- R0=1000 R1=0 R2=0 R3=0 SP=1023 | OP=ADD OPERAND1 = 0
+  TICK:  500 SC: 3 PC=006E OP1=00000000 OP2=00000000 OP3=00000001 IE=0 IRQ=0 FLAGS=--C- R0=1000 R1=0 R2=0 R3=0 SP=1023 | OP=ADD OPERAND2 = 0
 
-  Ticks: 550
-  Output: foo
+  --- OUTPUT ---
+  foo
+  --- ticks: 533 ---
 out_code_log: |-
   0000: 00001107  JMP    -> 0054 
   0002: 00001107  JMP    -> 0011 
