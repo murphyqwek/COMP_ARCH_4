@@ -720,9 +720,7 @@ class ControlUnit:
             src2_sel = self._stage_src2_to_alu_input(m2, a2)
             self.dp.signal_alu(alu_op, src1_sel, src2_sel, latch_flags=latch_flags)
             self.dp.signal_latch_reg(self._reg_from_operand(a_dst))
-            self._last_op = (
-                f"{opcode.name} {self._reg_from_operand(a_dst).name} <- alu"
-            )
+            self._last_op = f"{opcode.name} {self._reg_from_operand(a_dst).name} <- alu"
             self._finish()
             return
 
