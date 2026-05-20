@@ -49,7 +49,6 @@ class OperandASel(Enum):
     R1 = "R1"
     R2 = "R2"
     R3 = "R3"
-    AR = "AR"
     SP = "SP"
 
 
@@ -58,7 +57,6 @@ class OperandBSel(Enum):
     R1 = "R1"
     R2 = "R2"
     R3 = "R3"
-    AR = "AR"
     SP = "SP"
 
 
@@ -151,7 +149,6 @@ class DataPath:
             Registers.R3: 0,
             Registers.SP: MEMORY_SIZE - 1,
         }
-        self.ar: int = 0
         self.addr_reg: int = 0
         self.alu_out: int = 0
         self.flag_n = False
@@ -175,8 +172,6 @@ class DataPath:
             return self.registers[Registers.R2]
         if s == OperandASel.R3:
             return self.registers[Registers.R3]
-        if s == OperandASel.AR:
-            return self.ar
         if s == OperandASel.SP:
             return self.registers[Registers.SP]
         return 0
@@ -191,8 +186,6 @@ class DataPath:
             return self.registers[Registers.R2]
         if s == OperandBSel.R3:
             return self.registers[Registers.R3]
-        if s == OperandBSel.AR:
-            return self.ar
         if s == OperandBSel.SP:
             return self.registers[Registers.SP]
         return 0
@@ -348,10 +341,6 @@ class DataPath:
         self.registers[reg] = to_word(self.alu_out)
         self._last_signals[f"latch_{reg.name}"] = to_signed(self.alu_out)
 
-    def signal_latch_ar(self) -> None:
-        self.ar = to_word(self.alu_out)
-        self._last_signals["latch_AR"] = to_signed(self.ar)
-
     def signal_sp_save(self, sel: SpSaveSel) -> None:
         sp = self.registers[Registers.SP]
         if sel == SpSaveSel.PLUS_ONE:
@@ -399,6 +388,9 @@ def decode_inst(word: int) -> DecodedInstr:
 
     raw_modes = [(word >> (12 + i * 4)) & 0xF for i in range(cnt)]
     modes = [AddrMode(r & 0x7) for r in raw_modes]
+
+    if op_raw == Opcode.NADD.value and cnt > 1:
+        modes = [modes[0]] + [AddrMode.IMM] * (cnt - 1)
 
     return DecodedInstr(opcode=op_raw, arg_count=cnt, modes=modes)
 
@@ -472,13 +464,18 @@ class ControlUnit:
         if self.step_counter == 0:
             self._fetch_inst()
         else:
-            args_done_at = self.instr.arg_count
+            args_done_at = self._fetch_phase_length()
             if self.step_counter <= args_done_at:
                 self._fetch_argument(self.step_counter)
             else:
                 self._execute()
 
         self._tick += 1
+
+    def _fetch_phase_length(self) -> int:
+        if self.instr.opcode == Opcode.NADD:
+            return min(self.instr.arg_count, 3)
+        return self.instr.arg_count
 
     def write_op(self) -> None:
         self.dp.signal_mem_read()
@@ -525,7 +522,7 @@ class ControlUnit:
         self.latch_op3 = True
 
     def _execute(self) -> None:
-        local_step = self.step_counter - (1 + self.instr.arg_count)
+        local_step = self.step_counter - (1 + self._fetch_phase_length())
         op_raw = self.instr.opcode
 
         if op_raw == INT_OPCODE:
@@ -582,6 +579,9 @@ class ControlUnit:
             return
         if op == Opcode.POP:
             self._exec_pop(local_step)
+            return
+        if op == Opcode.NADD:
+            self._exec_nadd(local_step)
             return
 
     def _finish(self) -> None:
@@ -708,26 +708,6 @@ class ControlUnit:
                 self._last_op = f"MOV {reg.name} <- mem"
                 self._finish()
                 return
-            if dst_is_mem:
-                if step == 1:
-                    self.dp.signal_mem_read()
-                    self.dp.signal_alu(Operation.PASS_B, src2=OpSrc2Sel.DATA_OUT)
-                    self.dp.signal_latch_ar()
-                    self._last_op = "MOV AR <- mem (buffer)"
-                    self.signal_latch_sc(StepCntrSel.PLUS_ONE)
-                    return
-                if step == 2:
-                    self._stage_addr_for_operand(dst_mode, dst_arg)
-                    self._last_op = f"MOV stage dst addr ({dst_mode.name})"
-                    self.signal_latch_sc(StepCntrSel.PLUS_ONE)
-                    return
-                if step == 3:
-                    self.dp.signal_select_operand_a(OperandASel.AR)
-                    self.dp.signal_alu(Operation.PASS_A, OpSrc1Sel.OPERAND_A)
-                    self.dp.signal_mem_write()
-                    self._last_op = "MOV -> mem (from AR)"
-                    self._finish()
-                    return
 
     def _exec_alu3(self, opcode: Opcode, step: int) -> None:
         dst_mode, m1, m2 = self.instr.modes
@@ -735,131 +715,28 @@ class ControlUnit:
         alu_op = self._opcode_to_alu(opcode)
         latch_flags = True
 
-        s1_mem = m1 in (AddrMode.MEM, AddrMode.REG_INDIRECT)
-        s2_mem = m2 in (AddrMode.MEM, AddrMode.REG_INDIRECT)
-        dst_mem = dst_mode in (AddrMode.MEM, AddrMode.REG_INDIRECT)
-
-        if not s1_mem and not s2_mem:
-            if step == 0:
-                src1_sel = self._stage_src1_to_alu_input(m1, a1)
-                src2_sel = self._stage_src2_to_alu_input(m2, a2)
-                self.dp.signal_alu(alu_op, src1_sel, src2_sel, latch_flags=latch_flags)
-                if dst_mode == AddrMode.REG:
-                    self.dp.signal_latch_reg(self._reg_from_operand(a_dst))
-                    self._last_op = (
-                        f"{opcode.name} {self._reg_from_operand(a_dst).name} <- alu"
-                    )
-                    self._finish()
-                    return
-                if dst_mem:
-                    self.dp.signal_latch_ar()
-                    self._last_op = f"{opcode.name} AR <- alu (buffer)"
-                    self.signal_latch_sc(StepCntrSel.PLUS_ONE)
-                    return
-            if step == 1 and dst_mem:
-                self._stage_addr_for_operand(dst_mode, a_dst)
-                self._last_op = f"{opcode.name} stage dst addr"
-                self.signal_latch_sc(StepCntrSel.PLUS_ONE)
-                return
-            if step == 2 and dst_mem:
-                self.dp.signal_select_operand_a(OperandASel.AR)
-                self.dp.signal_alu(Operation.PASS_A, OpSrc1Sel.OPERAND_A)
-                self.dp.signal_mem_write()
-                self._last_op = f"{opcode.name} -> mem"
-                self._finish()
-                return
-
-        if s1_mem != s2_mem:
-            mem_mode, mem_arg = (m1, a1) if s1_mem else (m2, a2)
-            if step == 0:
-                self._stage_addr_for_operand(mem_mode, mem_arg)
-                self._last_op = f"{opcode.name} stage mem-src addr"
-                self.signal_latch_sc(StepCntrSel.PLUS_ONE)
-                return
-            if step == 1:
-                self.dp.signal_mem_read()
-                self.dp.signal_alu(Operation.PASS_B, src2=OpSrc2Sel.DATA_OUT)
-                self.dp.signal_latch_ar()
-                self._last_op = f"{opcode.name} AR <- mem"
-                self.signal_latch_sc(StepCntrSel.PLUS_ONE)
-                return
-            if step == 2:
-                if s1_mem:
-                    self.dp.signal_select_operand_a(OperandASel.AR)
-                    src1_sel = OpSrc1Sel.OPERAND_A
-                    src2_sel = self._stage_src2_to_alu_input(m2, a2)
-                else:
-                    src1_sel = self._stage_src1_to_alu_input(m1, a1)
-                    self.dp.signal_select_operand_b(OperandBSel.AR)
-                    src2_sel = OpSrc2Sel.OPERAND_B
-                self.dp.signal_alu(alu_op, src1_sel, src2_sel, latch_flags=latch_flags)
-                if dst_mode == AddrMode.REG:
-                    self.dp.signal_latch_reg(self._reg_from_operand(a_dst))
-                    self._last_op = (
-                        f"{opcode.name} {self._reg_from_operand(a_dst).name} <- alu"
-                    )
-                    self._finish()
-                    return
-                if dst_mem:
-                    self.dp.signal_latch_ar()
-                    self._last_op = f"{opcode.name} AR <- alu (buffer)"
-                    self.signal_latch_sc(StepCntrSel.PLUS_ONE)
-                    return
-            if step == 3 and dst_mem:
-                self._stage_addr_for_operand(dst_mode, a_dst)
-                self._last_op = f"{opcode.name} stage dst addr"
-                self.signal_latch_sc(StepCntrSel.PLUS_ONE)
-                return
-            if step == 4 and dst_mem:
-                self.dp.signal_select_operand_a(OperandASel.AR)
-                self.dp.signal_alu(Operation.PASS_A, OpSrc1Sel.OPERAND_A)
-                self.dp.signal_mem_write()
-                self._last_op = f"{opcode.name} -> mem"
-                self._finish()
-                return
+        if step == 0 and dst_mode == AddrMode.REG:
+            src1_sel = self._stage_src1_to_alu_input(m1, a1)
+            src2_sel = self._stage_src2_to_alu_input(m2, a2)
+            self.dp.signal_alu(alu_op, src1_sel, src2_sel, latch_flags=latch_flags)
+            self.dp.signal_latch_reg(self._reg_from_operand(a_dst))
+            self._last_op = (
+                f"{opcode.name} {self._reg_from_operand(a_dst).name} <- alu"
+            )
+            self._finish()
+            return
 
     def _exec_cmp(self, step: int) -> None:
         m1, m2 = self.instr.modes
         a1, a2 = self.operand1, self.operand2
-        s1_mem = m1 in (AddrMode.MEM, AddrMode.REG_INDIRECT)
-        s2_mem = m2 in (AddrMode.MEM, AddrMode.REG_INDIRECT)
 
-        if not s1_mem and not s2_mem:
-            if step == 0:
-                src1_sel = self._stage_src1_to_alu_input(m1, a1)
-                src2_sel = self._stage_src2_to_alu_input(m2, a2)
-                self.dp.signal_alu(Operation.SUB, src1_sel, src2_sel, latch_flags=True)
-                self._last_op = "CMP"
-                self._finish()
-                return
-
-        if s1_mem != s2_mem:
-            mem_mode, mem_arg = (m1, a1) if s1_mem else (m2, a2)
-            if step == 0:
-                self._stage_addr_for_operand(mem_mode, mem_arg)
-                self._last_op = "CMP stage addr"
-                self.signal_latch_sc(StepCntrSel.PLUS_ONE)
-                return
-            if step == 1:
-                self.dp.signal_mem_read()
-                self.dp.signal_alu(Operation.PASS_B, src2=OpSrc2Sel.DATA_OUT)
-                self.dp.signal_latch_ar()
-                self._last_op = "CMP AR <- mem"
-                self.signal_latch_sc(StepCntrSel.PLUS_ONE)
-                return
-            if step == 2:
-                if s1_mem:
-                    self.dp.signal_select_operand_a(OperandASel.AR)
-                    src1_sel = OpSrc1Sel.OPERAND_A
-                    src2_sel = self._stage_src2_to_alu_input(m2, a2)
-                else:
-                    src1_sel = self._stage_src1_to_alu_input(m1, a1)
-                    self.dp.signal_select_operand_b(OperandBSel.AR)
-                    src2_sel = OpSrc2Sel.OPERAND_B
-                self.dp.signal_alu(Operation.SUB, src1_sel, src2_sel, latch_flags=True)
-                self._last_op = "CMP"
-                self._finish()
-                return
+        if step == 0:
+            src1_sel = self._stage_src1_to_alu_input(m1, a1)
+            src2_sel = self._stage_src2_to_alu_input(m2, a2)
+            self.dp.signal_alu(Operation.SUB, src1_sel, src2_sel, latch_flags=True)
+            self._last_op = "CMP"
+            self._finish()
+            return
 
     def _exec_jmp(self, step: int, taken: bool) -> None:
         mode = self.instr.modes[0]
@@ -922,6 +799,67 @@ class ControlUnit:
             self.dp.signal_sp_save(SpSaveSel.PLUS_ONE)
             self._finish()
             return
+
+    def _fetch_next_into_op3(self, src_idx: int, total_srcs: int) -> None:
+        self.latch_op3 = False
+        self.write_op()
+        word = to_word(self.dp.read_instr(self.pc))
+        self._last_op = f"NADD load src{src_idx}/{total_srcs} = {to_signed(word)}"
+        self.signal_latch_pc(PcSel.INC)
+        self.signal_latch_sc(StepCntrSel.PLUS_ONE)
+
+    def _exec_nadd(self, step: int) -> None:
+        dst_mode = self.instr.modes[0]
+        dst_arg = self.operand1
+        n_sources = self.instr.arg_count - 1
+
+        if dst_mode != AddrMode.REG:
+            return
+
+        dst_reg = self._reg_from_operand(dst_arg)
+
+        if n_sources == 1:
+            if step == 0:
+                self.dp.signal_set_imm(imm1=self.operand2)
+                self.dp.signal_alu(Operation.PASS_A, OpSrc1Sel.IMM1)
+                self.dp.signal_latch_reg(dst_reg)
+                self._last_op = f"NADD {dst_reg.name} <- {to_signed(self.operand2)}"
+                self._finish()
+                return
+
+        if step == 0:
+            self.dp.signal_set_imm(imm1=self.operand2, imm2=self.operand3)
+            self.dp.signal_alu(
+                Operation.ADD, OpSrc1Sel.IMM1, OpSrc2Sel.IMM2, latch_flags=False
+            )
+            self.dp.signal_latch_reg(dst_reg)
+            self._last_op = f"NADD {dst_reg.name} <- src1+src2"
+            if n_sources == 2:
+                self._finish()
+            else:
+                self.signal_latch_sc(StepCntrSel.PLUS_ONE)
+            return
+
+        if step % 2 == 1:
+            src_idx = (step - 1) // 2 + 3
+            self._fetch_next_into_op3(src_idx, n_sources)
+            return
+
+        self.dp.signal_select_operand_a(self._op_a_sel(dst_reg))
+        self.dp.signal_set_imm(imm2=self.operand3)
+        self.dp.signal_alu(
+            Operation.ADD,
+            OpSrc1Sel.OPERAND_A,
+            OpSrc2Sel.IMM2,
+            latch_flags=False,
+        )
+        self.dp.signal_latch_reg(dst_reg)
+        src_idx = step // 2 + 2
+        self._last_op = f"NADD {dst_reg.name} += src{src_idx}"
+        if src_idx == n_sources:
+            self._finish()
+        else:
+            self.signal_latch_sc(StepCntrSel.PLUS_ONE)
 
     def _exec_call(self, step: int) -> None:
         mode = self.instr.modes[0]

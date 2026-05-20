@@ -22,6 +22,7 @@ class Opcode(int, Enum):
     ADC = 16
     SBC = 17
     DIV = 18
+    NADD = 19
 
 
 class AddrMode(int, Enum):

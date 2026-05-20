@@ -223,9 +223,39 @@ class Compiler:
                     Opcode.MOV, [AddrMode.REG, AddrMode.MEM], [dest_reg, temp_res]
                 )
 
-            elif op in ["+", "-", "*", "/", "mod", "adc", "sbc"]:
+            elif op == "+":
+                args = expr[1:]
+                if len(args) < 2:
+                    raise SyntaxError("'+' needs at least 2 arguments")
+
+                all_literals = all(isinstance(a, int) for a in args)
+
+                if all_literals and len(args) >= 3 and len(args) <= 14:
+                    src_modes = [AddrMode.IMM] * len(args)
+                    src_args = [a & 0xFFFFFFFF for a in args]
+                    self.emit(
+                        Opcode.NADD,
+                        [AddrMode.REG] + src_modes,
+                        [dest_reg] + src_args,
+                    )
+                else:
+                    self.compile_expr(args[0], Registers.R1, local_scope)
+                    self.emit(Opcode.PUSH, [AddrMode.REG], [Registers.R1])
+                    self.compile_expr(args[1], Registers.R2, local_scope)
+                    self.emit(Opcode.POP, [AddrMode.REG], [Registers.R1])
+                    self.emit(
+                        Opcode.ADD,
+                        [AddrMode.REG, AddrMode.REG, AddrMode.REG],
+                        [dest_reg, Registers.R1, Registers.R2],
+                    )
+                    if len(args) > 2:
+                        raise SyntaxError(
+                            "'+' with 3+ arguments requires all of them to be "
+                            "integer literals (so it can fold into NADD)"
+                        )
+
+            elif op in ["-", "*", "/", "mod", "adc", "sbc"]:
                 op_map = {
-                    "+": Opcode.ADD,
                     "-": Opcode.SUB,
                     "*": Opcode.MUL,
                     "/": Opcode.DIV,

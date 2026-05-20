@@ -5,7 +5,7 @@ import os
 import tempfile
 import pytest
 
-import machine
+import machine as machine
 import translator_lisp
 
 

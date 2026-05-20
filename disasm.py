@@ -46,6 +46,12 @@ def decode_at(words, i):
     arg_count = (h >> 8) & 0xF
     modes = [AddrMode((h >> (12 + j * 4)) & 0xF) for j in range(arg_count)]
 
+    # NADD: by ISA convention, all source operands are IMM.  The header only
+    # has 4 mode slots, so when N+1 > 4 the extras would otherwise decode as
+    # AddrMode.NONE (0) and render as blanks.
+    if op == Opcode.NADD and arg_count > 1:
+        modes = [modes[0]] + [AddrMode.IMM] * (arg_count - 1)
+
     if i + arg_count >= len(words):
         return None, 1, f"{h:08X}  <incomplete>"
 

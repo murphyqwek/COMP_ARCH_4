@@ -1,0 +1,42 @@
+(defvar a    0)
+(defvar b    0)
+(defvar c    0)
+(defvar d    0)
+(defvar e    0)
+(defvar f    0)
+(defvar mix  0)
+
+(setq a (+ 100 200))
+(print-pstr "bin (+ 100 200) = ")
+(print a)
+(print-pstr "\n")
+
+(setq b (+ 10 20 30))
+(print-pstr "3 lit (+ 10 20 30) = ")
+(print b)
+(print-pstr "\n")
+
+(setq c (+ 1 2 3 4 5))
+(print-pstr "5 lit (+ 1..5) = ")
+(print c)
+(print-pstr "\n")
+
+(setq d (+ 1 2 3 4 5 6 7 8 9 10))
+(print-pstr "10 lit (+ 1..10) = ")
+(print d)
+(print-pstr "\n")
+
+(setq e (+ 50 -10 -7 2))
+(print-pstr "neg lit = ")
+(print e)
+(print-pstr "\n")
+
+(setq f (+ a b))
+(print-pstr "bin vars (+ a b) = ")
+(print f)
+(print-pstr "\n")
+
+(setq mix (+ a (+ 7 8 9)))
+(print-pstr "mixed = ")
+(print mix)
+(print-pstr "\n")
